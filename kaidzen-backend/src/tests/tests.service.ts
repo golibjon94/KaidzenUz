@@ -1,10 +1,51 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { SubmitTestDto } from './dto/submit-test.dto';
+import { CreateTestDto } from './dto/create-test.dto';
 
 @Injectable()
 export class TestsService {
   constructor(private prisma: PrismaService) {}
+
+  async create(dto: CreateTestDto) {
+    return this.prisma.test.create({
+      data: {
+        title: dto.title,
+        slug: dto.slug,
+        description: dto.description,
+        isActive: dto.isActive ?? true,
+        questions: {
+          create: dto.questions.map((q) => ({
+            text: q.text,
+            order: q.order,
+            options: {
+              create: q.options.map((o) => ({
+                text: o.text,
+                score: o.score,
+                order: o.order,
+              })),
+            },
+          })),
+        },
+        resultLogic: {
+          create: dto.resultLogic.map((l) => ({
+            minScore: l.minScore,
+            maxScore: l.maxScore,
+            resultText: l.resultText,
+            recommendation: l.recommendation,
+          })),
+        },
+      },
+      include: {
+        questions: {
+          include: {
+            options: true,
+          },
+        },
+        resultLogic: true,
+      },
+    });
+  }
 
   async findAll() {
     return this.prisma.test.findMany({
@@ -14,6 +55,7 @@ export class TestsService {
         title: true,
         slug: true,
         description: true,
+        createdAt: true,
       },
     });
   }

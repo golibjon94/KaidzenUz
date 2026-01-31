@@ -1,7 +1,7 @@
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
   <div class="p-6 border-b border-gray-100 flex items-center justify-between">
     <h3 class="text-lg font-bold">Testlar boshqaruvi</h3>
-    <button nz-button nzType="primary">
+    <button nz-button nzType="primary" (click)="showModal()">
       <span nz-icon nzType="plus"></span> Yangi test
     </button>
   </div>
@@ -38,3 +38,147 @@
     </nz-table>
   }
 </div>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Yangi test yaratish"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="submitForm()"
+  [nzOkLoading]="isSubmitting()"
+  nzWidth="800px"
+>
+  <ng-container *nzModalContent>
+    <form [formGroup]="testForm" nz-form nzLayout="vertical">
+      <div class="grid grid-cols-2 gap-4">
+        <nz-form-item>
+          <nz-form-label nzRequired>Test nomi</nz-form-label>
+          <nz-form-control nzErrorTip="Iltimos nomini kiriting">
+            <input nz-input formControlName="title" placeholder="Test nomi" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzRequired>Slug (URL)</nz-form-label>
+          <nz-form-control nzErrorTip="Iltimos slug kiriting">
+            <input nz-input formControlName="slug" placeholder="test-nomi" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <nz-form-item>
+        <nz-form-label>Tavsif</nz-form-label>
+        <nz-form-control>
+          <textarea nz-input formControlName="description" rows="3" placeholder="Test haqida qisqacha"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label>Holati</nz-form-label>
+        <nz-form-control>
+          <nz-switch formControlName="isActive"></nz-switch>
+          <span class="ml-2">Faol</span>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-tabset>
+        <nz-tab nzTitle="Savollar">
+          <div formArrayName="questions">
+            @for (question of questions.controls; track $index) {
+              <div [formGroupName]="$index" class="bg-gray-50 p-4 rounded-lg mb-4 border border-gray-200">
+                <div class="flex justify-between items-start mb-4">
+                  <h4 class="font-bold text-gray-700">Savol #{{ $index + 1 }}</h4>
+                  <button nz-button nzType="text" nzDanger (click)="removeQuestion($index)">
+                    <span nz-icon nzType="delete"></span>
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-12 gap-4 mb-4">
+                  <div class="col-span-10">
+                    <nz-form-item class="mb-0">
+                      <nz-form-control nzErrorTip="Savol matni kiritilishi shart">
+                        <input nz-input formControlName="text" placeholder="Savol matni" />
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                  <div class="col-span-2">
+                    <nz-form-item class="mb-0">
+                      <nz-form-control>
+                        <nz-input-number formControlName="order" [nzMin]="1" class="w-full"></nz-input-number>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                </div>
+
+                <div formArrayName="options" class="pl-4 border-l-2 border-blue-100">
+                  <p class="text-sm text-gray-500 mb-2">Variantlar:</p>
+                  @for (option of getOptions($index).controls; track optionIndex; let optionIndex = $index) {
+                    <div [formGroupName]="optionIndex" class="flex gap-2 mb-2 items-center">
+                      <input nz-input formControlName="text" placeholder="Variant matni" class="flex-1" />
+                      <nz-input-number formControlName="score" [nzMin]="0" placeholder="Ball" style="width: 80px"></nz-input-number>
+                      <button nz-button nzType="text" nzDanger (click)="removeOption($index, optionIndex)">
+                        <span nz-icon nzType="minus-circle"></span>
+                      </button>
+                    </div>
+                  }
+                  <button nz-button nzType="dashed" class="w-full mt-2" (click)="addOption($index)">
+                    <span nz-icon nzType="plus"></span> Variant qo'shish
+                  </button>
+                </div>
+              </div>
+            }
+            <button nz-button nzType="dashed" class="w-full" (click)="addQuestion()">
+              <span nz-icon nzType="plus"></span> Savol qo'shish
+            </button>
+          </div>
+        </nz-tab>
+
+        <nz-tab nzTitle="Natijalar logikasi">
+          <div formArrayName="resultLogic">
+            @for (logic of resultLogic.controls; track $index) {
+              <div [formGroupName]="$index" class="bg-gray-50 p-4 rounded-lg mb-4 border border-gray-200">
+                <div class="flex justify-between items-start mb-4">
+                  <h4 class="font-bold text-gray-700">Natija #{{ $index + 1 }}</h4>
+                  <button nz-button nzType="text" nzDanger (click)="removeResultLogic($index)">
+                    <span nz-icon nzType="delete"></span>
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                  <nz-form-item class="mb-0">
+                    <nz-form-label>Min Ball</nz-form-label>
+                    <nz-form-control>
+                      <nz-input-number formControlName="minScore" [nzMin]="0" class="w-full"></nz-input-number>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <nz-form-item class="mb-0">
+                    <nz-form-label>Max Ball</nz-form-label>
+                    <nz-form-control>
+                      <nz-input-number formControlName="maxScore" [nzMin]="0" class="w-full"></nz-input-number>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+
+                <nz-form-item>
+                  <nz-form-label>Natija matni</nz-form-label>
+                  <nz-form-control>
+                    <textarea nz-input formControlName="resultText" rows="2"></textarea>
+                  </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item class="mb-0">
+                  <nz-form-label>Tavsiya</nz-form-label>
+                  <nz-form-control>
+                    <textarea nz-input formControlName="recommendation" rows="2"></textarea>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            }
+            <button nz-button nzType="dashed" class="w-full" (click)="addResultLogic()">
+              <span nz-icon nzType="plus"></span> Logika qo'shish
+            </button>
+          </div>
+        </nz-tab>
+      </nz-tabset>
+    </form>
+  </ng-container>
+</nz-modal>

@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { TestsService } from './tests.service';
 import { SubmitTestDto } from './dto/submit-test.dto';
+import { CreateTestDto } from './dto/create-test.dto';
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { Public } from '../common/decorators/public.decorator';
 
@@ -9,6 +10,13 @@ import { Public } from '../common/decorators/public.decorator';
 @Controller('tests')
 export class TestsController {
   constructor(private readonly testsService: TestsService) {}
+
+  @ApiBearerAuth()
+  @Post()
+  @ApiOperation({ summary: 'Create a new diagnostic test' })
+  create(@Body() dto: CreateTestDto) {
+    return this.testsService.create(dto);
+  }
 
   @Public()
   @Get()
