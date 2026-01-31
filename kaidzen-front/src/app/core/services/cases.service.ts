@@ -18,7 +18,9 @@ export class CasesService {
   }
 
   getById(id: string) {
-    return this.http.get<BusinessCase>(`${this.apiUrl}/${id}`);
+    return this.http.get<{data: BusinessCase}>(`${this.apiUrl}/${id}`).pipe(
+      map(res => res.data)
+    );
   }
 
   // Admin methods

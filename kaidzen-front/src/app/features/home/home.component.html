@@ -89,7 +89,9 @@
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">So'nggi Maqolalar</h2>
         <p class="text-gray-600 text-lg">Biznesingiz uchun foydali maslahatlar va yangiliklar.</p>
       </div>
-      <a nz-button nzType="link" class="text-blue-600 font-semibold text-lg flex items-center gap-1" routerLink="/blog">Barchasini ko'rish <span nz-icon nzType="arrow-right"></span></a>
+      <a nz-button nzType="link" class="text-blue-600 font-semibold text-lg flex items-center gap-1" routerLink="/blog">
+        Barchasini ko'rish <span nz-icon nzType="arrow-right"></span>
+      </a>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       @for (post of (latestPosts() || []); track post.id) {
@@ -100,7 +102,7 @@
             <p class="text-gray-600 mb-4 line-clamp-3">{{ post.content | slice:0:120 }}...</p>
             <div class="flex items-center justify-between">
               <span class="text-gray-400 text-sm">{{ post.createdAt | date:'dd.MM.yyyy' }}</span>
-              <a [routerLink]="['/blog', post.slug]" class="text-blue-600 font-bold hover:underline cursor-pointer">O'qish</a>
+              <a [routerLink]="['/blog', post.id]" class="text-blue-600 font-bold hover:underline cursor-pointer">O'qish</a>
             </div>
           </div>
         </div>
@@ -117,10 +119,13 @@
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Biznes Keyslar</h2>
         <p class="text-gray-600 text-lg">Muvaffaqiyatli amalga oshirilgan loyihalarimizdan namunalar.</p>
       </div>
+      <a nz-button nzType="link" class="text-blue-600 font-semibold text-lg flex items-center gap-1" routerLink="/cases">
+        Barchasini ko'rish <span nz-icon nzType="arrow-right"></span>
+      </a>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       @for (item of (cases() || []); track item.id) {
-        <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:border-blue-300 transition-all">
+        <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:border-blue-300 transition-all cursor-pointer" [routerLink]="['/cases', item.id]">
           <div class="flex items-center gap-4 mb-6">
             <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
               <span nz-icon nzType="project" nzTheme="outline" class="text-xl"></span>
@@ -130,20 +135,20 @@
           <div class="space-y-4">
             <div>
               <h4 class="font-bold text-blue-600 uppercase text-sm tracking-wider mb-1">Muammo</h4>
-              <p class="text-gray-600">{{ item.problem }}</p>
+              <p class="text-gray-600 line-clamp-2">{{ item.problem }}</p>
             </div>
             <div>
               <h4 class="font-bold text-green-600 uppercase text-sm tracking-wider mb-1">Yechim</h4>
-              <p class="text-gray-600">{{ item.solution }}</p>
+              <p class="text-gray-600 line-clamp-2">{{ item.solution }}</p>
             </div>
             <div>
               <h4 class="font-bold text-purple-600 uppercase text-sm tracking-wider mb-1">Natija</h4>
-              <p class="text-gray-700 font-medium italic">"{{ item.result }}"</p>
+              <p class="text-gray-700 font-medium italic line-clamp-2">"{{ item.result }}"</p>
             </div>
           </div>
           <div class="mt-6 pt-6 border-t border-gray-200 flex justify-between items-center">
             <span class="text-gray-400 text-sm">{{ item.date | date:'MMMM, yyyy' }}</span>
-            <button nz-button nzType="link" class="p-0 font-bold">Batafsil<span nz-icon nzType="right"></span></button>
+            <span class="text-blue-600 font-bold hover:underline flex items-center">Batafsil<span nz-icon nzType="right" class="ml-1"></span></span>
           </div>
         </div>
       }
