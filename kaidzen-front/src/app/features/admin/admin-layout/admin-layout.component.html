@@ -1,31 +1,34 @@
-<div class="flex h-screen bg-gray-50">
+<div class="flex h-screen bg-gray-100">
   <!-- Sidebar -->
-  <aside class="w-64 bg-gray-900 text-white flex flex-col">
-    <div class="p-6 text-2xl font-bold border-b border-gray-800">
-      Kaidzen Admin
+  <aside class="w-64 bg-slate-900 text-white flex flex-col shadow-xl">
+    <div class="p-6 text-2xl font-bold border-b border-slate-700">
+      <span class="flex items-center gap-2">
+        <span nz-icon nzType="appstore" class="text-white"></span>
+        Kaidzen Admin
+      </span>
     </div>
-    <nav class="flex-1 p-4 space-y-2">
-      <a routerLink="./dashboard" routerLinkActive="bg-blue-600" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors">
-        <span nz-icon nzType="dashboard"></span> Dashbord
+    <nav class="flex-1 p-4 space-y-1">
+      <a routerLink="./dashboard" routerLinkActive="bg-slate-700" class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800 transition-all duration-200 text-white">
+        <span nz-icon nzType="dashboard" class="text-lg text-white"></span> Dashboard
       </a>
-      <a routerLink="./users" routerLinkActive="bg-blue-600" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors">
-        <span nz-icon nzType="team"></span> Foydalanuvchilar
+      <a routerLink="./users" routerLinkActive="bg-slate-700" class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800 transition-all duration-200 text-white">
+        <span nz-icon nzType="team" class="text-lg text-white"></span> Foydalanuvchilar
       </a>
-      <a routerLink="./tests" routerLinkActive="bg-blue-600" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors">
-        <span nz-icon nzType="solution"></span> Testlar
+      <a routerLink="./tests" routerLinkActive="bg-slate-700" class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800 transition-all duration-200 text-white">
+        <span nz-icon nzType="solution" class="text-lg text-white"></span> Testlar
       </a>
-      <a routerLink="./blog" routerLinkActive="bg-blue-600" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors">
-        <span nz-icon nzType="form"></span> Blog
+      <a routerLink="./blog" routerLinkActive="bg-slate-700" class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800 transition-all duration-200 text-white">
+        <span nz-icon nzType="form" class="text-lg text-white"></span> Blog
       </a>
-      <a routerLink="./cases" routerLinkActive="bg-blue-600" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors">
-        <span nz-icon nzType="project"></span> Keyslar
+      <a routerLink="./cases" routerLinkActive="bg-slate-700" class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800 transition-all duration-200 text-white">
+        <span nz-icon nzType="project" class="text-lg text-white"></span> Keyslar
       </a>
-      <a routerLink="./applications" routerLinkActive="bg-blue-600" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors">
-        <span nz-icon nzType="mail"></span> Arizalar
+      <a routerLink="./applications" routerLinkActive="bg-slate-700" class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800 transition-all duration-200 text-white">
+        <span nz-icon nzType="mail" class="text-lg text-white"></span> Arizalar
       </a>
     </nav>
-    <div class="p-4 border-t border-gray-800">
-      <button class="flex items-center gap-3 p-3 w-full rounded-lg hover:bg-red-600/20 text-red-400 transition-colors">
+    <div class="p-4 border-t border-slate-700">
+      <button (click)="logout()" class="flex items-center gap-3 p-3 w-full rounded-lg hover:bg-red-500/20 text-red-400 transition-all duration-200">
         <span nz-icon nzType="logout"></span> Chiqish
       </button>
     </div>

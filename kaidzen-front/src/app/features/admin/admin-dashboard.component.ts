@@ -1,8 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject, OnInit, ChangeDetectorRef } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { AdminUsersService } from './services/admin-users.service';
 import { AdminAppsService } from './services/admin-apps.service';
@@ -12,7 +11,7 @@ import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [NzGridModule, NzCardModule, NzStatisticModule, NzIconModule, DecimalPipe],
+  imports: [NzGridModule, NzCardModule, NzIconModule, RouterLink],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush

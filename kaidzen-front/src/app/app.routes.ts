@@ -23,7 +23,7 @@ export const routes: Routes = [
     path: 'admin',
     children: [
       {
-        path: '',
+        path: 'login',
         loadComponent: () => import('./features/admin/admin-login.component').then(m => m.AdminLoginComponent),
         title: 'Admin Login - Kaidzen.uz'
       },
@@ -32,6 +32,11 @@ export const routes: Routes = [
         component: AdminLayoutComponent,
         canActivate: [adminGuard],
         children: [
+          {
+            path: '',
+            redirectTo: 'dashboard',
+            pathMatch: 'full'
+          },
           {
             path: 'dashboard',
             loadComponent: () => import('./features/admin/admin-dashboard.component').then(m => m.AdminDashboardComponent),

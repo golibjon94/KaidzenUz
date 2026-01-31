@@ -14,6 +14,6 @@ export const adminGuard: CanActivateFn = (route, state) => {
   }
 
   // Agar foydalanuvchi login qilmagan yoki admin emas bo'lsa, login sahifasiga yo'naltirish
-  router.navigate(['/admin']);
+  router.navigate(['/admin/login']);
   return false;
 };

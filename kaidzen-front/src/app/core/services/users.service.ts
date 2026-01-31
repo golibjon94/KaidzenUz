@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { User, UpdateUserDto } from '../models/user.model';
 import { AuthStore } from '../stores/auth.store';
-import { tap } from 'rxjs';
+import { tap, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +27,9 @@ export class UsersService {
 
   // Admin endpoints
   getUsers() {
-    return this.http.get<User[]>(this.apiUrl);
+    return this.http.get<{data: User[]}>(this.apiUrl).pipe(
+      tap(res => console.log('Users response:', res)),
+      map(res => res.data)
+    );
   }
 }
