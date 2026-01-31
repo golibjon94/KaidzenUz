@@ -32,7 +32,7 @@ export class RegisterComponent {
 
   registerForm: FormGroup = this.fb.group({
     fullName: ['', [Validators.required, Validators.minLength(3)]],
-    phone: ['', [Validators.required]],
+    phone: ['', [Validators.required, Validators.pattern(/^\+998\d{9}$/)]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     address: ['']
   });

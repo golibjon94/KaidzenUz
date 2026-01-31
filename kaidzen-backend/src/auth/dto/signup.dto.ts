@@ -8,7 +8,7 @@ export class SignupDto {
   fullName: string;
 
   @ApiProperty({ example: '+998901234567' })
-  @IsPhoneNumber()
+  @IsPhoneNumber('UZ')
   @IsNotEmpty()
   phone: string;
 

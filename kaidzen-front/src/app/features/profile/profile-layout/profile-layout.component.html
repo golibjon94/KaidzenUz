@@ -1,4 +1,31 @@
-<app-header></app-header>
+<header class="bg-white border-b border-gray-100">
+  <nav class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+    <a routerLink="/">
+      <div class="flex items-center gap-2">
+        <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+          <span class="text-white font-bold text-xl">K</span>
+        </div>
+        <span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+          Kaidzen
+        </span>
+      </div>
+    </a>
+
+    <div class="flex items-center gap-4">
+      @if (authStore.isAuthenticated()) {
+        <div class="flex items-center gap-3">
+          <button class="font-medium flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors" routerLink="/profile">
+            <span nz-icon nzType="user"></span>
+            {{ authStore.user()?.fullName }}
+          </button>
+          <button class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors" (click)="logout()" title="Chiqish">
+            <span nz-icon nzType="logout"></span>
+          </button>
+        </div>
+      }
+    </div>
+  </nav>
+</header>
 
 <div class="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row gap-8">
   <!-- Sidebar -->

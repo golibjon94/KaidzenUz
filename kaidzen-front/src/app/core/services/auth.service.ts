@@ -12,8 +12,8 @@ import { tap, catchError } from 'rxjs';
 export class AuthService {
   private http = inject(HttpClient);
   private authStore = inject(AuthStore);
-  private apiUrl = `${environment.apiUrl}/auth`;
-  private usersUrl = `${environment.apiUrl}/users`;
+  private apiUrl = '/auth';
+  private usersUrl = '/users';
 
   getMe() {
     return this.http.get<{ data: User }>(`${this.usersUrl}/me`).pipe(
@@ -24,19 +24,19 @@ export class AuthService {
   }
 
   signup(data: SignupDto) {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/signup`, data).pipe(
+    return this.http.post<{ data: AuthResponse }>(`${this.apiUrl}/signup`, data).pipe(
       tap(res => {
-        this.authStore.setTokens(res.accessToken, res.refreshToken);
-        this.authStore.setUser(res.user);
+        this.authStore.setTokens(res.data.accessToken, res.data.refreshToken);
+        this.authStore.setUser(res.data.user);
       })
     );
   }
 
   login(data: LoginDto) {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, data).pipe(
+    return this.http.post<{ data: AuthResponse }>(`${this.apiUrl}/login`, data).pipe(
       tap(res => {
-        this.authStore.setTokens(res.accessToken, res.refreshToken);
-        this.authStore.setUser(res.user);
+        this.authStore.setTokens(res.data.accessToken, res.data.refreshToken);
+        this.authStore.setUser(res.data.user);
       })
     );
   }

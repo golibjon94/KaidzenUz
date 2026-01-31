@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class LoginDto {
   @ApiProperty({ example: '+998901234567' })
-  @IsPhoneNumber()
+  @IsPhoneNumber('UZ')
   @IsNotEmpty()
   phone: string;
 

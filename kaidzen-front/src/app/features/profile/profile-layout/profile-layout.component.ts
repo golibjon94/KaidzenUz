@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
@@ -10,7 +11,7 @@ import { AuthStore } from '../../../core/stores/auth.store';
 @Component({
   selector: 'app-profile-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, NzIconModule, NzAvatarModule, NzModalModule],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, NzIconModule, NzAvatarModule, NzModalModule],
   templateUrl: './profile-layout.component.html',
   styleUrl: './profile-layout.component.css',
 })

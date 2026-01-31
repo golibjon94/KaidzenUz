@@ -36,7 +36,7 @@ export class HeaderComponent {
   isLoading = signal(false);
 
   loginForm: FormGroup = this.fb.group({
-    phone: ['', [Validators.required]],
+    phone: ['', [Validators.required, Validators.pattern(/^\+998\d{9}$/)]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
