@@ -1,13 +1,16 @@
 <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100">
   <nav class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-    <div class="flex items-center gap-2">
-      <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-        <span class="text-white font-bold text-xl">K</span>
-      </div>
-      <span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+    <a href="/">
+      <div class="flex items-center gap-2">
+        <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+          <span class="text-white font-bold text-xl">K</span>
+        </div>
+        <span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
         Kaidzen
       </span>
-    </div>
+      </div>
+
+    </a>
 
     <div class="hidden md:flex items-center gap-8">
       <a href="#services" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">Xizmatlar</a>
@@ -17,8 +20,20 @@
     </div>
 
     <div class="flex items-center gap-4">
-      <button nz-button nzType="text" class="font-medium" (click)="showLoginModal()">Kirish</button>
-      <button nz-button nzType="primary" class="rounded-full px-6">Boshlash</button>
+      @if (authStore.isAuthenticated()) {
+        <div class="flex items-center gap-3">
+          <button nz-button nzType="text" class="font-medium flex items-center gap-2" (click)="goToProfile()">
+            <span nz-icon nzType="user"></span>
+            {{ authStore.user()?.fullName }}
+          </button>
+          <button nz-button nzType="text" nzDanger (click)="logout()" title="Chiqish">
+            <span nz-icon nzType="logout"></span>
+          </button>
+        </div>
+      } @else {
+        <button nz-button nzType="text" class="font-medium" (click)="showLoginModal()">Kirish</button>
+        <button nz-button nzType="primary" class="rounded-full px-6">Boshlash</button>
+      }
     </div>
   </nav>
 </header>

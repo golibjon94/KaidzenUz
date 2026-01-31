@@ -6,7 +6,9 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { AuthService } from '../../../../core/services/auth.service';
+import { AuthStore } from '../../../../core/stores/auth.store';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +18,8 @@ import { AuthService } from '../../../../core/services/auth.service';
     NzModalModule,
     NzFormModule,
     NzInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NzIconModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -26,6 +29,7 @@ export class HeaderComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   private message = inject(NzMessageService);
+  public authStore = inject(AuthStore);
 
   isLoginModalVisible = signal(false);
   isLoading = signal(false);
@@ -73,5 +77,21 @@ export class HeaderComponent {
   goToRegister() {
     this.isLoginModalVisible.set(false);
     this.router.navigate(['/auth/register']);
+  }
+
+  logout() {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.message.success('Tizimdan chiqdingiz');
+        this.router.navigate(['/']);
+      },
+      error: () => {
+        this.message.error('Xatolik yuz berdi');
+      }
+    });
+  }
+
+  goToProfile() {
+    this.router.navigate(['/profile']);
   }
 }
