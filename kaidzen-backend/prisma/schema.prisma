@@ -1,0 +1,192 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ApplicationStatus {
+  PENDING
+  CONTACTED
+  COMPLETED
+  REJECTED
+}
+
+enum BlogStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// ============================================
+// USER MANAGEMENT
+// ============================================
+
+model User {
+  id       String  @id @default(uuid())
+  fullName String  @map("full_name")
+  phone    String  @unique
+  password String
+  address  String?
+  role     Role    @default(USER)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  testResults   TestResult[]
+  refreshTokens RefreshToken[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+// ============================================
+// APPLICATION FORMS
+// ============================================
+
+model Application {
+  id          String            @id @default(uuid())
+  fullName    String            @map("full_name")
+  phone       String
+  companyName String?           @map("company_name")
+  message     String?
+  status      ApplicationStatus @default(PENDING)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("applications")
+}
+
+// ============================================
+// DIAGNOSTICS / TESTS
+// ============================================
+
+model Test {
+  id          String  @id @default(uuid())
+  title       String
+  slug        String  @unique
+  description String?
+  isActive    Boolean @default(true) @map("is_active")
+
+  questions   Question[]
+  resultLogic ResultLogic[]
+  testResults TestResult[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("tests")
+}
+
+model Question {
+  id     String @id @default(uuid())
+  testId String @map("test_id")
+  text   String
+  order  Int
+
+  options Option[]
+
+  test Test @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  @@map("questions")
+}
+
+model Option {
+  id         String @id @default(uuid())
+  questionId String @map("question_id")
+  text       String
+  score      Int
+  order      Int
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("options")
+}
+
+model ResultLogic {
+  id             String @id @default(uuid())
+  testId         String @map("test_id")
+  minScore       Int    @map("min_score")
+  maxScore       Int    @map("max_score")
+  resultText     String @map("result_text") @db.Text
+  recommendation String @db.Text
+
+  test Test @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  @@map("result_logic")
+}
+
+model TestResult {
+  id             String @id @default(uuid())
+  userId         String @map("user_id")
+  testId         String @map("test_id")
+  score          Int
+  resultText     String @map("result_text") @db.Text
+  recommendation String @db.Text
+  answers        Json
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  test Test @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  @@map("test_results")
+}
+
+// ============================================
+// BLOG / CONTENT
+// ============================================
+
+model BlogPost {
+  id      String     @id @default(uuid())
+  title   String
+  slug    String     @unique
+  image   String?
+  content String     @db.Text
+  status  BlogStatus @default(DRAFT)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("blog_posts")
+}
+
+// ============================================
+// BUSINESS CASES
+// ============================================
+
+model BusinessCase {
+  id       String   @id @default(uuid())
+  title    String
+  problem  String   @db.Text
+  solution String   @db.Text
+  result   String   @db.Text
+  date     DateTime
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("business_cases")
+}
