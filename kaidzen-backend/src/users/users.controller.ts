@@ -11,9 +11,11 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '@prisma/client';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('Users')
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

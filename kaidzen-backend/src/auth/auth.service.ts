@@ -38,7 +38,18 @@ export class AuthService {
       },
     });
 
-    return this.generateTokens(user.id, user.role);
+    const tokens = await this.generateTokens(user.id, user.role);
+    return {
+      ...tokens,
+      user: {
+        id: user.id,
+        fullName: user.fullName,
+        phone: user.phone,
+        address: user.address,
+        role: user.role,
+        createdAt: user.createdAt,
+      },
+    };
   }
 
   async login(dto: LoginDto) {
@@ -56,7 +67,18 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    return this.generateTokens(user.id, user.role);
+    const tokens = await this.generateTokens(user.id, user.role);
+    return {
+      ...tokens,
+      user: {
+        id: user.id,
+        fullName: user.fullName,
+        phone: user.phone,
+        address: user.address,
+        role: user.role,
+        createdAt: user.createdAt,
+      },
+    };
   }
 
   async refreshTokens(refreshToken: string) {

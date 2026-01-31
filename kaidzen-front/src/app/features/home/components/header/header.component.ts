@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -29,6 +29,7 @@ export class HeaderComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   private message = inject(NzMessageService);
+  private modal = inject(NzModalService);
   public authStore = inject(AuthStore);
 
   isLoginModalVisible = signal(false);
@@ -53,11 +54,19 @@ export class HeaderComponent {
       this.isLoading.set(true);
       this.authService.login(this.loginForm.value).subscribe({
         next: () => {
-          this.message.success('Tizimga muvaffaqiyatli kirdingiz!');
-          this.isLoginModalVisible.set(false);
-          this.loginForm.reset();
-          this.isLoading.set(false);
-          this.router.navigate(['/profile']);
+          this.authService.getMe().subscribe({
+            next: () => {
+              this.message.success('Tizimga muvaffaqiyatli kirdingiz!');
+              this.isLoginModalVisible.set(false);
+              this.loginForm.reset();
+              this.isLoading.set(false);
+              this.router.navigate(['/profile']);
+            },
+            error: () => {
+              this.message.error('Profil ma\'lumotlarini yuklashda xatolik!');
+              this.isLoading.set(false);
+            }
+          });
         },
         error: (err) => {
           this.message.error('Login yoki parol noto\'g\'ri!');
@@ -80,14 +89,23 @@ export class HeaderComponent {
   }
 
   logout() {
-    this.authService.logout().subscribe({
-      next: () => {
-        this.message.success('Tizimdan chiqdingiz');
-        this.router.navigate(['/']);
+    this.modal.confirm({
+      nzTitle: 'Tizimdan chiqish',
+      nzContent: 'Haqiqatan ham tizimdan chiqmoqchimisiz?',
+      nzOkText: 'Chiqish',
+      nzOkDanger: true,
+      nzOnOk: () => {
+        this.authService.logout().subscribe({
+          next: () => {
+            this.message.success('Tizimdan chiqdingiz');
+            this.router.navigate(['/']);
+          },
+          error: () => {
+            this.message.error('Xatolik yuz berdi');
+          }
+        });
       },
-      error: () => {
-        this.message.error('Xatolik yuz berdi');
-      }
+      nzCancelText: 'Bekor qilish'
     });
   }
 
