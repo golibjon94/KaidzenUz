@@ -23,7 +23,9 @@ export class BlogService {
   }
 
   getBySlug(slug: string) {
-    return this.http.get<BlogPost>(`${this.apiUrl}/${slug}`);
+    return this.http.get<{data: BlogPost}>(`${this.apiUrl}/${slug}`).pipe(
+      map(res => res.data)
+    );
   }
 
   // Admin methods

@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
@@ -19,7 +19,8 @@ import { AuthStore } from '../../../../core/stores/auth.store';
     NzFormModule,
     NzInputModule,
     ReactiveFormsModule,
-    NzIconModule
+    NzIconModule,
+    RouterLink
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',

@@ -46,7 +46,7 @@ export class BlogController {
   @Roles(Role.ADMIN)
   @Patch(':id')
   @ApiOperation({ summary: 'Update blog post (Admin only)' })
-  update(@Param('id') id: string, @Body() dto: any) {
+  update(@Param('id') id: string, @Body() dto: CreatePostDto) {
     return this.blogService.update(id, dto);
   }
 

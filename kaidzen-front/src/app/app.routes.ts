@@ -15,6 +15,16 @@ export const routes: Routes = [
         path: '',
         loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent),
         title: 'Kaidzen.uz - Biznes Diagnostika va Konsalting'
+      },
+      {
+        path: 'blog',
+        loadComponent: () => import('./features/blog/components/blog-list.component').then(m => m.BlogListComponent),
+        title: 'Blog - Kaidzen.uz'
+      },
+      {
+        path: 'blog/:slug',
+        loadComponent: () => import('./features/blog/components/blog-details.component').then(m => m.BlogDetailsComponent),
+        title: 'Blog - Kaidzen.uz'
       }
     ]
   },

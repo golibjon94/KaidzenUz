@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject, OnInit, signal } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -11,13 +12,13 @@ import { HomeService } from './services/home.service';
 import { BlogPost } from '../../core/models/blog.model';
 import { BusinessCase } from '../../core/models/case.model';
 import { Test } from '../../core/models/test.model';
-import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, NzButtonModule, NzIconModule, NzCardModule, NzTagModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterLink, NzButtonModule, NzIconModule, NzCardModule, NzTagModule, HeaderComponent, FooterComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -27,6 +28,8 @@ export class HomeComponent implements OnInit {
   private metaService = inject(Meta);
   private homeService = inject(HomeService);
   private router = inject(Router);
+
+  baseUrl = environment.apiUrl.replace('/api', '');
 
   services = [
     { title: 'Biznes Diagnostika', icon: 'pie-chart', desc: 'Sotuv, marketing va operatsion jarayonlarning chuqur tahlili.' },
@@ -48,7 +51,10 @@ export class HomeComponent implements OnInit {
   loadData() {
     this.homeService.getLatestPosts().pipe(
       catchError(() => of([]))
-    ).subscribe(posts => this.latestPosts.set(Array.isArray(posts) ? posts : []));
+    ).subscribe(posts => {
+      const p = Array.isArray(posts) ? posts : [];
+      this.latestPosts.set(p.slice(0, 3));
+    });
 
     this.homeService.getCases().pipe(
       catchError(() => of([]))

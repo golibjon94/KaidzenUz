@@ -1,0 +1,42 @@
+
+<app-header></app-header>
+<div class="bg-gray-50 min-h-screen py-12">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Blog</h1>
+      <p class="text-gray-600 text-lg">Biznesingiz uchun foydali maqolalar va yangiliklar.</p>
+    </div>
+
+    @if (loading()) {
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        @for (i of [1,2,3]; track i) {
+          <nz-card [nzLoading]="true"></nz-card>
+        }
+      </div>
+    } @else {
+      @if (posts().length === 0) {
+        <div class="text-center py-20 bg-white rounded-2xl shadow-sm">
+          <p class="text-gray-500 text-lg">Hozircha maqolalar mavjud emas.</p>
+        </div>
+      } @else {
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          @for (post of posts(); track post.id) {
+            <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-gray-100">
+              <img [src]="post.image ? baseUrl + post.image : 'https://images.unsplash.com/photo-1432888622747-4eb9a8f2c20e?auto=format&fit=crop&q=80&w=800'"
+                   class="w-full h-48 object-cover" [alt]="post.title">
+              <div class="p-6">
+                <h3 class="text-xl font-bold mb-3 line-clamp-2">{{ post.title }}</h3>
+                <p class="text-gray-600 mb-4 line-clamp-3">{{ post.content | slice:0:120 }}...</p>
+                <div class="flex items-center justify-between">
+                  <span class="text-gray-400 text-sm">{{ post.createdAt | date:'dd.MM.yyyy' }}</span>
+                  <a [routerLink]="['/blog', post.slug]" class="text-blue-600 font-bold hover:underline cursor-pointer">O'qish</a>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+</div>
+<app-footer></app-footer>

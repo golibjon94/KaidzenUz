@@ -1,0 +1,41 @@
+<app-header></app-header>
+
+<div class="bg-white min-h-screen py-12">
+  <div class="max-w-4xl mx-auto px-6">
+    @if (loading()) {
+      <nz-skeleton [nzActive]="true" [nzTitle]="true" [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+    } @else if (post()) {
+      <button nz-button nzType="link" routerLink="/blog" class="mb-8 p-0 flex items-center gap-2 text-gray-600 hover:text-blue-600">
+        <span nz-icon nzType="arrow-left"></span>Blogga qaytish
+      </button>
+
+      <article class="animate-fade-in">
+        <header class="mb-8">
+          <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">
+            {{ post()!.title }}
+          </h1>
+          <div class="flex items-center gap-4 text-gray-500">
+            <span class="flex items-center gap-2">
+              <span nz-icon nzType="calendar"></span>
+              {{ post()!.createdAt | date:'dd.MM.yyyy' }}
+            </span>
+          </div>
+        </header>
+
+        @if (post()!.image) {
+          <img [src]="baseUrl + post()!.image" class="w-full rounded-2xl shadow-lg mb-10 object-cover max-h-[500px]" [alt]="post()!.title">
+        }
+
+        <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
+          {{ post()!.content }}
+        </div>
+      </article>
+    } @else {
+      <div class="text-center py-20">
+        <h2 class="text-2xl font-bold text-gray-900">Maqola topilmadi</h2>
+        <button nz-button nzType="primary" routerLink="/blog" class="mt-4">Blogga qaytish</button>
+      </div>
+    }
+  </div>
+</div>
+<app-footer></app-footer>

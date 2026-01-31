@@ -89,18 +89,18 @@
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">So'nggi Maqolalar</h2>
         <p class="text-gray-600 text-lg">Biznesingiz uchun foydali maslahatlar va yangiliklar.</p>
       </div>
-      <button nz-button nzType="link" class="text-blue-600 font-semibold text-lg" ngSkipHydration>Barchasini ko'rish <span nz-icon nzType="arrow-right"></span></button>
+      <button nz-button nzType="link" class="text-blue-600 font-semibold text-lg" routerLink="/blog">Barchasini ko'rish<span nz-icon nzType="arrow-right"></span></button>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       @for (post of (latestPosts() || []); track post.id) {
         <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-gray-100">
-          <img [src]="post.image || 'https://images.unsplash.com/photo-1432888622747-4eb9a8f2c20e?auto=format&fit=crop&q=80&w=800'" class="w-full h-48 object-cover" [alt]="post.title">
+          <img [src]="post.image ? baseUrl + post.image : 'https://images.unsplash.com/photo-1432888622747-4eb9a8f2c20e?auto=format&fit=crop&q=80&w=800'" class="w-full h-48 object-cover" [alt]="post.title">
           <div class="p-6">
             <h3 class="text-xl font-bold mb-3 line-clamp-2">{{ post.title }}</h3>
             <p class="text-gray-600 mb-4 line-clamp-3">{{ post.content | slice:0:120 }}...</p>
             <div class="flex items-center justify-between">
               <span class="text-gray-400 text-sm">{{ post.createdAt | date:'dd.MM.yyyy' }}</span>
-              <a class="text-blue-600 font-bold hover:underline">O'qish</a>
+              <a [routerLink]="['/blog', post.slug]" class="text-blue-600 font-bold hover:underline cursor-pointer">O'qish</a>
             </div>
           </div>
         </div>
@@ -143,7 +143,7 @@
           </div>
           <div class="mt-6 pt-6 border-t border-gray-200 flex justify-between items-center">
             <span class="text-gray-400 text-sm">{{ item.date | date:'MMMM, yyyy' }}</span>
-            <button nz-button nzType="link" class="p-0 font-bold">Batafsil <span nz-icon nzType="right"></span></button>
+            <button nz-button nzType="link" class="p-0 font-bold">Batafsil<span nz-icon nzType="right"></span></button>
           </div>
         </div>
       }
