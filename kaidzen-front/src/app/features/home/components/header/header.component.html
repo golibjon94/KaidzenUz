@@ -23,11 +23,15 @@
       @if (authStore.isAuthenticated()) {
         <div class="flex items-center gap-3">
           <button nz-button nzType="text" class="font-medium flex items-center gap-2" (click)="goToProfile()">
-            <span nz-icon nzType="user"></span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+            </svg>
             {{ authStore.user()?.fullName }}
           </button>
           <button nz-button nzType="text" nzDanger (click)="logout()" title="Chiqish">
-            <span nz-icon nzType="logout"></span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+            </svg>
           </button>
         </div>
       } @else {
@@ -38,77 +42,82 @@
   </nav>
 </header>
 
-<!-- Login Modal -->
-<nz-modal
-  [(nzVisible)]="isLoginModalVisible"
-  nzTitle="Tizimga kirish"
-  [nzFooter]="null"
-  (nzOnCancel)="handleLoginCancel()"
-  nzWidth="400px"
->
-  <ng-container *nzModalContent>
-    <form nz-form [formGroup]="loginForm" (ngSubmit)="handleLogin()">
-      <nz-form-item>
-        <nz-form-label [nzSpan]="24" nzRequired>Telefon raqam</nz-form-label>
-        <nz-form-control [nzSpan]="24" [nzErrorTip]="phoneError">
-          <nz-input-group nzAddOnBefore="+998">
+<!-- Login Modal (Tailwind) -->
+@if (isLoginModalVisible()) {
+<div class="fixed inset-0 z-[100] flex items-center justify-center" role="dialog" aria-modal="true">
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" (click)="handleLoginCancel()"></div>
+
+  <!-- Modal Panel -->
+  <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform transition-all animate-scale-in">
+    <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+      <h3 class="text-xl font-bold text-gray-900">Tizimga kirish</h3>
+      <button (click)="handleLoginCancel()" class="text-gray-400 hover:text-gray-600 transition-colors rounded-full p-1 hover:bg-gray-100">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="p-6">
+      <form [formGroup]="loginForm" (ngSubmit)="handleLogin()" class="space-y-5">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Telefon raqam</label>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">+998</span>
             <input
-              nz-input
-              formControlName="phone"
-              placeholder="90 123 45 67"
               type="tel"
+              formControlName="phone"
+              class="w-full pl-14 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-gray-50 focus:bg-white"
+              placeholder="90 123 45 67"
               maxlength="9"
-            />
-          </nz-input-group>
-          <ng-template #phoneError>
-            @if (loginForm.get('phone')?.errors?.['required']) {
-              Telefon raqamni kiriting
-            } @else if (loginForm.get('phone')?.errors?.['pattern']) {
-              9 ta raqam kiriting (masalan: 901234567)
-            }
-          </ng-template>
-        </nz-form-control>
-      </nz-form-item>
+            >
+          </div>
+          @if (loginForm.get('phone')?.touched && loginForm.get('phone')?.invalid) {
+            <p class="text-red-500 text-xs mt-1 font-medium">
+              @if (loginForm.get('phone')?.errors?.['required']) { Telefon raqamni kiriting }
+              @else if (loginForm.get('phone')?.errors?.['pattern']) { 9 ta raqam kiriting }
+            </p>
+          }
+        </div>
 
-      <nz-form-item>
-        <nz-form-label [nzSpan]="24" nzRequired>Parol</nz-form-label>
-        <nz-form-control [nzSpan]="24" nzErrorTip="Parolni kiriting (kamida 6 ta belgi)">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Parol</label>
           <input
-            nz-input
-            formControlName="password"
-            placeholder="Parolingizni kiriting"
             type="password"
-          />
-        </nz-form-control>
-      </nz-form-item>
-
-      <nz-form-item>
-        <nz-form-control [nzSpan]="24">
-          <button
-            nz-button
-            nzType="primary"
-            nzBlock
-            [nzLoading]="isLoading()"
-            type="submit"
-            class="h-10"
+            formControlName="password"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-gray-50 focus:bg-white"
+            placeholder="Parolingizni kiriting"
           >
-            Kirish
-          </button>
-        </nz-form-control>
-      </nz-form-item>
+          @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
+            <p class="text-red-500 text-xs mt-1 font-medium">Parolni kiriting (kamida 6 ta belgi)</p>
+          }
+        </div>
 
-      <div class="text-center mt-4">
-        <span class="text-gray-600">Akkauntingiz yo'qmi? </span>
         <button
-          nz-button
-          nzType="link"
-          (click)="goToRegister()"
-          type="button"
-          class="p-0"
+          type="submit"
+          [disabled]="isLoading()"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center shadow-lg shadow-blue-600/20"
         >
-          Ro'yxatdan o'tish
+          @if (isLoading()) {
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Kirish...
+          } @else {
+            Kirish
+          }
         </button>
-      </div>
-    </form>
-  </ng-container>
-</nz-modal>
+
+        <div class="text-center pt-2">
+          <span class="text-gray-500 text-sm">Akkauntingiz yo'qmi? </span>
+          <button type="button" (click)="goToRegister()" class="text-blue-600 hover:text-blue-800 font-bold text-sm hover:underline">
+            Ro'yxatdan o'tish
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+}

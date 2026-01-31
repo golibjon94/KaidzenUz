@@ -21,7 +21,8 @@ import { catchError, of } from 'rxjs';
   imports: [CommonModule, RouterLink, NzButtonModule, NzIconModule, NzCardModule, NzTagModule, HeaderComponent, FooterComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { 'ngSkipHydration': 'true' }
 })
 export class HomeComponent implements OnInit {
   private titleService = inject(Title);

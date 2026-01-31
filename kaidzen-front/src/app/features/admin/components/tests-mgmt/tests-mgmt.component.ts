@@ -50,7 +50,7 @@ interface Test {
     NzTabsModule,
     NzPopconfirmModule,
     NzCardModule,
-    NzDividerModule
+    NzDividerModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './tests-mgmt.component.html',

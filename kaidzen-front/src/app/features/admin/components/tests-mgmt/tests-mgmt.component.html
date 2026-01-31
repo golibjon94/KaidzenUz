@@ -1,7 +1,7 @@
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
   <div class="p-6 border-b border-gray-100 flex items-center justify-between">
     <h3 class="text-lg font-bold">Testlar boshqaruvi</h3>
-    <button nz-button nzType="primary" (click)="showModal()">
+    <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center gap-2 transition-colors" (click)="showModal()">
       <span nz-icon nzType="plus"></span> Yangi test
     </button>
   </div>
@@ -67,178 +67,211 @@
   }
 </div>
 
-<nz-modal
-  [(nzVisible)]="isVisible"
-  [nzTitle]="editMode() ? 'Testni tahrirlash' : 'Yangi test yaratish'"
-  (nzOnCancel)="handleCancel()"
-  (nzOnOk)="submitForm()"
-  [nzOkLoading]="isSubmitting()"
-  nzWidth="900px"
-  nzCentered
->
-  <ng-container *nzModalContent>
-    <form [formGroup]="testForm" nz-form nzLayout="vertical">
-      <div class="grid grid-cols-2 gap-4">
-        <nz-form-item>
-          <nz-form-label nzRequired>Test nomi</nz-form-label>
-          <nz-form-control nzErrorTip="Iltimos nomini kiriting">
-            <input nz-input formControlName="title" placeholder="Test nomi" />
-          </nz-form-control>
-        </nz-form-item>
+<!-- Custom Tailwind Modal -->
+@if (isVisible()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true">
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" (click)="handleCancel()"></div>
 
-        <nz-form-item>
-          <nz-form-label nzRequired>Slug (URL)</nz-form-label>
-          <nz-form-control nzErrorTip="Iltimos slug kiriting">
-            <input nz-input formControlName="slug" placeholder="test-nomi" />
-          </nz-form-control>
-        </nz-form-item>
+    <!-- Modal Panel -->
+    <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden animate-scale-in">
+      <!-- Header -->
+      <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50 shrink-0">
+        <h3 class="text-xl font-bold text-gray-800">{{ editMode() ? 'Testni tahrirlash' : 'Yangi test yaratish' }}</h3>
+        <button (click)="handleCancel()" class="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100">
+          <span nz-icon nzType="close" nzTheme="outline" class="text-lg"></span>
+        </button>
       </div>
 
-      <nz-form-item>
-        <nz-form-label>Tavsif</nz-form-label>
-        <nz-form-control>
-          <textarea nz-input formControlName="description" rows="3" placeholder="Test haqida qisqacha"></textarea>
-        </nz-form-control>
-      </nz-form-item>
+      <!-- Content -->
+      <div class="p-6 overflow-y-auto grow">
+        <form [formGroup]="testForm" nz-form nzLayout="vertical">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+            <nz-form-item class="mb-0">
+              <nz-form-label nzRequired>Test nomi</nz-form-label>
+              <nz-form-control nzErrorTip="Iltimos nomini kiriting">
+                <input nz-input formControlName="title" placeholder="Test nomi" class="rounded-lg" />
+              </nz-form-control>
+            </nz-form-item>
 
-      <nz-form-item>
-        <nz-form-label>Holati</nz-form-label>
-        <nz-form-control>
-          <nz-switch formControlName="isActive"></nz-switch>
-          <span class="ml-2">Faol (saytda ko'rinadi)</span>
-        </nz-form-control>
-      </nz-form-item>
+            <nz-form-item class="mb-0">
+              <nz-form-label nzRequired>Slug (URL)</nz-form-label>
+              <nz-form-control nzErrorTip="Iltimos slug kiriting">
+                <input nz-input formControlName="slug" placeholder="test-nomi" class="rounded-lg" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
 
-      <nz-tabset>
-        <nz-tab [nzTitle]="questionsTitle">
-          <ng-template #questionsTitle>
-            <span nz-icon nzType="question-circle"></span> Savollar ({{ questions.length }})
-          </ng-template>
+          <nz-form-item class="mb-4">
+            <nz-form-label>Tavsif</nz-form-label>
+            <nz-form-control>
+              <textarea nz-input formControlName="description" rows="3" placeholder="Test haqida qisqacha" class="rounded-lg"></textarea>
+            </nz-form-control>
+          </nz-form-item>
 
-          <div class="max-h-[500px] overflow-y-auto pr-2">
-            <div formArrayName="questions">
-              @for (question of questions.controls; track $index) {
-                <div [formGroupName]="$index" class="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-200 relative group hover:border-blue-300 transition-colors">
-                  <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
-                    <h4 class="font-bold text-gray-700 flex items-center">
-                      <span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">#{{ $index + 1 }}</span>
-                      Savol
-                    </h4>
-                    <button nz-button nzType="text" nzDanger (click)="removeQuestion($index)" nz-tooltip="Savolni o'chirish">
-                      <span nz-icon nzType="delete"></span>
-                    </button>
-                  </div>
+          <nz-form-item class="mb-6">
+            <nz-form-label>Holati</nz-form-label>
+            <nz-form-control>
+              <div class="flex items-center gap-3">
+                <nz-switch formControlName="isActive"></nz-switch>
+                <span class="text-gray-600">Faol (saytda ko'rinadi)</span>
+              </div>
+            </nz-form-control>
+          </nz-form-item>
 
-                  <div class="grid grid-cols-12 gap-4 mb-4">
-                    <div class="col-span-10">
-                      <nz-form-item class="mb-0">
-                        <nz-form-control nzErrorTip="Savol matni kiritilishi shart">
-                          <input nz-input formControlName="text" placeholder="Savol matni" />
-                        </nz-form-control>
-                      </nz-form-item>
-                    </div>
-                    <div class="col-span-2">
-                      <nz-form-item class="mb-0">
-                        <nz-form-control>
-                          <nz-input-number formControlName="order" [nzMin]="1" class="w-full" placeholder="Tartib"></nz-input-number>
-                        </nz-form-control>
-                      </nz-form-item>
-                    </div>
-                  </div>
+          <nz-tabset [nzType]="'card'" [nzAnimated]="false">
+            <nz-tab [nzTitle]="questionsTitle">
+              <ng-template #questionsTitle>
+                <div class="flex items-center gap-2">
+                  <span nz-icon nzType="question-circle"></span>
+                  <span>Savollar ({{ questions.length }})</span>
+                </div>
+              </ng-template>
 
-                  <div formArrayName="options" class="pl-4 border-l-2 border-blue-100 bg-white p-3 rounded-r-lg">
-                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Variantlar</p>
-
-                    @for (option of getOptions($index).controls; track optionIndex; let optionIndex = $index) {
-                      <div [formGroupName]="optionIndex" class="flex gap-2 mb-3 items-start">
-                        <nz-form-item class="flex-1 mb-0">
-                          <nz-form-control nzErrorTip="Variant matni kerak">
-                            <input nz-input formControlName="text" placeholder="Variant matni" />
-                          </nz-form-control>
-                        </nz-form-item>
-
-                        <nz-form-item class="mb-0" style="width: 100px">
-                          <nz-form-control>
-                            <nz-input-number formControlName="score" [nzMin]="0" placeholder="Ball" class="w-full"></nz-input-number>
-                          </nz-form-control>
-                        </nz-form-item>
-
-                        <button nz-button nzType="text" nzDanger (click)="removeOption($index, optionIndex)" class="mt-1">
-                          <span nz-icon nzType="minus-circle"></span>
+              <div class="max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                <div formArrayName="questions">
+                  @for (question of questions.controls; track $index) {
+                    <div [formGroupName]="$index" class="bg-gray-50 p-5 rounded-xl mb-6 border border-gray-200 relative group hover:border-blue-300 transition-all shadow-sm">
+                      <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-200">
+                        <h4 class="font-bold text-gray-700 flex items-center text-base">
+                          <span class="bg-blue-100 text-blue-800 text-xs font-bold mr-3 px-2.5 py-1 rounded-md">#{{ $index + 1 }}</span>
+                          Savol
+                        </h4>
+                        <button type="button" class="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-full transition-colors" (click)="removeQuestion($index)" title="Savolni o'chirish">
+                          <span nz-icon nzType="delete"></span>
                         </button>
                       </div>
-                    }
 
-                    <button nz-button nzType="dashed" nzSize="small" class="w-full mt-2" (click)="addOption($index)">
-                      <span nz-icon nzType="plus"></span> Variant qo'shish
-                    </button>
-                  </div>
+                      <div class="grid grid-cols-12 gap-4 mb-5">
+                        <div class="col-span-12 md:col-span-10">
+                          <nz-form-item class="mb-0">
+                            <nz-form-control nzErrorTip="Savol matni kiritilishi shart">
+                              <input nz-input formControlName="text" placeholder="Savol matni" class="rounded-lg" />
+                            </nz-form-control>
+                          </nz-form-item>
+                        </div>
+                        <div class="col-span-12 md:col-span-2">
+                          <nz-form-item class="mb-0">
+                            <nz-form-control>
+                              <nz-input-number formControlName="order" [nzMin]="1" class="w-full rounded-lg" placeholder="Tartib"></nz-input-number>
+                            </nz-form-control>
+                          </nz-form-item>
+                        </div>
+                      </div>
+
+                      <div formArrayName="options" class="pl-4 border-l-4 border-blue-100 bg-white p-4 rounded-r-xl shadow-inner">
+                        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+                          <span nz-icon nzType="unordered-list"></span> Variantlar
+                        </p>
+
+                        @for (option of getOptions($index).controls; track optionIndex; let optionIndex = $index) {
+                          <div [formGroupName]="optionIndex" class="flex gap-3 mb-3 items-start">
+                            <nz-form-item class="flex-1 mb-0">
+                              <nz-form-control nzErrorTip="Variant matni kerak">
+                                <input nz-input formControlName="text" placeholder="Variant matni" class="rounded-lg" />
+                              </nz-form-control>
+                            </nz-form-item>
+
+                            <nz-form-item class="mb-0 w-24">
+                              <nz-form-control>
+                                <nz-input-number formControlName="score" [nzMin]="0" placeholder="Ball" class="w-full rounded-lg"></nz-input-number>
+                              </nz-form-control>
+                            </nz-form-item>
+
+                            <button type="button" class="text-red-400 hover:text-red-600 mt-1 p-1" (click)="removeOption($index, optionIndex)">
+                              <span nz-icon nzType="minus-circle" class="text-lg"></span>
+                            </button>
+                          </div>
+                        }
+
+                        <button type="button" class="mt-2 text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center gap-1 px-2 py-1 rounded hover:bg-blue-50 transition-colors" (click)="addOption($index)">
+                          <span nz-icon nzType="plus"></span> Variant qo'shish
+                        </button>
+                      </div>
+                    </div>
+                  }
+
+                  <button type="button" class="w-full py-4 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50 transition-all flex items-center justify-center gap-2 font-semibold text-lg" (click)="addQuestion()">
+                    <span nz-icon nzType="plus-circle"></span> Yangi savol qo'shish
+                  </button>
                 </div>
-              }
+              </div>
+            </nz-tab>
 
-              <button nz-button nzType="dashed" class="w-full py-3 flex items-center justify-center gap-2 text-lg" (click)="addQuestion()">
-                <span nz-icon nzType="plus"></span> Yangi savol qo'shish
-              </button>
-            </div>
-          </div>
-        </nz-tab>
-
-        <nz-tab [nzTitle]="logicTitle">
-          <ng-template #logicTitle>
-            <span nz-icon nzType="aim"></span> Natijalar ({{ resultLogic.length }})
-          </ng-template>
-
-          <div class="max-h-[500px] overflow-y-auto pr-2">
-            <div formArrayName="resultLogic">
-              @for (logic of resultLogic.controls; track $index) {
-                <div [formGroupName]="$index" class="bg-gray-50 p-4 rounded-lg mb-4 border border-gray-200 hover:border-green-300 transition-colors">
-                  <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
-                    <h4 class="font-bold text-gray-700 flex items-center">
-                      <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Natija #{{ $index + 1 }}</span>
-                    </h4>
-                    <button nz-button nzType="text" nzDanger (click)="removeResultLogic($index)">
-                      <span nz-icon nzType="delete"></span>
-                    </button>
-                  </div>
-
-                  <div class="grid grid-cols-2 gap-4 mb-4 bg-white p-3 rounded border border-gray-100">
-                    <nz-form-item class="mb-0">
-                      <nz-form-label nzNoColon>Min Ball</nz-form-label>
-                      <nz-form-control>
-                        <nz-input-number formControlName="minScore" [nzMin]="0" class="w-full"></nz-input-number>
-                      </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item class="mb-0">
-                      <nz-form-label nzNoColon>Max Ball</nz-form-label>
-                      <nz-form-control>
-                        <nz-input-number formControlName="maxScore" [nzMin]="0" class="w-full"></nz-input-number>
-                      </nz-form-control>
-                    </nz-form-item>
-                  </div>
-
-                  <nz-form-item>
-                    <nz-form-label>Natija matni</nz-form-label>
-                    <nz-form-control nzErrorTip="Natija matni kiritilishi shart">
-                      <textarea nz-input formControlName="resultText" rows="2" placeholder="Sizning natijangiz..."></textarea>
-                    </nz-form-control>
-                  </nz-form-item>
-
-                  <nz-form-item class="mb-0">
-                    <nz-form-label>Tavsiya</nz-form-label>
-                    <nz-form-control nzErrorTip="Tavsiya kiritilishi shart">
-                      <textarea nz-input formControlName="recommendation" rows="3" placeholder="Bizning tavsiyamiz..."></textarea>
-                    </nz-form-control>
-                  </nz-form-item>
+            <nz-tab [nzTitle]="logicTitle">
+              <ng-template #logicTitle>
+                <div class="flex items-center gap-2">
+                  <span nz-icon nzType="aim"></span>
+                  <span>Natijalar ({{ resultLogic.length }})</span>
                 </div>
-              }
+              </ng-template>
 
-              <button nz-button nzType="dashed" class="w-full py-3 flex items-center justify-center gap-2 text-lg" (click)="addResultLogic()">
-                <span nz-icon nzType="plus"></span> Natija logikasi qo'shish
-              </button>
-            </div>
-          </div>
-        </nz-tab>
-      </nz-tabset>
-    </form>
-  </ng-container>
-</nz-modal>
+              <div class="max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                <div formArrayName="resultLogic">
+                  @for (logic of resultLogic.controls; track $index) {
+                    <div [formGroupName]="$index" class="bg-gray-50 p-5 rounded-xl mb-4 border border-gray-200 hover:border-green-300 transition-all shadow-sm">
+                      <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-200">
+                        <h4 class="font-bold text-gray-700 flex items-center">
+                          <span class="bg-green-100 text-green-800 text-xs font-bold mr-3 px-2.5 py-1 rounded-md">Natija #{{ $index + 1 }}</span>
+                        </h4>
+                        <button type="button" class="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-full transition-colors" (click)="removeResultLogic($index)">
+                          <span nz-icon nzType="delete"></span>
+                        </button>
+                      </div>
+
+                      <div class="grid grid-cols-2 gap-4 mb-4 bg-white p-4 rounded-lg border border-gray-100">
+                        <nz-form-item class="mb-0">
+                          <nz-form-label nzNoColon class="font-semibold">Min Ball</nz-form-label>
+                          <nz-form-control>
+                            <nz-input-number formControlName="minScore" [nzMin]="0" class="w-full rounded-lg"></nz-input-number>
+                          </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item class="mb-0">
+                          <nz-form-label nzNoColon class="font-semibold">Max Ball</nz-form-label>
+                          <nz-form-control>
+                            <nz-input-number formControlName="maxScore" [nzMin]="0" class="w-full rounded-lg"></nz-input-number>
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+
+                      <nz-form-item>
+                        <nz-form-label class="font-semibold">Natija matni</nz-form-label>
+                        <nz-form-control nzErrorTip="Natija matni kiritilishi shart">
+                          <textarea nz-input formControlName="resultText" rows="2" placeholder="Sizning natijangiz..." class="rounded-lg"></textarea>
+                        </nz-form-control>
+                      </nz-form-item>
+
+                      <nz-form-item class="mb-0">
+                        <nz-form-label class="font-semibold">Tavsiya</nz-form-label>
+                        <nz-form-control nzErrorTip="Tavsiya kiritilishi shart">
+                          <textarea nz-input formControlName="recommendation" rows="3" placeholder="Bizning tavsiyamiz..." class="rounded-lg"></textarea>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                  }
+
+                  <button type="button" class="w-full py-4 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-green-500 hover:text-green-600 hover:bg-green-50 transition-all flex items-center justify-center gap-2 font-semibold text-lg" (click)="addResultLogic()">
+                    <span nz-icon nzType="plus-circle"></span> Natija logikasi qo'shish
+                  </button>
+                </div>
+              </div>
+            </nz-tab>
+          </nz-tabset>
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="px-6 py-4 border-t border-gray-100 bg-gray-50/50 flex justify-end gap-3 shrink-0">
+        <button type="button" class="px-6 py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors" (click)="handleCancel()">
+          Bekor qilish
+        </button>
+        <button type="button" class="px-6 py-2.5 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2" (click)="submitForm()" [disabled]="isSubmitting()">
+          @if (isSubmitting()) {
+            <span nz-icon nzType="loading"></span>
+          }
+          Saqlash
+        </button>
+      </div>
+    </div>
+  </div>
+}
