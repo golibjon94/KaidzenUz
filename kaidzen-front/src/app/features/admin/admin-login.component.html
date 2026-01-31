@@ -17,14 +17,24 @@
           <nz-form-label [nzSpan]="24" nzRequired class="text-base font-semibold">
             Telefon raqam
           </nz-form-label>
-          <nz-form-control [nzSpan]="24" nzErrorTip="Telefon raqamni kiriting">
-            <input
-              nz-input
-              formControlName="phone"
-              placeholder="+998 90 123 45 67"
-              type="tel"
-              class="h-12 text-base"
-            />
+          <nz-form-control [nzSpan]="24" [nzErrorTip]="phoneError">
+            <nz-input-group nzAddOnBefore="+998" class="h-12">
+              <input
+                nz-input
+                formControlName="phone"
+                placeholder="90 123 45 67"
+                type="tel"
+                maxlength="9"
+                class="text-base"
+              />
+            </nz-input-group>
+            <ng-template #phoneError>
+              @if (loginForm.get('phone')?.errors?.['required']) {
+                Telefon raqamni kiriting
+              } @else if (loginForm.get('phone')?.errors?.['pattern']) {
+                9 ta raqam kiriting (masalan: 901234567)
+              }
+            </ng-template>
           </nz-form-control>
         </nz-form-item>
 

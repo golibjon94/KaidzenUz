@@ -30,17 +30,20 @@
         <nz-form-item>
           <nz-form-label [nzSpan]="24" nzRequired>Telefon raqam</nz-form-label>
           <nz-form-control [nzSpan]="24" [nzErrorTip]="phoneError">
-            <input
-              nz-input
-              formControlName="phone"
-              placeholder="+998 90 123 45 67"
-              type="tel"
-            />
+            <nz-input-group nzAddOnBefore="+998">
+              <input
+                nz-input
+                formControlName="phone"
+                placeholder="90 123 45 67"
+                type="tel"
+                maxlength="9"
+              />
+            </nz-input-group>
             <ng-template #phoneError>
               @if (registerForm.get('phone')?.errors?.['required']) {
                 Telefon raqamni kiriting
               } @else if (registerForm.get('phone')?.errors?.['pattern']) {
-                Noto'g'ri format (+998XXXXXXXXX kutilmoqda)
+                9 ta raqam kiriting (masalan: 901234567)
               }
             </ng-template>
           </nz-form-control>

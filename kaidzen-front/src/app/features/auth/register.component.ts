@@ -32,7 +32,7 @@ export class RegisterComponent {
 
   registerForm: FormGroup = this.fb.group({
     fullName: ['', [Validators.required, Validators.minLength(3)]],
-    phone: ['', [Validators.required, Validators.pattern(/^\+998\d{9}$/)]],
+    phone: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     address: ['']
   });
@@ -40,7 +40,11 @@ export class RegisterComponent {
   handleRegister() {
     if (this.registerForm.valid) {
       this.isLoading.set(true);
-      this.authService.signup(this.registerForm.value).subscribe({
+      const registerData = {
+        ...this.registerForm.value,
+        phone: `+998${this.registerForm.value.phone}`
+      };
+      this.authService.signup(registerData).subscribe({
         next: () => {
           this.message.success('Ro\'yxatdan o\'tish muvaffaqiyatli amalga oshirildi!');
           this.isLoading.set(false);

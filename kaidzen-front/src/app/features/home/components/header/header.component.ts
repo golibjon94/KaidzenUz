@@ -36,7 +36,7 @@ export class HeaderComponent {
   isLoading = signal(false);
 
   loginForm: FormGroup = this.fb.group({
-    phone: ['', [Validators.required, Validators.pattern(/^\+998\d{9}$/)]],
+    phone: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
@@ -52,7 +52,11 @@ export class HeaderComponent {
   handleLogin() {
     if (this.loginForm.valid) {
       this.isLoading.set(true);
-      this.authService.login(this.loginForm.value).subscribe({
+      const loginData = {
+        ...this.loginForm.value,
+        phone: `+998${this.loginForm.value.phone}`
+      };
+      this.authService.login(loginData).subscribe({
         next: () => {
           this.authService.getMe().subscribe({
             next: () => {
