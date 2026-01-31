@@ -6,33 +6,39 @@
     </button>
   </div>
 
-  <nz-table #blogTable [nzData]="posts" [nzLoading]="loading">
-    <thead>
-      <tr>
-        <th>Sarlavha</th>
-        <th>Slug</th>
-        <th>Status</th>
-        <th>Yaratilgan</th>
-        <th>Amallar</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (data of blogTable.data; track data.id) {
+  @if (!loading() && posts().length === 0) {
+    <div class="p-8 text-center">
+      <nz-empty nzNotFoundContent="Hozircha maqolalar yo'q"></nz-empty>
+    </div>
+  } @else {
+    <nz-table #blogTable [nzData]="posts()" [nzLoading]="loading()">
+      <thead>
         <tr>
-          <td>{{ data.title }}</td>
-          <td>{{ data.slug }}</td>
-          <td>
-            <nz-tag [nzColor]="data.status === 'PUBLISHED' ? 'green' : 'orange'">
-              {{ data.status }}
-            </nz-tag>
-          </td>
-          <td>{{ data.createdAt | date:'dd.MM.yyyy' }}</td>
-          <td>
-            <a class="text-blue-600 hover:text-blue-800 mr-4">Tahrirlash</a>
-            <a (click)="deletePost(data.id)" class="text-red-600 hover:text-red-800 cursor-pointer">O'chirish</a>
-          </td>
+          <th>Sarlavha</th>
+          <th>Slug</th>
+          <th>Status</th>
+          <th>Yaratilgan</th>
+          <th>Amallar</th>
         </tr>
-      }
-    </tbody>
-  </nz-table>
+      </thead>
+      <tbody>
+        @for (data of blogTable.data; track data.id) {
+          <tr>
+            <td>{{ data.title }}</td>
+            <td>{{ data.slug }}</td>
+            <td>
+              <nz-tag [nzColor]="data.status === 'PUBLISHED' ? 'green' : 'orange'">
+                {{ data.status }}
+              </nz-tag>
+            </td>
+            <td>{{ data.createdAt | date:'dd.MM.yyyy' }}</td>
+            <td>
+              <a class="text-blue-600 hover:text-blue-800 mr-4">Tahrirlash</a>
+              <a (click)="deletePost(data.id)" class="text-red-600 hover:text-red-800 cursor-pointer">O'chirish</a>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </nz-table>
+  }
 </div>

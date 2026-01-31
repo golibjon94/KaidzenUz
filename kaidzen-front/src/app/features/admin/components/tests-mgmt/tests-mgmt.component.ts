@@ -1,10 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { environment } from '../../../../../environments/environment';
 
 interface Test {
@@ -18,29 +19,31 @@ interface Test {
 @Component({
   selector: 'app-tests-mgmt',
   standalone: true,
-  imports: [CommonModule, NzTableModule, NzButtonModule, NzTagModule, NzIconModule],
+  imports: [CommonModule, NzTableModule, NzButtonModule, NzTagModule, NzIconModule, NzEmptyModule],
   templateUrl: './tests-mgmt.component.html',
   styleUrl: './tests-mgmt.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestsMgmtComponent implements OnInit {
   private http = inject(HttpClient);
 
-  tests: Test[] = [];
-  loading = true;
+  tests = signal<Test[]>([]);
+  loading = signal(true);
 
   ngOnInit() {
     this.loadTests();
   }
 
   loadTests() {
-    this.loading = true;
-    this.http.get<Test[]>(`${environment.apiUrl}/tests`).subscribe({
-      next: (data) => {
-        this.tests = data;
-        this.loading = false;
+    this.loading.set(true);
+    this.http.get<{data: Test[]}>(`${environment.apiUrl}/tests`).subscribe({
+      next: (res) => {
+        this.tests.set(res.data || []);
+        this.loading.set(false);
       },
       error: () => {
-        this.loading = false;
+        this.tests.set([]);
+        this.loading.set(false);
       }
     });
   }

@@ -9,33 +9,39 @@
     </div>
   </div>
 
-  <nz-table #basicTable [nzData]="users" [nzLoading]="loading">
-    <thead>
-      <tr>
-        <th>F.I.SH</th>
-        <th>Telefon</th>
-        <th>Roli</th>
-        <th>Ro'yxatdan o'tgan</th>
-        <th>Amallar</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (data of basicTable.data; track data.id) {
+  @if (!loading() && users().length === 0) {
+    <div class="p-8 text-center">
+      <nz-empty nzNotFoundContent="Hozircha foydalanuvchilar yo'q"></nz-empty>
+    </div>
+  } @else {
+    <nz-table #basicTable [nzData]="users()" [nzLoading]="loading()">
+      <thead>
         <tr>
-          <td>{{ data.fullName }}</td>
-          <td>{{ data.phone }}</td>
-          <td>
-            <nz-tag [nzColor]="data.role === 'ADMIN' ? 'red' : 'blue'">
-              {{ data.role }}
-            </nz-tag>
-          </td>
-          <td>{{ data.createdAt | date:'dd.MM.yyyy HH:mm' }}</td>
-          <td>
-            <a class="text-blue-600 hover:text-blue-800 mr-4">Tahrirlash</a>
-            <a class="text-red-600 hover:text-red-800">O'chirish</a>
-          </td>
+          <th>F.I.SH</th>
+          <th>Telefon</th>
+          <th>Roli</th>
+          <th>Ro'yxatdan o'tgan</th>
+          <th>Amallar</th>
         </tr>
-      }
-    </tbody>
-  </nz-table>
+      </thead>
+      <tbody>
+        @for (data of basicTable.data; track data.id) {
+          <tr>
+            <td>{{ data.fullName }}</td>
+            <td>{{ data.phone }}</td>
+            <td>
+              <nz-tag [nzColor]="data.role === 'ADMIN' ? 'red' : 'blue'">
+                {{ data.role }}
+              </nz-tag>
+            </td>
+            <td>{{ data.createdAt | date:'dd.MM.yyyy HH:mm' }}</td>
+            <td>
+              <a class="text-blue-600 hover:text-blue-800 mr-4">Tahrirlash</a>
+              <a class="text-red-600 hover:text-red-800">O'chirish</a>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </nz-table>
+  }
 </div>

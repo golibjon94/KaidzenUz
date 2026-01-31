@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { BlogPost, CreatePostDto } from '../models/blog.model';
 import { BlogStatus } from '../models/enums';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,9 @@ export class BlogService {
     if (status) {
       params = params.set('status', status);
     }
-    return this.http.get<BlogPost[]>(this.apiUrl, { params });
+    return this.http.get<{data: BlogPost[]}>(this.apiUrl, { params }).pipe(
+      map(res => res.data || [])
+    );
   }
 
   getBySlug(slug: string) {

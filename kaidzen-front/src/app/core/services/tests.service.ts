@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Test, TestResult, SubmitTestDto } from '../models/test.model';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,9 @@ export class TestsService {
   private apiUrl = `${environment.apiUrl}/tests`;
 
   getTests() {
-    return this.http.get<Test[]>(this.apiUrl);
+    return this.http.get<{data: Test[]}>(this.apiUrl).pipe(
+      map(res => res.data || [])
+    );
   }
 
   getBySlug(slug: string) {

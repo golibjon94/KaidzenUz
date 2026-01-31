@@ -6,29 +6,35 @@
     </button>
   </div>
 
-  <nz-table #testsTable [nzData]="tests" [nzLoading]="loading">
-    <thead>
-      <tr>
-        <th>Nomi</th>
-        <th>Slug</th>
-        <th>Tavsif</th>
-        <th>Yaratilgan</th>
-        <th>Amallar</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (data of testsTable.data; track data.id) {
+  @if (!loading() && tests().length === 0) {
+    <div class="p-8 text-center">
+      <nz-empty nzNotFoundContent="Hozircha testlar yo'q"></nz-empty>
+    </div>
+  } @else {
+    <nz-table #testsTable [nzData]="tests()" [nzLoading]="loading()">
+      <thead>
         <tr>
-          <td>{{ data.title }}</td>
-          <td><code class="bg-gray-100 px-2 py-1 rounded text-sm">{{ data.slug }}</code></td>
-          <td class="max-w-xs truncate">{{ data.description }}</td>
-          <td>{{ data.createdAt | date:'dd.MM.yyyy' }}</td>
-          <td>
-            <a class="text-blue-600 hover:text-blue-800 mr-4">Tahrirlash</a>
-            <a class="text-red-600 hover:text-red-800 cursor-pointer">O'chirish</a>
-          </td>
+          <th>Nomi</th>
+          <th>Slug</th>
+          <th>Tavsif</th>
+          <th>Yaratilgan</th>
+          <th>Amallar</th>
         </tr>
-      }
-    </tbody>
-  </nz-table>
+      </thead>
+      <tbody>
+        @for (data of testsTable.data; track data.id) {
+          <tr>
+            <td>{{ data.title }}</td>
+            <td><code class="bg-gray-100 px-2 py-1 rounded text-sm">{{ data.slug }}</code></td>
+            <td class="max-w-xs truncate">{{ data.description }}</td>
+            <td>{{ data.createdAt | date:'dd.MM.yyyy' }}</td>
+            <td>
+              <a class="text-blue-600 hover:text-blue-800 mr-4">Tahrirlash</a>
+              <a class="text-red-600 hover:text-red-800 cursor-pointer">O'chirish</a>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </nz-table>
+  }
 </div>

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Application, CreateApplicationDto } from '../models/application.model';
 import { ApplicationStatus } from '../models/enums';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,9 @@ export class ApplicationsService {
 
   // Admin methods
   getApplications() {
-    return this.http.get<Application[]>(this.apiUrl);
+    return this.http.get<{data: Application[]}>(this.apiUrl).pipe(
+      map(res => res.data || [])
+    );
   }
 
   updateStatus(id: string, status: ApplicationStatus) {
