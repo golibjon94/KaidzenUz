@@ -1,0 +1,86 @@
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
+  <div class="w-full max-w-md">
+    <!-- Logo va Sarlavha -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl shadow-lg mb-4">
+        <span class="text-3xl font-bold text-blue-600">K</span>
+      </div>
+      <h1 class="text-3xl font-bold text-white mb-2">Admin Panel</h1>
+      <p class="text-blue-100">Tizimga kirish uchun ma'lumotlaringizni kiriting</p>
+    </div>
+
+    <!-- Login Card -->
+    <nz-card class="shadow-2xl rounded-2xl overflow-hidden">
+      <form nz-form [formGroup]="loginForm" (ngSubmit)="handleLogin()" class="space-y-6">
+        <!-- Telefon raqam -->
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired class="text-base font-semibold">
+            Telefon raqam
+          </nz-form-label>
+          <nz-form-control [nzSpan]="24" nzErrorTip="Telefon raqamni kiriting">
+            <input
+              nz-input
+              formControlName="phone"
+              placeholder="+998 90 123 45 67"
+              type="tel"
+              class="h-12 text-base"
+            />
+          </nz-form-control>
+        </nz-form-item>
+
+        <!-- Parol -->
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired class="text-base font-semibold">
+            Parol
+          </nz-form-label>
+          <nz-form-control [nzSpan]="24" nzErrorTip="Parolni kiriting (kamida 6 ta belgi)">
+            <input
+              nz-input
+              formControlName="password"
+              placeholder="Parolingizni kiriting"
+              type="password"
+              class="h-12 text-base"
+            />
+          </nz-form-control>
+        </nz-form-item>
+
+        <!-- Login tugmasi -->
+        <nz-form-item class="mb-0">
+          <nz-form-control [nzSpan]="24">
+            <button
+              nz-button
+              nzType="primary"
+              nzBlock
+              nzSize="large"
+              [nzLoading]="isLoading()"
+              type="submit"
+              class="h-12 text-base font-semibold"
+            >
+              Kirish
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+
+        <!-- Bosh sahifaga qaytish -->
+        <div class="text-center pt-4 border-t border-gray-100">
+          <button
+            nz-button
+            nzType="link"
+            (click)="goToHome()"
+            type="button"
+            class="text-gray-600 hover:text-blue-600"
+          >
+            ← Bosh sahifaga qaytish
+          </button>
+        </div>
+      </form>
+    </nz-card>
+
+    <!-- Xavfsizlik xabari -->
+    <div class="mt-6 text-center">
+      <p class="text-blue-100 text-sm">
+        🔒 Bu sahifa faqat tizim administratorlari uchun mo'ljallangan
+      </p>
+    </div>
+  </div>
+</div>

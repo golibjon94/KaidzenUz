@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { AdminLayoutComponent } from './features/admin/admin-layout/admin-layout.component';
 import { ProfileLayoutComponent } from './features/profile/profile-layout/profile-layout.component';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   // Home Page (Landing)
@@ -17,45 +18,51 @@ export const routes: Routes = [
     ]
   },
 
-  // Admin Dashboard
+  // Admin Routes
   {
     path: 'admin',
-    component: AdminLayoutComponent,
     children: [
       {
         path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
+        loadComponent: () => import('./features/admin/admin-login.component').then(m => m.AdminLoginComponent),
+        title: 'Admin Login - Kaidzen.uz'
       },
       {
-        path: 'dashboard',
-        loadComponent: () => import('./features/admin/admin-dashboard.component').then(m => m.AdminDashboardComponent),
-        title: 'Admin Dashboard - Kaidzen.uz'
-      },
-      {
-        path: 'users',
-        loadComponent: () => import('./features/admin/components/users-list/users-list.component').then(m => m.UsersListComponent),
-        title: 'Foydalanuvchilar - Kaidzen.uz'
-      },
-      {
-        path: 'tests',
-        loadComponent: () => import('./features/admin/components/tests-mgmt/tests-mgmt.component').then(m => m.TestsMgmtComponent),
-        title: 'Testlar boshqaruvi - Kaidzen.uz'
-      },
-      {
-        path: 'blog',
-        loadComponent: () => import('./features/admin/components/blog-mgmt/blog-mgmt.component').then(m => m.BlogMgmtComponent),
-        title: 'Blog boshqaruvi - Kaidzen.uz'
-      },
-      {
-        path: 'cases',
-        loadComponent: () => import('./features/admin/components/cases-mgmt/cases-mgmt.component').then(m => m.CasesMgmtComponent),
-        title: 'Keyslar boshqaruvi - Kaidzen.uz'
-      },
-      {
-        path: 'applications',
-        loadComponent: () => import('./features/admin/components/apps-list/apps-list.component').then(m => m.AppsListComponent),
-        title: 'Arizalar - Kaidzen.uz'
+        path: '',
+        component: AdminLayoutComponent,
+        canActivate: [adminGuard],
+        children: [
+          {
+            path: 'dashboard',
+            loadComponent: () => import('./features/admin/admin-dashboard.component').then(m => m.AdminDashboardComponent),
+            title: 'Admin Dashboard - Kaidzen.uz'
+          },
+          {
+            path: 'users',
+            loadComponent: () => import('./features/admin/components/users-list/users-list.component').then(m => m.UsersListComponent),
+            title: 'Foydalanuvchilar - Kaidzen.uz'
+          },
+          {
+            path: 'tests',
+            loadComponent: () => import('./features/admin/components/tests-mgmt/tests-mgmt.component').then(m => m.TestsMgmtComponent),
+            title: 'Testlar boshqaruvi - Kaidzen.uz'
+          },
+          {
+            path: 'blog',
+            loadComponent: () => import('./features/admin/components/blog-mgmt/blog-mgmt.component').then(m => m.BlogMgmtComponent),
+            title: 'Blog boshqaruvi - Kaidzen.uz'
+          },
+          {
+            path: 'cases',
+            loadComponent: () => import('./features/admin/components/cases-mgmt/cases-mgmt.component').then(m => m.CasesMgmtComponent),
+            title: 'Keyslar boshqaruvi - Kaidzen.uz'
+          },
+          {
+            path: 'applications',
+            loadComponent: () => import('./features/admin/components/apps-list/apps-list.component').then(m => m.AppsListComponent),
+            title: 'Arizalar - Kaidzen.uz'
+          }
+        ]
       }
     ]
   },
