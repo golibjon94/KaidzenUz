@@ -6,7 +6,7 @@ import { Role } from '@prisma/client';
 import { Public } from '../common/decorators/public.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 
-@ApiTags('Business CasesService')
+@ApiTags('Business Cases')
 @Controller('cases')
 export class CasesController {
   constructor(private readonly casesService: CasesService) {}

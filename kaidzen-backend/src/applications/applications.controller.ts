@@ -6,7 +6,7 @@ import { ApplicationStatus, Role } from '@prisma/client';
 import { Public } from '../common/decorators/public.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 
-@ApiTags('ApplicationsService')
+@ApiTags('Applications')
 @Controller('applications')
 export class ApplicationsController {
   constructor(private readonly applicationsService: ApplicationsService) {}
