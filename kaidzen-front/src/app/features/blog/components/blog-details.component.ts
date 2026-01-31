@@ -26,15 +26,15 @@ export class BlogDetailsComponent implements OnInit {
   baseUrl = environment.apiUrl.replace('/api', '');
 
   ngOnInit() {
-    const slug = this.route.snapshot.paramMap.get('slug');
-    if (slug) {
-      this.loadPost(slug);
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.loadPost(id);
     }
   }
 
-  loadPost(slug: string) {
+  loadPost(id: string) {
     this.loading.set(true);
-    this.blogService.getBySlug(slug).subscribe({
+    this.blogService.getById(id).subscribe({
       next: (data) => {
         this.post.set(data);
         this.loading.set(false);

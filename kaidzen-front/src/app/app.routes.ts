@@ -22,7 +22,7 @@ export const routes: Routes = [
         title: 'Blog - Kaidzen.uz'
       },
       {
-        path: 'blog/:slug',
+        path: 'blog/:id',
         loadComponent: () => import('./features/blog/components/blog-details.component').then(m => m.BlogDetailsComponent),
         title: 'Blog - Kaidzen.uz'
       }

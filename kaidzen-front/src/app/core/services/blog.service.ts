@@ -28,6 +28,12 @@ export class BlogService {
     );
   }
 
+  getById(id: string) {
+    return this.http.get<{data: BlogPost}>(`${this.apiUrl}/${id}`).pipe(
+      map(res => res.data)
+    );
+  }
+
   // Admin methods
   createPost(data: CreatePostDto) {
     return this.http.post<BlogPost>(this.apiUrl, data);
