@@ -11,6 +11,7 @@ import { HomeService } from './services/home.service';
 import { BlogPost } from '../../core/models/blog.model';
 import { BusinessCase } from '../../core/models/case.model';
 import { Test } from '../../core/models/test.model';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -43,8 +44,16 @@ export class HomeComponent implements OnInit {
   }
 
   loadData() {
-    this.homeService.getLatestPosts().subscribe(posts => this.latestPosts.set(posts));
-    this.homeService.getCases().subscribe(cases => this.cases.set(cases));
-    this.homeService.getTests().subscribe(tests => this.tests.set(tests));
+    this.homeService.getLatestPosts().pipe(
+      catchError(() => of([]))
+    ).subscribe(posts => this.latestPosts.set(posts || []));
+
+    this.homeService.getCases().pipe(
+      catchError(() => of([]))
+    ).subscribe(cases => this.cases.set(cases || []));
+
+    this.homeService.getTests().pipe(
+      catchError(() => of([]))
+    ).subscribe(tests => this.tests.set(tests || []));
   }
 }

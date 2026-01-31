@@ -1,12 +1,77 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [NzButtonModule],
+  imports: [
+    NzButtonModule,
+    NzModalModule,
+    NzFormModule,
+    NzInputModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
 export class HeaderComponent {
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private message = inject(NzMessageService);
+
+  isLoginModalVisible = signal(false);
+  isLoading = signal(false);
+
+  loginForm: FormGroup = this.fb.group({
+    phone: ['', [Validators.required]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
+  });
+
+  showLoginModal() {
+    this.isLoginModalVisible.set(true);
+  }
+
+  handleLoginCancel() {
+    this.isLoginModalVisible.set(false);
+    this.loginForm.reset();
+  }
+
+  handleLogin() {
+    if (this.loginForm.valid) {
+      this.isLoading.set(true);
+      this.authService.login(this.loginForm.value).subscribe({
+        next: () => {
+          this.message.success('Tizimga muvaffaqiyatli kirdingiz!');
+          this.isLoginModalVisible.set(false);
+          this.loginForm.reset();
+          this.isLoading.set(false);
+          this.router.navigate(['/profile']);
+        },
+        error: (err) => {
+          this.message.error('Login yoki parol noto\'g\'ri!');
+          this.isLoading.set(false);
+        }
+      });
+    } else {
+      Object.values(this.loginForm.controls).forEach(control => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
+  }
+
+  goToRegister() {
+    this.isLoginModalVisible.set(false);
+    this.router.navigate(['/auth/register']);
+  }
 }

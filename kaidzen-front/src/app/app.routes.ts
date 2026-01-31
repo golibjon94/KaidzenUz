@@ -83,12 +83,15 @@ export const routes: Routes = [
     ]
   },
 
-  // AuthService (Hozircha bo'sh)
+  // Auth Routes
   {
     path: 'auth',
-    loadChildren: () => [
-        { path: 'login', loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent) },
-        { path: 'register', loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent) }
+    children: [
+      {
+        path: 'register',
+        loadComponent: () => import('./features/auth/register.component').then(m => m.RegisterComponent),
+        title: 'Ro\'yxatdan o\'tish - Kaidzen.uz'
+      }
     ]
   },
 

@@ -1,0 +1,91 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center py-12 px-4">
+  <div class="max-w-md w-full">
+    <div class="text-center mb-8">
+      <div class="flex items-center justify-center gap-2 mb-4">
+        <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+          <span class="text-white font-bold text-2xl">K</span>
+        </div>
+        <span class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+          Kaidzen
+        </span>
+      </div>
+      <h1 class="text-2xl font-bold text-gray-900 mb-2">Ro'yxatdan o'tish</h1>
+      <p class="text-gray-600">Yangi akkaunt yaratish uchun ma'lumotlaringizni kiriting</p>
+    </div>
+
+    <nz-card class="shadow-xl">
+      <form nz-form [formGroup]="registerForm" (ngSubmit)="handleRegister()">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>To'liq ism</nz-form-label>
+          <nz-form-control [nzSpan]="24" nzErrorTip="To'liq ismingizni kiriting (kamida 3 ta belgi)">
+            <input
+              nz-input
+              formControlName="fullName"
+              placeholder="Ism Familiya"
+              type="text"
+            />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>Telefon raqam</nz-form-label>
+          <nz-form-control [nzSpan]="24" nzErrorTip="Telefon raqamni kiriting">
+            <input
+              nz-input
+              formControlName="phone"
+              placeholder="+998 90 123 45 67"
+              type="tel"
+            />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>Parol</nz-form-label>
+          <nz-form-control [nzSpan]="24" nzErrorTip="Parolni kiriting (kamida 6 ta belgi)">
+            <input
+              nz-input
+              formControlName="password"
+              placeholder="Parolingizni kiriting"
+              type="password"
+            />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24">Manzil</nz-form-label>
+          <nz-form-control [nzSpan]="24">
+            <input
+              nz-input
+              formControlName="address"
+              placeholder="Manzilingizni kiriting (ixtiyoriy)"
+              type="text"
+            />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control [nzSpan]="24">
+            <button
+              nz-button
+              nzType="primary"
+              nzBlock
+              nzSize="large"
+              [nzLoading]="isLoading()"
+              type="submit"
+              class="h-12"
+            >
+              Ro'yxatdan o'tish
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+
+        <div class="text-center mt-4">
+          <span class="text-gray-600">Akkauntingiz bormi? </span>
+          <a routerLink="/" class="text-blue-600 hover:text-blue-800 font-medium">
+            Bosh sahifaga qaytish
+          </a>
+        </div>
+      </form>
+    </nz-card>
+  </div>
+</div>
