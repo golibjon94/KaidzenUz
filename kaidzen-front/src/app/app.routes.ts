@@ -3,6 +3,7 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout.component
 import { AdminLayoutComponent } from './features/admin/admin-layout/admin-layout.component';
 import { ProfileLayoutComponent } from './features/profile/profile-layout/profile-layout.component';
 import { adminGuard } from './core/guards/admin.guard';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   // Home Page (Landing)
@@ -76,6 +77,7 @@ export const routes: Routes = [
   {
     path: 'profile',
     component: ProfileLayoutComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: '',

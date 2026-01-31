@@ -11,6 +11,7 @@ import { HomeService } from './services/home.service';
 import { BlogPost } from '../../core/models/blog.model';
 import { BusinessCase } from '../../core/models/case.model';
 import { Test } from '../../core/models/test.model';
+import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
 
 @Component({
@@ -25,6 +26,7 @@ export class HomeComponent implements OnInit {
   private titleService = inject(Title);
   private metaService = inject(Meta);
   private homeService = inject(HomeService);
+  private router = inject(Router);
 
   services = [
     { title: 'Biznes Diagnostika', icon: 'pie-chart', desc: 'Sotuv, marketing va operatsion jarayonlarning chuqur tahlili.' },
@@ -55,5 +57,14 @@ export class HomeComponent implements OnInit {
     this.homeService.getTests().pipe(
       catchError(() => of([]))
     ).subscribe(tests => this.tests.set(Array.isArray(tests) ? tests : []));
+  }
+
+  goToTests() {
+    this.router.navigate(['/profile/tests']);
+  }
+
+  scrollToServices() {
+    const el = document.getElementById('services');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
   }
 }

@@ -1,12 +1,28 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzResultModule } from 'ng-zorro-antd/result';
+import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
+import { FormsModule } from '@angular/forms';
 import { TestsService } from '../../../../core/services/tests.service';
 import { Test, TestResult, SubmitTestDto } from '../../../../core/models/test.model';
 
 @Component({
   selector: 'app-user-tests',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    NzCardModule,
+    NzButtonModule,
+    NzIconModule,
+    NzRadioModule,
+    NzResultModule,
+    NzSkeletonModule
+  ],
   templateUrl: './user-tests.component.html',
   styleUrl: './user-tests.component.css',
 })

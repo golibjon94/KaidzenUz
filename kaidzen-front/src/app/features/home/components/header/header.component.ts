@@ -116,4 +116,8 @@ export class HeaderComponent {
   goToProfile() {
     this.router.navigate(['/profile']);
   }
+
+  goToTests() {
+    this.router.navigate(['/profile/tests']);
+  }
 }

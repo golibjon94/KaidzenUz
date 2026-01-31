@@ -11,10 +11,10 @@
         Professional biznes diagnostika va konsalting xizmatlari yordamida kompaniyangizdagi muammolarni aniqlang va samaradorlikni oshiring.
       </p>
       <div class="flex flex-wrap gap-4">
-        <button nz-button nzType="primary" nzSize="large" class="h-14 px-8 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all">
+        <button nz-button nzType="primary" nzSize="large" class="h-14 px-8 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all" (click)="goToTests()">
           Diagnostikadan o'ting
         </button>
-        <button nz-button nzType="default" nzSize="large" class="h-14 px-8 rounded-full text-lg font-semibold">
+        <button nz-button nzType="default" nzSize="large" class="h-14 px-8 rounded-full text-lg font-semibold" (click)="scrollToServices()">
           Batafsil ma'lumot
         </button>
       </div>
@@ -74,7 +74,7 @@
         <nz-card [nzHoverable]="true" class="rounded-2xl overflow-hidden border-gray-100">
           <h3 class="text-xl font-bold mb-3">{{ test.title }}</h3>
           <p class="text-gray-500 mb-6">{{ test.description | slice:0:100 }}...</p>
-          <button nz-button nzType="primary" nzBlock class="rounded-lg h-12 font-semibold">Testni boshlash</button>
+          <button nz-button nzType="primary" nzBlock class="rounded-lg h-12 font-semibold" (click)="goToTests()">Testni boshlash</button>
         </nz-card>
       }
     </div>
@@ -102,6 +102,48 @@
               <span class="text-gray-400 text-sm">{{ post.createdAt | date:'dd.MM.yyyy' }}</span>
               <a class="text-blue-600 font-bold hover:underline">O'qish</a>
             </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Cases Section -->
+<section id="cases" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex items-center justify-between mb-16">
+      <div>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Biznes Keyslar</h2>
+        <p class="text-gray-600 text-lg">Muvaffaqiyatli amalga oshirilgan loyihalarimizdan namunalar.</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      @for (item of (cases() || []); track item.id) {
+        <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:border-blue-300 transition-all">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+              <span nz-icon nzType="project" nzTheme="outline" class="text-xl"></span>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900">{{ item.title }}</h3>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <h4 class="font-bold text-blue-600 uppercase text-sm tracking-wider mb-1">Muammo</h4>
+              <p class="text-gray-600">{{ item.problem }}</p>
+            </div>
+            <div>
+              <h4 class="font-bold text-green-600 uppercase text-sm tracking-wider mb-1">Yechim</h4>
+              <p class="text-gray-600">{{ item.solution }}</p>
+            </div>
+            <div>
+              <h4 class="font-bold text-purple-600 uppercase text-sm tracking-wider mb-1">Natija</h4>
+              <p class="text-gray-700 font-medium italic">"{{ item.result }}"</p>
+            </div>
+          </div>
+          <div class="mt-6 pt-6 border-t border-gray-200 flex justify-between items-center">
+            <span class="text-gray-400 text-sm">{{ item.date | date:'MMMM, yyyy' }}</span>
+            <button nz-button nzType="link" class="p-0 font-bold">Batafsil <span nz-icon nzType="right"></span></button>
           </div>
         </div>
       }
