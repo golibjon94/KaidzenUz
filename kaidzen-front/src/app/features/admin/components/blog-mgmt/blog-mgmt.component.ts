@@ -1,12 +1,47 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { AdminBlogService } from '../../services/admin-blog.service';
+import { BlogPost } from '../../../../core/models/blog.model';
 
 @Component({
   selector: 'app-blog-mgmt',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, NzTableModule, NzButtonModule, NzTagModule, NzIconModule],
   templateUrl: './blog-mgmt.component.html',
   styleUrl: './blog-mgmt.component.css',
 })
-export class BlogMgmtComponent {
+export class BlogMgmtComponent implements OnInit {
+  private blogService = inject(AdminBlogService);
 
+  posts: BlogPost[] = [];
+  loading = true;
+
+  ngOnInit() {
+    this.loadPosts();
+  }
+
+  loadPosts() {
+    this.loading = true;
+    this.blogService.getPosts().subscribe({
+      next: (data) => {
+        this.posts = data;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      }
+    });
+  }
+
+  deletePost(id: string) {
+    if (confirm('Rostdan ham ushbu maqolani o\'chirmoqchimisiz?')) {
+      this.blogService.deletePost(id).subscribe(() => {
+        this.loadPosts();
+      });
+    }
+  }
 }

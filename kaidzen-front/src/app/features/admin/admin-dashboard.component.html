@@ -4,7 +4,7 @@
   <div nz-col [nzSpan]="6">
     <nz-card>
       <nz-statistic
-        [nzValue]="(125 | number)!"
+        [nzValue]="(stats.usersCount | number)!"
         [nzTitle]="'Jami foydalanuvchilar'"
         [nzPrefix]="prefixUsers"
         [nzValueStyle]="{ color: '#3F8600' }"
@@ -15,31 +15,31 @@
   <div nz-col [nzSpan]="6">
     <nz-card>
       <nz-statistic
-        [nzValue]="(48 | number)!"
-        [nzTitle]="'Diagnostikalar'"
+        [nzValue]="(stats.appsCount | number)!"
+        [nzTitle]="'Arizalar'"
         [nzPrefix]="prefixDiag"
       ></nz-statistic>
-      <ng-template #prefixDiag><span nz-icon nzType="solution"></span></ng-template>
+      <ng-template #prefixDiag><span nz-icon nzType="mail"></span></ng-template>
+    </nz-card>
+  </div>
+  <div nz-col [nzSpan]="6">
+    <nz-card>
+      <nz-statistic
+        [nzValue]="(stats.postsCount | number)!"
+        [nzTitle]="'Maqolalar'"
+        [nzPrefix]="prefixCons"
+      ></nz-statistic>
+      <ng-template #prefixCons><span nz-icon nzType="form"></span></ng-template>
     </nz-card>
   </div>
   <div nz-col [nzSpan]="6">
     <nz-card>
       <nz-statistic
         [nzValue]="(12 | number)!"
-        [nzTitle]="'Konsultantlar'"
-        [nzPrefix]="prefixCons"
-      ></nz-statistic>
-      <ng-template #prefixCons><span nz-icon nzType="user"></span></ng-template>
-    </nz-card>
-  </div>
-  <div nz-col [nzSpan]="6">
-    <nz-card>
-      <nz-statistic
-        [nzValue]="(15600000 | number)!"
-        nzTitle="Daromad (so'm)"
+        nzTitle="Konsultantlar"
         [nzPrefix]="prefixMoney"
       ></nz-statistic>
-      <ng-template #prefixMoney><span nz-icon nzType="pay-circle"></span></ng-template>
+      <ng-template #prefixMoney><span nz-icon nzType="user"></span></ng-template>
     </nz-card>
   </div>
 </div>

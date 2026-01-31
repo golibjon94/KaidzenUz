@@ -1,3 +1,11 @@
+export interface CreateCaseDto {
+  title: string;
+  problem: string;
+  solution: string;
+  result: string;
+  date: string;
+}
+
 export interface BusinessCase {
   id: string;
   title: string;

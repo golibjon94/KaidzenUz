@@ -1,28 +1,32 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { User } from '../models/user.model';
+import { User, UpdateUserDto } from '../models/user.model';
+import { AuthStore } from '../stores/auth.store';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersService {
   private http = inject(HttpClient);
+  private authStore = inject(AuthStore);
   private apiUrl = `${environment.apiUrl}/users`;
 
-  getAll() {
+  getMe() {
+    return this.http.get<User>(`${this.apiUrl}/me`).pipe(
+      tap(user => this.authStore.setUser(user))
+    );
+  }
+
+  updateMe(data: UpdateUserDto) {
+    return this.http.patch<User>(`${this.apiUrl}/me`, data).pipe(
+      tap(user => this.authStore.setUser(user))
+    );
+  }
+
+  // Admin endpoints
+  getUsers() {
     return this.http.get<User[]>(this.apiUrl);
-  }
-
-  getById(id: string) {
-    return this.http.get<User>(`${this.apiUrl}/${id}`);
-  }
-
-  update(id: string, data: Partial<User>) {
-    return this.http.patch<User>(`${this.apiUrl}/${id}`, data);
-  }
-
-  delete(id: string) {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

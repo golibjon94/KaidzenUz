@@ -1,12 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-
-export interface User {
-  id: string;
-  fullName: string;
-  phone: string;
-  role: 'USER' | 'ADMIN';
-  address?: string;
-}
+import { User } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
@@ -28,6 +21,8 @@ export class AuthStore {
   // Computed signals
   readonly user = this._user.asReadonly();
   readonly loading = this._loading.asReadonly();
+  readonly accessToken = this._accessToken.asReadonly();
+  readonly refreshToken = this._refreshToken.asReadonly();
   readonly isAuthenticated = computed(() => this._accessToken() !== null);
   readonly isAdmin = computed(() => this._user()?.role === 'ADMIN');
 

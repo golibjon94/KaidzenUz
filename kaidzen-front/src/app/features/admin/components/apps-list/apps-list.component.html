@@ -1,1 +1,36 @@
-<p>apps-list works!</p>
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+  <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+    <h3 class="text-lg font-bold">Mijozlar arizalari</h3>
+  </div>
+
+  <nz-table #appsTable [nzData]="apps" [nzLoading]="loading">
+    <thead>
+      <tr>
+        <th>F.I.SH</th>
+        <th>Telefon</th>
+        <th>Kompaniya</th>
+        <th>Xabar</th>
+        <th>Status</th>
+        <th>Yuborilgan</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (data of appsTable.data; track data.id) {
+        <tr>
+          <td>{{ data.fullName }}</td>
+          <td>{{ data.phone }}</td>
+          <td>{{ data.companyName || '-' }}</td>
+          <td>{{ data.message | slice:0:30 }}...</td>
+          <td>
+            <nz-select [ngModel]="data.status" (ngModelChange)="updateStatus(data.id, $event)" nzSize="small" class="w-32">
+              @for (st of statuses; track st) {
+                <nz-option [nzValue]="st" [nzLabel]="st"></nz-option>
+              }
+            </nz-select>
+          </td>
+          <td>{{ data.createdAt | date:'dd.MM.yyyy HH:mm' }}</td>
+        </tr>
+      }
+    </tbody>
+  </nz-table>
+</div>

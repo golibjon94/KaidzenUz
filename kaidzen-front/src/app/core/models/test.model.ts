@@ -1,3 +1,11 @@
+export interface SubmitTestDto {
+  testId: string;
+  answers: Array<{
+    questionId: string;
+    optionId: string;
+  }>;
+}
+
 export interface Option {
   id: string;
   questionId: string;

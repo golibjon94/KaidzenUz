@@ -41,6 +41,21 @@ export const routes: Routes = [
         path: 'tests',
         loadComponent: () => import('./features/admin/components/tests-mgmt/tests-mgmt.component').then(m => m.TestsMgmtComponent),
         title: 'Testlar boshqaruvi - Kaidzen.uz'
+      },
+      {
+        path: 'blog',
+        loadComponent: () => import('./features/admin/components/blog-mgmt/blog-mgmt.component').then(m => m.BlogMgmtComponent),
+        title: 'Blog boshqaruvi - Kaidzen.uz'
+      },
+      {
+        path: 'cases',
+        loadComponent: () => import('./features/admin/components/cases-mgmt/cases-mgmt.component').then(m => m.CasesMgmtComponent),
+        title: 'Keyslar boshqaruvi - Kaidzen.uz'
+      },
+      {
+        path: 'applications',
+        loadComponent: () => import('./features/admin/components/apps-list/apps-list.component').then(m => m.AppsListComponent),
+        title: 'Arizalar - Kaidzen.uz'
       }
     ]
   },

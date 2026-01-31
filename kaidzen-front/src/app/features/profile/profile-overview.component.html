@@ -1,19 +1,21 @@
-<div class="flex items-center gap-6 mb-8 pb-8 border-b">
-  <nz-avatar [nzSize]="100" nzIcon="user" class="bg-blue-600"></nz-avatar>
-  <div>
-    <h1 class="text-3xl font-bold text-gray-900">G'ulom Turaqulov</h1>
-    <p class="text-gray-500 text-lg">+998 90 123 45 67</p>
-    <nz-tag nzColor="blue" class="mt-2">Tadbirkor</nz-tag>
+@if (user()) {
+  <div class="flex items-center gap-6 mb-8 pb-8 border-b">
+    <nz-avatar [nzSize]="100" nzIcon="user" class="bg-blue-600"></nz-avatar>
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">{{ user()?.fullName }}</h1>
+      <p class="text-gray-500 text-lg">{{ user()?.phone }}</p>
+      <nz-tag nzColor="blue" class="mt-2">{{ user()?.role }}</nz-tag>
+    </div>
   </div>
-</div>
 
-<nz-descriptions nzTitle="Shaxsiy ma'lumotlar" nzBordered>
-  <nz-descriptions-item nzTitle="F.I.SH">G'ulom Turaqulov</nz-descriptions-item>
-  <nz-descriptions-item nzTitle="Telefon">+998 90 123 45 67</nz-descriptions-item>
-  <nz-descriptions-item nzTitle="Manzil">Toshkent shahri, Chilonzor tumani</nz-descriptions-item>
-  <nz-descriptions-item nzTitle="Ro'yxatdan o'tilgan sana">2026-01-31</nz-descriptions-item>
-  <nz-descriptions-item nzTitle="Status"><nz-tag nzColor="green">Faol</nz-tag></nz-descriptions-item>
-</nz-descriptions>
+  <nz-descriptions nzTitle="Shaxsiy ma'lumotlar" nzBordered>
+    <nz-descriptions-item nzTitle="F.I.SH">{{ user()?.fullName }}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Telefon">{{ user()?.phone }}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Manzil">{{ user()?.address || 'Kiritilmagan' }}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Ro'yxatdan o'tilgan sana">{{ user()?.createdAt | date:'dd.MM.yyyy' }}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Status"><nz-tag nzColor="green">Faol</nz-tag></nz-descriptions-item>
+  </nz-descriptions>
+}
 
 <div class="mt-10">
   <h3 class="text-xl font-bold mb-4">Mening diagnostikalarim</h3>

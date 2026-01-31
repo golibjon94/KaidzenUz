@@ -1,1 +1,38 @@
-<p>blog-mgmt works!</p>
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+  <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+    <h3 class="text-lg font-bold">Blog maqolalari</h3>
+    <button nz-button nzType="primary">
+      <span nz-icon nzType="plus"></span> Yangi maqola
+    </button>
+  </div>
+
+  <nz-table #blogTable [nzData]="posts" [nzLoading]="loading">
+    <thead>
+      <tr>
+        <th>Sarlavha</th>
+        <th>Slug</th>
+        <th>Status</th>
+        <th>Yaratilgan</th>
+        <th>Amallar</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (data of blogTable.data; track data.id) {
+        <tr>
+          <td>{{ data.title }}</td>
+          <td>{{ data.slug }}</td>
+          <td>
+            <nz-tag [nzColor]="data.status === 'PUBLISHED' ? 'green' : 'orange'">
+              {{ data.status }}
+            </nz-tag>
+          </td>
+          <td>{{ data.createdAt | date:'dd.MM.yyyy' }}</td>
+          <td>
+            <a class="text-blue-600 hover:text-blue-800 mr-4">Tahrirlash</a>
+            <a (click)="deletePost(data.id)" class="text-red-600 hover:text-red-800 cursor-pointer">O'chirish</a>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </nz-table>
+</div>

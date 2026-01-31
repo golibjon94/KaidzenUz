@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { BlogPost } from '../models/blog.model';
+import { BlogPost, CreatePostDto } from '../models/blog.model';
+import { BlogStatus } from '../models/enums';
 
 @Injectable({
   providedIn: 'root',
@@ -10,23 +11,28 @@ export class BlogService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/blog`;
 
-  getAll() {
-    return this.http.get<BlogPost[]>(this.apiUrl);
+  getPosts(status?: BlogStatus) {
+    let params = new HttpParams();
+    if (status) {
+      params = params.set('status', status);
+    }
+    return this.http.get<BlogPost[]>(this.apiUrl, { params });
   }
 
   getBySlug(slug: string) {
     return this.http.get<BlogPost>(`${this.apiUrl}/${slug}`);
   }
 
-  create(data: Partial<BlogPost>) {
+  // Admin methods
+  createPost(data: CreatePostDto) {
     return this.http.post<BlogPost>(this.apiUrl, data);
   }
 
-  update(id: string, data: Partial<BlogPost>) {
+  updatePost(id: string, data: Partial<CreatePostDto>) {
     return this.http.patch<BlogPost>(`${this.apiUrl}/${id}`, data);
   }
 
-  delete(id: string) {
+  deletePost(id: string) {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

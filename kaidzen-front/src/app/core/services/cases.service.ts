@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { BusinessCase } from '../models/case.model';
+import { BusinessCase, CreateCaseDto } from '../models/case.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,7 @@ export class CasesService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/cases`;
 
-  getAll() {
+  getCases() {
     return this.http.get<BusinessCase[]>(this.apiUrl);
   }
 
@@ -18,15 +18,12 @@ export class CasesService {
     return this.http.get<BusinessCase>(`${this.apiUrl}/${id}`);
   }
 
-  create(data: Partial<BusinessCase>) {
+  // Admin methods
+  createCase(data: CreateCaseDto) {
     return this.http.post<BusinessCase>(this.apiUrl, data);
   }
 
-  update(id: string, data: Partial<BusinessCase>) {
-    return this.http.patch<BusinessCase>(`${this.apiUrl}/${id}`, data);
-  }
-
-  delete(id: string) {
+  deleteCase(id: string) {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

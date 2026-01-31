@@ -4,7 +4,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { UsersService } from '../../../../core/services/users.service';
+import { AdminUsersService } from '../../services/admin-users.service';
 import { User } from '../../../../core/models/user.model';
 
 @Component({
@@ -15,7 +15,7 @@ import { User } from '../../../../core/models/user.model';
   styleUrl: './users-list.component.css',
 })
 export class UsersListComponent implements OnInit {
-  private usersService = inject(UsersService);
+  private usersService = inject(AdminUsersService);
 
   users: User[] = [];
   loading = true;
@@ -26,7 +26,7 @@ export class UsersListComponent implements OnInit {
 
   loadUsers() {
     this.loading = true;
-    this.usersService.getAll().subscribe({
+    this.usersService.getUsers().subscribe({
       next: (data) => {
         this.users = data;
         this.loading = false;

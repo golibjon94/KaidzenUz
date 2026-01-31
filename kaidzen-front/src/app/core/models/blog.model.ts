@@ -1,5 +1,13 @@
 import { BlogStatus } from './enums';
 
+export interface CreatePostDto {
+  title: string;
+  slug: string;
+  image?: string;
+  content: string;
+  status: BlogStatus;
+}
+
 export interface BlogPost {
   id: string;
   title: string;
