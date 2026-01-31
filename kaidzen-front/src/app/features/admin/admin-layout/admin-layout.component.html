@@ -1,0 +1,47 @@
+<div class="flex h-screen bg-gray-50">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-gray-900 text-white flex flex-col">
+    <div class="p-6 text-2xl font-bold border-b border-gray-800">
+      Kaidzen Admin
+    </div>
+    <nav class="flex-1 p-4 space-y-2">
+      <a routerLink="./dashboard" routerLinkActive="bg-blue-600" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors">
+        <span nz-icon nzType="dashboard"></span> Dashbord
+      </a>
+      <a routerLink="./users" routerLinkActive="bg-blue-600" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors">
+        <span nz-icon nzType="team"></span> Foydalanuvchilar
+      </a>
+      <a routerLink="./tests" routerLinkActive="bg-blue-600" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors">
+        <span nz-icon nzType="solution"></span> Testlar
+      </a>
+      <a routerLink="./blog" routerLinkActive="bg-blue-600" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors">
+        <span nz-icon nzType="form"></span> Blog
+      </a>
+      <a routerLink="./cases" routerLinkActive="bg-blue-600" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors">
+        <span nz-icon nzType="project"></span> Keyslar
+      </a>
+      <a routerLink="./applications" routerLinkActive="bg-blue-600" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors">
+        <span nz-icon nzType="mail"></span> Arizalar
+      </a>
+    </nav>
+    <div class="p-4 border-t border-gray-800">
+      <button class="flex items-center gap-3 p-3 w-full rounded-lg hover:bg-red-600/20 text-red-400 transition-colors">
+        <span nz-icon nzType="logout"></span> Chiqish
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col overflow-hidden">
+    <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
+      <h2 class="text-xl font-semibold text-gray-800">Boshqaruv paneli</h2>
+      <div class="flex items-center gap-4">
+        <nz-avatar nzIcon="user" class="bg-blue-600"></nz-avatar>
+        <span class="font-medium text-gray-700">Administrator</span>
+      </div>
+    </header>
+    <div class="flex-1 overflow-auto p-8">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

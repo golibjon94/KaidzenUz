@@ -1,0 +1,51 @@
+<h2 class="text-2xl font-bold mb-6">Tizim holati</h2>
+
+<div nz-row [nzGutter]="16">
+  <div nz-col [nzSpan]="6">
+    <nz-card>
+      <nz-statistic
+        [nzValue]="(125 | number)!"
+        [nzTitle]="'Jami foydalanuvchilar'"
+        [nzPrefix]="prefixUsers"
+        [nzValueStyle]="{ color: '#3F8600' }"
+      ></nz-statistic>
+      <ng-template #prefixUsers><span nz-icon nzType="team"></span></ng-template>
+    </nz-card>
+  </div>
+  <div nz-col [nzSpan]="6">
+    <nz-card>
+      <nz-statistic
+        [nzValue]="(48 | number)!"
+        [nzTitle]="'Diagnostikalar'"
+        [nzPrefix]="prefixDiag"
+      ></nz-statistic>
+      <ng-template #prefixDiag><span nz-icon nzType="solution"></span></ng-template>
+    </nz-card>
+  </div>
+  <div nz-col [nzSpan]="6">
+    <nz-card>
+      <nz-statistic
+        [nzValue]="(12 | number)!"
+        [nzTitle]="'Konsultantlar'"
+        [nzPrefix]="prefixCons"
+      ></nz-statistic>
+      <ng-template #prefixCons><span nz-icon nzType="user"></span></ng-template>
+    </nz-card>
+  </div>
+  <div nz-col [nzSpan]="6">
+    <nz-card>
+      <nz-statistic
+        [nzValue]="(15600000 | number)!"
+        nzTitle="Daromad (so'm)"
+        [nzPrefix]="prefixMoney"
+      ></nz-statistic>
+      <ng-template #prefixMoney><span nz-icon nzType="pay-circle"></span></ng-template>
+    </nz-card>
+  </div>
+</div>
+
+<div class="mt-8">
+  <nz-card nzTitle="Oxirgi diagnostikalar">
+    <p>Bu yerda oxirgi o'tkazilgan diagnostikalar ro'yxati bo'ladi.</p>
+  </nz-card>
+</div>

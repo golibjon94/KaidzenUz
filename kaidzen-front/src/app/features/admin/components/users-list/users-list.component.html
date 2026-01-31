@@ -1,0 +1,41 @@
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+  <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+    <h3 class="text-lg font-bold">Foydalanuvchilar ro'yxati</h3>
+    <div class="flex gap-4">
+      <nz-input-group [nzSuffix]="suffixIconSearch">
+        <input type="text" nz-input placeholder="Qidirish..." />
+      </nz-input-group>
+      <ng-template #suffixIconSearch><span nz-icon nzType="search"></span></ng-template>
+    </div>
+  </div>
+
+  <nz-table #basicTable [nzData]="users" [nzLoading]="loading">
+    <thead>
+      <tr>
+        <th>F.I.SH</th>
+        <th>Telefon</th>
+        <th>Roli</th>
+        <th>Ro'yxatdan o'tgan</th>
+        <th>Amallar</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (data of basicTable.data; track data.id) {
+        <tr>
+          <td>{{ data.fullName }}</td>
+          <td>{{ data.phone }}</td>
+          <td>
+            <nz-tag [nzColor]="data.role === 'ADMIN' ? 'red' : 'blue'">
+              {{ data.role }}
+            </nz-tag>
+          </td>
+          <td>{{ data.createdAt | date:'dd.MM.yyyy HH:mm' }}</td>
+          <td>
+            <a class="text-blue-600 hover:text-blue-800 mr-4">Tahrirlash</a>
+            <a class="text-red-600 hover:text-red-800">O'chirish</a>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </nz-table>
+</div>

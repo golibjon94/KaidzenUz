@@ -1,0 +1,33 @@
+<div class="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row gap-8">
+  <!-- Sidebar -->
+  <aside class="w-full md:w-64 space-y-2">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+      <div class="flex flex-col items-center text-center">
+        <nz-avatar [nzSize]="80" nzIcon="user" class="bg-blue-600 mb-4"></nz-avatar>
+        <h3 class="text-lg font-bold">Foydalanuvchi</h3>
+        <p class="text-gray-500 text-sm">+998 90 123 45 67</p>
+      </div>
+    </div>
+
+    <nav class="bg-white rounded-2xl shadow-sm border border-gray-100 p-2">
+      <a routerLink="./overview" routerLinkActive="text-blue-600 bg-blue-50" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-all font-medium">
+        <span nz-icon nzType="user"></span> Profil ma'lumotlari
+      </a>
+      <a routerLink="./tests" routerLinkActive="text-blue-600 bg-blue-50" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-all font-medium">
+        <span nz-icon nzType="solution"></span> Mening testlarim
+      </a>
+      <a routerLink="./results" routerLinkActive="text-blue-600 bg-blue-50" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-all font-medium">
+        <span nz-icon nzType="bar-chart"></span> Test natijalari
+      </a>
+      <div class="border-t border-gray-100 my-2"></div>
+      <button class="flex items-center gap-3 p-3 w-full rounded-xl hover:bg-red-50 text-red-500 transition-all font-medium">
+        <span nz-icon nzType="logout"></span> Chiqish
+      </button>
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <main class="flex-1">
+    <router-outlet></router-outlet>
+  </main>
+</div>

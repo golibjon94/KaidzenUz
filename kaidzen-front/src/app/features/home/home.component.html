@@ -1,0 +1,85 @@
+<app-header></app-header>
+
+<!-- Hero Section -->
+<section class="relative bg-white pt-20 pb-32 overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <div class="z-10 animate-fade-in-left">
+      <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+        Biznesingizni <span class="text-blue-600">Kaidzen</span> orqali rivojlantiring
+      </h1>
+      <p class="text-xl text-gray-600 mb-8 max-w-lg">
+        Professional biznes diagnostika va konsalting xizmatlari yordamida kompaniyangizdagi muammolarni aniqlang va samaradorlikni oshiring.
+      </p>
+      <div class="flex flex-wrap gap-4">
+        <button nz-button nzType="primary" nzSize="large" class="h-14 px-8 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all">
+          Diagnostikadan o'ting
+        </button>
+        <button nz-button nzType="default" nzSize="large" class="h-14 px-8 rounded-full text-lg font-semibold">
+          Batafsil ma'lumot
+        </button>
+      </div>
+      <div class="mt-10 flex items-center gap-6">
+        <div class="flex -space-x-4">
+          <img src="https://i.pravatar.cc/150?u=1" class="w-12 h-12 rounded-full border-4 border-white shadow-sm" alt="User">
+          <img src="https://i.pravatar.cc/150?u=2" class="w-12 h-12 rounded-full border-4 border-white shadow-sm" alt="User">
+          <img src="https://i.pravatar.cc/150?u=3" class="w-12 h-12 rounded-full border-4 border-white shadow-sm" alt="User">
+        </div>
+        <p class="text-gray-500 font-medium">500+ tadbirkorlar bizga ishonishgan</p>
+      </div>
+    </div>
+    <div class="relative animate-fade-in-right">
+      <div class="absolute -top-20 -right-20 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-50"></div>
+      <div class="absolute -bottom-20 -left-20 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-50"></div>
+      <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800"
+           alt="Business Growth"
+           class="relative rounded-2xl shadow-2xl z-10 w-full transform hover:scale-105 transition-transform duration-500">
+    </div>
+  </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="bg-gray-50 py-24">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Bizning Xizmatlar</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+        Biznesingizning har bir sohasini tahlil qilamiz va eng yaxshi yechimlarni taklif etamiz.
+      </p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      @for (service of services; track service.title) {
+        <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-all border border-gray-100 group">
+          <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
+            <span nz-icon [nzType]="service.icon" class="text-2xl text-blue-600 group-hover:text-white"></span>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-gray-900">{{service.title}}</h3>
+          <p class="text-gray-600 leading-relaxed">{{service.desc}}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-20 bg-blue-600 text-white">
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+    <div>
+      <div class="text-4xl font-extrabold mb-2">10+</div>
+      <div class="text-blue-100">Yillik tajriba</div>
+    </div>
+    <div>
+      <div class="text-4xl font-extrabold mb-2">500+</div>
+      <div class="text-blue-100">Muvaffaqiyatli loyihalar</div>
+    </div>
+    <div>
+      <div class="text-4xl font-extrabold mb-2">50+</div>
+      <div class="text-blue-100">Ekspertlar</div>
+    </div>
+    <div>
+      <div class="text-4xl font-extrabold mb-2">98%</div>
+      <div class="text-blue-100">Mijozlar mamnunligi</div>
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>
