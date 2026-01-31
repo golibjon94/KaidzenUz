@@ -10,6 +10,7 @@ export class BlogService {
   async create(dto: CreatePostDto) {
     return this.prisma.blogPost.create({
       data: dto,
+      include: { image: true },
     });
   }
 
@@ -17,12 +18,14 @@ export class BlogService {
     return this.prisma.blogPost.findMany({
       where: status ? { status } : {},
       orderBy: { createdAt: 'desc' },
+      include: { image: true },
     });
   }
 
   async findOne(slug: string) {
     const post = await this.prisma.blogPost.findUnique({
       where: { slug },
+      include: { image: true },
     });
     if (!post) throw new NotFoundException('Post not found');
     return post;
@@ -33,6 +36,7 @@ export class BlogService {
     return this.prisma.blogPost.update({
       where: { id },
       data: updateData,
+      include: { image: true },
     });
   }
 

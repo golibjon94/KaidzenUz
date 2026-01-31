@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsOptional, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsEnum, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { BlogStatus } from '@prisma/client';
 
@@ -13,10 +13,10 @@ export class CreatePostDto {
   @IsNotEmpty()
   slug: string;
 
-  @ApiProperty({ required: false })
-  @IsString()
+  @ApiProperty({ required: false, description: 'File ID for image' })
+  @IsUUID()
   @IsOptional()
-  image?: string | null;
+  imageId?: string | null;
 
   @ApiProperty()
   @IsString()

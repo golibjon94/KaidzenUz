@@ -23,7 +23,7 @@
         </header>
 
         @if (post()!.image) {
-          <img [src]="baseUrl + post()!.image" class="w-full rounded-2xl shadow-lg mb-10 object-cover max-h-[500px]" [alt]="post()!.title">
+          <img [src]="baseUrl + '/api/file/' + post()!.image!.id" class="w-full rounded-2xl shadow-lg mb-10 object-cover max-h-[500px]" [alt]="post()!.title">
         }
 
         <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">

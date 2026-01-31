@@ -156,6 +156,25 @@ model TestResult {
 }
 
 // ============================================
+// FILE MANAGEMENT
+// ============================================
+
+model File {
+  id           String @id @default(uuid())
+  filename     String @unique
+  originalName String @map("original_name")
+  mimetype     String
+  size         Int
+  path         String
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  blogPosts BlogPost[]
+
+  @@map("files")
+}
+
+// ============================================
 // BLOG / CONTENT
 // ============================================
 
@@ -163,12 +182,14 @@ model BlogPost {
   id      String     @id @default(uuid())
   title   String
   slug    String     @unique
-  image   String?
+  imageId String?    @map("image_id")
   content String     @db.Text
   status  BlogStatus @default(DRAFT)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  image File? @relation(fields: [imageId], references: [id])
 
   @@map("blog_posts")
 }

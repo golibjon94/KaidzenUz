@@ -1,19 +1,25 @@
 import {
   Controller,
   Post,
+  Get,
   UseInterceptors,
   UploadedFile,
   BadRequestException,
   Delete,
   Param,
+  Res,
+  NotFoundException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { extname, join } from 'path';
+import { existsSync } from 'fs';
+import type { Response } from 'express';
 import { FileService } from './file.service';
 import { Role } from '@prisma/client';
 import { Roles } from '../common/decorators/roles.decorator';
+import { Public } from '../common/decorators/public.decorator';
 
 @ApiTags('Files')
 @Controller('file')
@@ -59,6 +65,18 @@ export class FileController {
   )
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     return this.fileService.uploadFile(file);
+  }
+
+  @Public()
+  @Get(':id')
+  @ApiOperation({ summary: 'Get a file by ID (Public)' })
+  async getFile(@Param('id') id: string, @Res() res: Response) {
+    const file = await this.fileService.getFileById(id);
+    const filePath = join(process.cwd(), 'uploads', file.filename);
+    if (!existsSync(filePath)) {
+      throw new NotFoundException('Fayl topilmadi');
+    }
+    return res.sendFile(filePath);
   }
 
   @ApiBearerAuth()

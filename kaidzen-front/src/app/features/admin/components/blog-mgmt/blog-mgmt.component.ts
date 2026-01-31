@@ -57,7 +57,7 @@ export class BlogMgmtComponent implements OnInit {
     title: ['', [Validators.required]],
     slug: ['', [Validators.required]],
     content: ['', [Validators.required]],
-    image: [''],
+    imageId: [null],
     status: ['DRAFT', [Validators.required]]
   });
 
@@ -82,7 +82,13 @@ export class BlogMgmtComponent implements OnInit {
   showModal(post?: BlogPost) {
     if (post) {
       this.editingPost.set(post);
-      this.blogForm.patchValue(post);
+      this.blogForm.patchValue({
+        title: post.title,
+        slug: post.slug,
+        content: post.content,
+        imageId: post.imageId,
+        status: post.status
+      });
     } else {
       this.editingPost.set(null);
       this.blogForm.reset({ status: 'DRAFT' });
@@ -98,8 +104,8 @@ export class BlogMgmtComponent implements OnInit {
   beforeUpload = (file: NzUploadFile): boolean => {
     this.fileService.uploadFile(file as any).subscribe({
       next: (res) => {
-        // Backend returns { data: { url: "/uploads/filename.ext" } } due to TransformInterceptor
-        this.blogForm.patchValue({ image: res.data.url });
+        // Backend returns { data: { id: "uuid", url: "/uploads/filename.ext" } } due to TransformInterceptor
+        this.blogForm.patchValue({ imageId: res.data.id });
         this.message.success('Rasm muvaffaqiyatli yuklandi');
       },
       error: () => {
@@ -113,14 +119,6 @@ export class BlogMgmtComponent implements OnInit {
     if (this.blogForm.valid) {
       this.isSubmitting.set(true);
       const postData = { ...this.blogForm.value };
-
-      // If image is a full URL, we should only save the relative path
-      if (postData.image && postData.image.startsWith('http')) {
-        const urlParts = postData.image.split('/uploads/');
-        if (urlParts.length > 1) {
-          postData.image = '/uploads/' + urlParts[1];
-        }
-      }
 
       const request = this.editingPost()
         ? this.blogService.updatePost(this.editingPost()!.id, postData)
