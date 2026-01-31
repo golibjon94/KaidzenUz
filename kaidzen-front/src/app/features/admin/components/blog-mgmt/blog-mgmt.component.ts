@@ -98,7 +98,8 @@ export class BlogMgmtComponent implements OnInit {
   beforeUpload = (file: NzUploadFile): boolean => {
     this.fileService.uploadFile(file as any).subscribe({
       next: (res) => {
-        this.blogForm.patchValue({ image: res.url });
+        // Backend returns { data: { url: "/uploads/filename.ext" } } due to TransformInterceptor
+        this.blogForm.patchValue({ image: res.data.url });
         this.message.success('Rasm muvaffaqiyatli yuklandi');
       },
       error: () => {
@@ -111,7 +112,16 @@ export class BlogMgmtComponent implements OnInit {
   submitForm() {
     if (this.blogForm.valid) {
       this.isSubmitting.set(true);
-      const postData = this.blogForm.value;
+      const postData = { ...this.blogForm.value };
+
+      // If image is a full URL, we should only save the relative path
+      if (postData.image && postData.image.startsWith('http')) {
+        const urlParts = postData.image.split('/uploads/');
+        if (urlParts.length > 1) {
+          postData.image = '/uploads/' + urlParts[1];
+        }
+      }
+
       const request = this.editingPost()
         ? this.blogService.updatePost(this.editingPost()!.id, postData)
         : this.blogService.createPost(postData);

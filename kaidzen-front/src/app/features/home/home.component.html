@@ -89,7 +89,7 @@
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">So'nggi Maqolalar</h2>
         <p class="text-gray-600 text-lg">Biznesingiz uchun foydali maslahatlar va yangiliklar.</p>
       </div>
-      <button nz-button nzType="link" class="text-blue-600 font-semibold text-lg" routerLink="/blog">Barchasini ko'rish<span nz-icon nzType="arrow-right"></span></button>
+      <a nz-button nzType="link" class="text-blue-600 font-semibold text-lg flex items-center gap-1" routerLink="/blog">Barchasini ko'rish <span nz-icon nzType="arrow-right"></span></a>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       @for (post of (latestPosts() || []); track post.id) {

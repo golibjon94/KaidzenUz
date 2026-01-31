@@ -12,7 +12,7 @@ export class FileService {
   uploadFile(file: File) {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<any>(`${this.apiUrl}/upload`, formData);
+    return this.http.post<{data: {url: string}}>(`${this.apiUrl}/upload`, formData);
   }
 
   deleteFile(filename: string) {

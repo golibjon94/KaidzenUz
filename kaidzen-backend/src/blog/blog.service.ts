@@ -29,9 +29,10 @@ export class BlogService {
   }
 
   async update(id: string, dto: any) {
+    const { id: _, createdAt: __, updatedAt: ___, ...updateData } = dto;
     return this.prisma.blogPost.update({
       where: { id },
-      data: dto,
+      data: updateData,
     });
   }
 
