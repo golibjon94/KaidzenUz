@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import configuration from './config/configuration';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
@@ -9,6 +11,7 @@ import { TestsModule } from './tests/tests.module';
 import { BlogModule } from './blog/blog.module';
 import { CasesModule } from './cases/cases.module';
 import { ApplicationsModule } from './applications/applications.module';
+import { FileModule } from './file/file.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
 
@@ -18,6 +21,10 @@ import { RolesGuard } from './auth/guards/roles.guard';
       isGlobal: true,
       load: [configuration],
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'uploads'),
+      serveRoot: '/uploads',
+    }),
     PrismaModule,
     AuthModule,
     UsersModule,
@@ -25,6 +32,7 @@ import { RolesGuard } from './auth/guards/roles.guard';
     BlogModule,
     CasesModule,
     ApplicationsModule,
+    FileModule,
   ],
   controllers: [],
   providers: [

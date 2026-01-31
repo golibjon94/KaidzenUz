@@ -1,7 +1,7 @@
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
   <div class="p-6 border-b border-gray-100 flex items-center justify-between">
     <h3 class="text-lg font-bold">Biznes keyslar</h3>
-    <button nz-button nzType="primary">
+    <button nz-button nzType="primary" (click)="showModal()">
       <span nz-icon nzType="plus"></span> Yangi keys
     </button>
   </div>
@@ -25,8 +25,8 @@
         @for (data of casesTable.data; track data.id) {
           <tr>
             <td>{{ data.title }}</td>
-            <td>{{ data.problem | slice:0:50 }}...</td>
-            <td>{{ data.solution | slice:0:50 }}...</td>
+            <td class="max-w-xs truncate">{{ data.problem }}</td>
+            <td class="max-w-xs truncate">{{ data.solution }}</td>
             <td>{{ data.date | date:'dd.MM.yyyy' }}</td>
             <td>
               <a class="text-blue-600 hover:text-blue-800 mr-4">Tahrirlash</a>
@@ -38,3 +38,56 @@
     </nz-table>
   }
 </div>
+
+<!-- Case Modal -->
+<nz-modal
+  [(nzVisible)]="isModalVisible"
+  nzTitle="Yangi biznes keys"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="submitForm()"
+  [nzOkLoading]="isSubmitting()"
+  nzWidth="700px"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="caseForm" layout="vertical">
+      <nz-form-item>
+        <nz-form-label nzRequired>Sarlavha</nz-form-label>
+        <nz-form-control nzErrorTip="Sarlavhani kiriting">
+          <input nz-input formControlName="title" placeholder="Keys sarlavhasi" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <div class="grid grid-cols-2 gap-4">
+        <nz-form-item>
+          <nz-form-label nzRequired>Muammo (Problem)</nz-form-label>
+          <nz-form-control nzErrorTip="Muammoni kiriting">
+            <textarea nz-input formControlName="problem" rows="4" placeholder="Muammo nima edi?"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzRequired>Yechim (Solution)</nz-form-label>
+          <nz-form-control nzErrorTip="Yechimni kiriting">
+            <textarea nz-input formControlName="solution" rows="4" placeholder="Qanday yechim taklif qilindi?"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <nz-form-item>
+          <nz-form-label nzRequired>Natija (Result)</nz-form-label>
+          <nz-form-control nzErrorTip="Natijani kiriting">
+            <textarea nz-input formControlName="result" rows="4" placeholder="Qanday natija olindi?"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzRequired>Sana</nz-form-label>
+          <nz-form-control nzErrorTip="Sanani tanlang">
+            <nz-date-picker formControlName="date" class="w-full"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </form>
+  </ng-container>
+</nz-modal>
