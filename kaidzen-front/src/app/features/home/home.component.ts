@@ -46,14 +46,14 @@ export class HomeComponent implements OnInit {
   loadData() {
     this.homeService.getLatestPosts().pipe(
       catchError(() => of([]))
-    ).subscribe(posts => this.latestPosts.set(posts || []));
+    ).subscribe(posts => this.latestPosts.set(Array.isArray(posts) ? posts : []));
 
     this.homeService.getCases().pipe(
       catchError(() => of([]))
-    ).subscribe(cases => this.cases.set(cases || []));
+    ).subscribe(cases => this.cases.set(Array.isArray(cases) ? cases : []));
 
     this.homeService.getTests().pipe(
       catchError(() => of([]))
-    ).subscribe(tests => this.tests.set(tests || []));
+    ).subscribe(tests => this.tests.set(Array.isArray(tests) ? tests : []));
   }
 }
