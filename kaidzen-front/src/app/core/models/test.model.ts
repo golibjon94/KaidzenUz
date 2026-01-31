@@ -41,6 +41,9 @@ export interface Test {
   resultLogic: ResultLogic[];
   createdAt: Date;
   updatedAt: Date;
+  _count?: {
+    questions: number;
+  };
 }
 
 export interface TestResult {

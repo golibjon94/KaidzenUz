@@ -1,1 +1,23 @@
-<p>profile-settings works!</p>
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+  <h3 class="text-lg font-bold mb-6">Profilni tahrirlash</h3>
+
+  <form [formGroup]="form" nz-form nzLayout="vertical" (ngSubmit)="submit()">
+    <nz-form-item>
+      <nz-form-label nzRequired>F.I.SH</nz-form-label>
+      <nz-form-control nzErrorTip="Ismingizni kiriting">
+        <input nz-input formControlName="fullName" placeholder="To'liq ismingiz" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label>Manzil</nz-form-label>
+      <nz-form-control>
+        <input nz-input formControlName="address" placeholder="Manzilingiz" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <div class="flex justify-end">
+      <button nz-button nzType="primary" [nzLoading]="loading()">Saqlash</button>
+    </div>
+  </form>
+</div>

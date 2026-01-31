@@ -23,4 +23,8 @@ export class ProfileOverviewComponent {
   goToTests() {
     this.router.navigate(['/profile/tests']);
   }
+
+  goToResults() {
+    this.router.navigate(['/profile/results']);
+  }
 }

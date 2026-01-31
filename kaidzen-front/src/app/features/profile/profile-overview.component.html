@@ -20,7 +20,10 @@
 <div class="mt-10">
   <h3 class="text-xl font-bold mb-4">Mening diagnostikalarim</h3>
   <div class="bg-gray-50 p-8 rounded-lg border border-dashed border-gray-300 text-center">
-    <p class="text-gray-500 mb-4">Sizda hali o'tkazilgan diagnostikalar mavjud emas.</p>
-    <button nz-button nzType="primary" (click)="goToTests()">Diagnostikadan o'tish</button>
+    <p class="text-gray-500 mb-4">Biznesingiz holatini aniqlash uchun diagnostik testlardan o'ting.</p>
+    <div class="flex gap-4 justify-center">
+      <button nz-button nzType="primary" (click)="goToTests()">Testlardan o'tish</button>
+      <button nz-button nzType="default" (click)="goToResults()">Natijalarimni ko'rish</button>
+    </div>
   </div>
 </div>

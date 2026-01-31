@@ -65,7 +65,11 @@ export class HomeComponent implements OnInit {
 
     this.homeService.getTests().pipe(
       catchError(() => of([]))
-    ).subscribe(tests => this.tests.set(Array.isArray(tests) ? tests : []));
+    ).subscribe(res => {
+      // Handle both array and object with data property
+      const tests = Array.isArray(res) ? res : (res as any).data || [];
+      this.tests.set(tests);
+    });
   }
 
   goToTests() {

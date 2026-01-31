@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -6,6 +6,10 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzResultModule } from 'ng-zorro-antd/result';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
+import { NzProgressModule } from 'ng-zorro-antd/progress';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 import { FormsModule } from '@angular/forms';
 import { TestsService } from '../../../../core/services/tests.service';
 import { Test, TestResult, SubmitTestDto } from '../../../../core/models/test.model';
@@ -21,13 +25,18 @@ import { Test, TestResult, SubmitTestDto } from '../../../../core/models/test.mo
     NzIconModule,
     NzRadioModule,
     NzResultModule,
-    NzSkeletonModule
+    NzSkeletonModule,
+    NzProgressModule,
+    NzModalModule,
+    NzEmptyModule,
+    NzTagModule
   ],
   templateUrl: './user-tests.component.html',
   styleUrl: './user-tests.component.css',
 })
 export class UserTestsComponent implements OnInit {
   private testsService = inject(TestsService);
+  private modal = inject(NzModalService);
 
   tests = signal<Test[]>([]);
   selectedTest = signal<Test | null>(null);
@@ -36,6 +45,36 @@ export class UserTestsComponent implements OnInit {
   submitting = signal(false);
   result = signal<TestResult | null>(null);
   error = signal<string | null>(null);
+
+  // Test taking state
+  currentQuestionIndex = signal(0);
+
+  currentQuestion = computed(() => {
+    const test = this.selectedTest();
+    const index = this.currentQuestionIndex();
+    if (!test || !test.questions || test.questions.length === 0) return null;
+    return test.questions[index];
+  });
+
+  progress = computed(() => {
+    const test = this.selectedTest();
+    const index = this.currentQuestionIndex();
+    if (!test || !test.questions || test.questions.length === 0) return 0;
+    return Math.round(((index + 1) / test.questions.length) * 100);
+  });
+
+  isLastQuestion = computed(() => {
+    const test = this.selectedTest();
+    const index = this.currentQuestionIndex();
+    if (!test || !test.questions) return false;
+    return index === test.questions.length - 1;
+  });
+
+  canGoNext = computed(() => {
+    const current = this.currentQuestion();
+    const answers = this.selectedAnswers();
+    return current ? answers.has(current.id) : false;
+  });
 
   ngOnInit() {
     this.loadTests();
@@ -59,6 +98,8 @@ export class UserTestsComponent implements OnInit {
     this.loading.set(true);
     this.result.set(null);
     this.selectedAnswers.set(new Map());
+    this.currentQuestionIndex.set(0);
+
     this.testsService.getBySlug(slug).subscribe({
       next: (test) => {
         this.selectedTest.set(test);
@@ -81,15 +122,29 @@ export class UserTestsComponent implements OnInit {
     return this.selectedAnswers().get(questionId) === optionId;
   }
 
-  canSubmit(): boolean {
-    const test = this.selectedTest();
-    if (!test) return false;
-    return test.questions.length === this.selectedAnswers().size;
+  nextQuestion() {
+    if (this.canGoNext() && !this.isLastQuestion()) {
+      this.currentQuestionIndex.update(i => i + 1);
+    }
+  }
+
+  previousQuestion() {
+    this.currentQuestionIndex.update(i => Math.max(0, i - 1));
+  }
+
+  confirmSubmit() {
+    this.modal.confirm({
+      nzTitle: 'Testni yakunlash',
+      nzContent: 'Haqiqatan ham testni yakunlamoqchimisiz? Javoblarni qayta o\'zgartirib bo\'lmaydi.',
+      nzOkText: 'Ha, yakunlash',
+      nzCancelText: 'Bekor qilish',
+      nzOnOk: () => this.submitTest()
+    });
   }
 
   submitTest() {
     const test = this.selectedTest();
-    if (!test || !this.canSubmit()) return;
+    if (!test) return;
 
     this.submitting.set(true);
     const dto: SubmitTestDto = {
@@ -116,5 +171,7 @@ export class UserTestsComponent implements OnInit {
     this.selectedTest.set(null);
     this.result.set(null);
     this.selectedAnswers.set(new Map());
+    this.currentQuestionIndex.set(0);
+    this.loadTests(); // Refresh list to update counts if needed
   }
 }

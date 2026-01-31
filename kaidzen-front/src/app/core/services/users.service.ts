@@ -19,6 +19,12 @@ export class UsersService {
     );
   }
 
+  updateProfile(data: any) {
+    return this.http.put<User>(`${this.apiUrl}/me`, data).pipe(
+      tap(user => this.authStore.setUser(user))
+    );
+  }
+
   updateMe(data: UpdateUserDto) {
     return this.http.patch<User>(`${this.apiUrl}/me`, data).pipe(
       tap(user => this.authStore.setUser(user))

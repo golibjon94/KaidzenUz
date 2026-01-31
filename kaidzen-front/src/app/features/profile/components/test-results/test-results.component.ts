@@ -1,12 +1,27 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 import { TestsService } from '../../../../core/services/tests.service';
 import { TestResult } from '../../../../core/models/test.model';
 
 @Component({
   selector: 'app-test-results',
   standalone: true,
-  imports: [CommonModule, DatePipe],
+  imports: [
+    CommonModule,
+    DatePipe,
+    NzTableModule,
+    NzButtonModule,
+    NzIconModule,
+    NzModalModule,
+    NzEmptyModule,
+    NzTagModule
+  ],
   templateUrl: './test-results.component.html',
   styleUrl: './test-results.component.css',
 })
@@ -16,6 +31,10 @@ export class TestResultsComponent implements OnInit {
   results = signal<TestResult[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
+
+  // Modal state
+  isVisible = signal(false);
+  selectedResult = signal<TestResult | null>(null);
 
   ngOnInit() {
     this.loadResults();
@@ -33,5 +52,15 @@ export class TestResultsComponent implements OnInit {
         this.loading.set(false);
       },
     });
+  }
+
+  showDetails(result: TestResult) {
+    this.selectedResult.set(result);
+    this.isVisible.set(true);
+  }
+
+  handleCancel() {
+    this.isVisible.set(false);
+    this.selectedResult.set(null);
   }
 }

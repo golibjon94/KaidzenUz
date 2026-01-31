@@ -113,6 +113,16 @@ export const routes: Routes = [
         path: 'tests',
         loadComponent: () => import('./features/profile/components/user-tests/user-tests.component').then(m => m.UserTestsComponent),
         title: 'Mening testlarim - Kaidzen.uz'
+      },
+      {
+        path: 'results',
+        loadComponent: () => import('./features/profile/components/test-results/test-results.component').then(m => m.TestResultsComponent),
+        title: 'Test natijalari - Kaidzen.uz'
+      },
+      {
+        path: 'settings',
+        loadComponent: () => import('./features/profile/components/profile-settings/profile-settings.component').then(m => m.ProfileSettingsComponent),
+        title: 'Sozlamalar - Kaidzen.uz'
       }
     ]
   },

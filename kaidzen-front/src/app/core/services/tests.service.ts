@@ -12,8 +12,11 @@ export class TestsService {
   private apiUrl = `${environment.apiUrl}/tests`;
 
   getTests() {
-    return this.http.get<{data: Test[]}>(this.apiUrl).pipe(
-      map(res => res.data || [])
+    return this.http.get<Test[] | {data: Test[]}>(this.apiUrl).pipe(
+      map(res => {
+        if (Array.isArray(res)) return res;
+        return res.data || [];
+      })
     );
   }
 

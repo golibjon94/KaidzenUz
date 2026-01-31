@@ -1,40 +1,95 @@
-<div class="test-results-container">
-  <h2>Mening test natijalarim</h2>
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+  <div class="p-6 border-b border-gray-100">
+    <h3 class="text-lg font-bold">Mening test natijalarim</h3>
+  </div>
 
   @if (error()) {
-    <div class="error-message">
-      {{ error() }}
-      <button (click)="error.set(null)">×</button>
+    <div class="m-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg flex justify-between items-center">
+      <span>{{ error() }}</span>
+      <button (click)="error.set(null)" class="text-xl">&times;</button>
     </div>
-  }
-
-  @if (loading()) {
-    <div class="loading">Yuklanmoqda...</div>
   }
 
   @if (!loading() && results().length === 0) {
-    <div class="no-results">
-      <p>Siz hali hech qanday test topshirmadingiz</p>
+    <div class="p-12 text-center">
+      <nz-empty
+        nzNotFoundImage="simple"
+        nzNotFoundContent="Siz hali hech qanday test topshirmadingiz"
+      ></nz-empty>
     </div>
-  }
-
-  @if (!loading() && results().length > 0) {
-    <div class="results-list">
-      @for (result of results(); track result.id) {
-        <div class="result-card">
-          <div class="result-header">
-            <h3>{{ result.test?.title || 'Test' }}</h3>
-            <span class="date">{{ result.createdAt | date:'dd.MM.yyyy HH:mm' }}</span>
-          </div>
-          <div class="result-body">
-            <div class="score">Ball: <strong>{{ result.score }}</strong></div>
-            <div class="result-text">{{ result.resultText }}</div>
-            <div class="recommendation">
-              <strong>Tavsiya:</strong> {{ result.recommendation }}
-            </div>
-          </div>
-        </div>
-      }
-    </div>
+  } @else {
+    <nz-table #resultsTable [nzData]="results()" [nzLoading]="loading()" [nzPageSize]="10">
+      <thead>
+        <tr>
+          <th>Test nomi</th>
+          <th>Ball</th>
+          <th>Sana</th>
+          <th>Amallar</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (data of resultsTable.data; track data.id) {
+          <tr>
+            <td class="font-medium">{{ data.test?.title || 'Noma\'lum test' }}</td>
+            <td>
+              <nz-tag [nzColor]="'blue'" class="font-bold text-sm px-3 py-1 rounded-full">
+                {{ data.score }} ball
+              </nz-tag>
+            </td>
+            <td>{{ data.createdAt | date:'dd.MM.yyyy HH:mm' }}</td>
+            <td>
+              <button nz-button nzType="link" (click)="showDetails(data)">
+                Batafsil <span nz-icon nzType="right"></span>
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </nz-table>
   }
 </div>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="selectedResult()?.test?.title || 'Test natijasi'"
+  (nzOnCancel)="handleCancel()"
+  [nzFooter]="null"
+  nzWidth="700px"
+>
+  <ng-container *nzModalContent>
+    @if (selectedResult(); as result) {
+      <div class="space-y-6">
+        <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+          <div>
+            <p class="text-gray-500 text-sm mb-1">Topshirilgan sana</p>
+            <p class="font-medium">{{ result.createdAt | date:'dd MMMM yyyy, HH:mm' }}</p>
+          </div>
+          <div class="text-right">
+            <p class="text-gray-500 text-sm mb-1">To'plangan ball</p>
+            <p class="text-2xl font-bold text-blue-600">{{ result.score }}</p>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-lg mb-2 text-gray-800">Xulosa</h4>
+          <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 text-gray-700 leading-relaxed">
+            {{ result.resultText }}
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-lg mb-2 text-gray-800 flex items-center gap-2">
+            <span nz-icon nzType="bulb" class="text-yellow-500"></span> Tavsiyalar
+          </h4>
+          <div class="bg-green-50 p-4 rounded-lg border border-green-100 text-gray-700 leading-relaxed italic">
+            {{ result.recommendation }}
+          </div>
+        </div>
+
+        <div class="flex justify-end pt-4 border-t border-gray-100">
+          <button nz-button nzType="primary" (click)="handleCancel()">Yopish</button>
+        </div>
+      </div>
+    }
+  </ng-container>
+</nz-modal>
