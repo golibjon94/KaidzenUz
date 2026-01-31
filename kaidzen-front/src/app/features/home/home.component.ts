@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, signal } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -18,10 +18,7 @@ import { Test } from '../../core/models/test.model';
   imports: [CommonModule, NzButtonModule, NzIconModule, NzCardModule, NzTagModule, HeaderComponent, FooterComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    'ngSkipHydration': 'true'
-  }
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit {
   private titleService = inject(Title);
@@ -34,9 +31,9 @@ export class HomeComponent implements OnInit {
     { title: 'Xodimlar auditi', icon: 'team', desc: 'Jamoangiz samaradorligini oshirish va kadrlar tahlili.' }
   ];
 
-  latestPosts: BlogPost[] = [];
-  cases: BusinessCase[] = [];
-  tests: Test[] = [];
+  latestPosts = signal<BlogPost[]>([]);
+  cases = signal<BusinessCase[]>([]);
+  tests = signal<Test[]>([]);
 
   ngOnInit() {
     this.titleService.setTitle('Kaidzen.uz - Professional Biznes Diagnostika va Konsalting');
@@ -46,8 +43,8 @@ export class HomeComponent implements OnInit {
   }
 
   loadData() {
-    this.homeService.getLatestPosts().subscribe(posts => this.latestPosts = posts);
-    this.homeService.getCases().subscribe(cases => this.cases = cases);
-    this.homeService.getTests().subscribe(tests => this.tests = tests);
+    this.homeService.getLatestPosts().subscribe(posts => this.latestPosts.set(posts));
+    this.homeService.getCases().subscribe(cases => this.cases.set(cases));
+    this.homeService.getTests().subscribe(tests => this.tests.set(tests));
   }
 }
