@@ -12,7 +12,7 @@ import { GetUser } from '../common/decorators/get-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 
-@ApiTags('Users')
+@ApiTags('UsersService')
 @ApiBearerAuth()
 @Controller('users')
 export class UsersController {

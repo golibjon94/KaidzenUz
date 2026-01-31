@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
@@ -25,7 +26,11 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor());
 
   // CORS
-  app.enableCors();
+  const configService = app.get(ConfigService);
+  app.enableCors({
+    origin: configService.get('cors.origin'),
+    credentials: true,
+  });
 
   // Swagger
   const config = new DocumentBuilder()

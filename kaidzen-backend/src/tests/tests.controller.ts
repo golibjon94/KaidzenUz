@@ -5,7 +5,7 @@ import { SubmitTestDto } from './dto/submit-test.dto';
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { Public } from '../common/decorators/public.decorator';
 
-@ApiTags('Diagnostics / Tests')
+@ApiTags('Diagnostics / TestsService')
 @Controller('tests')
 export class TestsController {
   constructor(private readonly testsService: TestsService) {}
