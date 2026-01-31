@@ -1,1 +1,40 @@
-<p>test-results works!</p>
+<div class="test-results-container">
+  <h2>Mening test natijalarim</h2>
+
+  @if (error()) {
+    <div class="error-message">
+      {{ error() }}
+      <button (click)="error.set(null)">×</button>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading">Yuklanmoqda...</div>
+  }
+
+  @if (!loading() && results().length === 0) {
+    <div class="no-results">
+      <p>Siz hali hech qanday test topshirmadingiz</p>
+    </div>
+  }
+
+  @if (!loading() && results().length > 0) {
+    <div class="results-list">
+      @for (result of results(); track result.id) {
+        <div class="result-card">
+          <div class="result-header">
+            <h3>{{ result.test?.title || 'Test' }}</h3>
+            <span class="date">{{ result.createdAt | date:'dd.MM.yyyy HH:mm' }}</span>
+          </div>
+          <div class="result-body">
+            <div class="score">Ball: <strong>{{ result.score }}</strong></div>
+            <div class="result-text">{{ result.resultText }}</div>
+            <div class="recommendation">
+              <strong>Tavsiya:</strong> {{ result.recommendation }}
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,97 @@
+.test-results-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.test-results-container h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.error-message {
+  background: #fee;
+  color: #c00;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-message button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.no-results {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  background: #f9fafb;
+  border-radius: 12px;
+}
+
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.result-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.result-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.date {
+  color: #666;
+  font-size: 14px;
+}
+
+.result-body {
+  padding: 20px;
+}
+
+.score {
+  font-size: 18px;
+  color: #4f46e5;
+  margin-bottom: 10px;
+}
+
+.result-text {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.recommendation {
+  background: #f0fdf4;
+  padding: 12px 15px;
+  border-radius: 8px;
+  color: #166534;
+  font-size: 14px;
+}
