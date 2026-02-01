@@ -27,6 +27,7 @@ export class AuthStore {
     this._accessToken.set(accessToken);
     this._refreshToken.set(refreshToken);
 
+    // set(name, value, days, path) - ob'ekt emas, raqam bering!
     this.cookieService.set('access_token', accessToken, 7, '/');
     this.cookieService.set('refresh_token', refreshToken, 7, '/');
   }

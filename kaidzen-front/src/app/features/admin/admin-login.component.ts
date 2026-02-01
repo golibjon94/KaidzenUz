@@ -26,7 +26,7 @@ import { AuthStore } from '../../core/stores/auth.store';
     :host {
       display: block;
       min-height: 100vh;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: rgba(162, 159, 159, 0.3);
     }
   `]
 })
