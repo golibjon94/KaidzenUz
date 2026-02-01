@@ -1,4 +1,5 @@
-/* You can add global styles to this file, and also import other style files */
-
-@import "tailwindcss";
+/* 1. Ng-Zorro stillari (Komponentlar dizayni yuklanadi) */
 @import "ng-zorro-antd/ng-zorro-antd.min.css";
+
+/* 2. Tailwind (Utility klasslar yuklanadi va Ng-Zorro dizaynini boshqara oladi) */
+@import "tailwindcss";

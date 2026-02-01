@@ -13,6 +13,7 @@ import { provideNzIcons } from 'ng-zorro-antd/icon';
 
 import { baseUrlInterceptor } from './core/interceptors/base-url.interceptor';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import {SsrCookieService } from 'ngx-cookie-service-ssr';
 
 registerLocaleData(en);
 
@@ -25,6 +26,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideNzI18n(en_US),
     importProvidersFrom(FormsModule),
-    provideNzIcons(icons)
+    provideNzIcons(icons),
+    SsrCookieService
   ]
 };
