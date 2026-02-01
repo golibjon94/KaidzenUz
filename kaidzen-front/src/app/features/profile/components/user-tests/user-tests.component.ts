@@ -87,7 +87,7 @@ export class UserTestsComponent implements OnInit {
         this.tests.set(data);
         this.loading.set(false);
       },
-      error: (err) => {
+      error: () => {
         this.error.set('Testlarni yuklashda xatolik');
         this.loading.set(false);
       },
@@ -107,7 +107,7 @@ export class UserTestsComponent implements OnInit {
         this.selectedTest.set(testData);
         this.loading.set(false);
       },
-      error: (err) => {
+      error: () => {
         this.error.set('Test ma\'lumotlarini yuklashda xatolik');
         this.loading.set(false);
       },
@@ -161,7 +161,7 @@ export class UserTestsComponent implements OnInit {
         this.result.set(result);
         this.submitting.set(false);
       },
-      error: (err) => {
+      error: () => {
         this.error.set('Testni topshirishda xatolik');
         this.submitting.set(false);
       },

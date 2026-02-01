@@ -51,7 +51,7 @@ export class TestResultsComponent implements OnInit {
         this.results.set(actualData);
         this.loading.set(false);
       },
-      error: (err) => {
+      error: () => {
         this.error.set('Natijalarni yuklashda xatolik');
         this.loading.set(false);
         this.results.set([]); // Xato bo'lsa jadval bo'sh qolsin, xato bermasin

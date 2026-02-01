@@ -63,7 +63,7 @@ export class AdminLoginComponent {
           }
           this.isLoading.set(false);
         },
-        error: (err) => {
+        error: () => {
           this.notification.error('Xatolik', 'Login yoki parol noto\'g\'ri!');
           this.isLoading.set(false);
         }

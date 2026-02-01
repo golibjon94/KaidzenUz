@@ -50,7 +50,7 @@ export class RegisterComponent {
           this.isLoading.set(false);
           this.router.navigate(['/profile']);
         },
-        error: (err) => {
+        error: () => {
           this.notification.error('Xatolik', 'Ro\'yxatdan o\'tishda xatolik yuz berdi!');
           this.isLoading.set(false);
         }

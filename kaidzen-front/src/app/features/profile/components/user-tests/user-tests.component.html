@@ -10,165 +10,163 @@
   <!-- Loading Skeleton -->
   @if (loading()) {
     <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 10 }"></nz-skeleton>
-  }
-
-  <!-- Test Result -->
-  @else if (result()) {
-    <nz-result
-      nzStatus="success"
-      nzTitle="Test muvaffaqiyatli yakunlandi!"
-      [nzSubTitle]="'Sizning natijangiz: ' + result()!.score + ' ball'"
-    >
-      <div nz-result-content>
-        <div class="bg-gray-50 p-6 rounded-xl border border-gray-100 mb-6">
-          <h4 class="text-lg font-bold mb-2">Xulosa:</h4>
-          <p class="text-gray-700 text-lg mb-4">{{ result()!.resultText }}</p>
-          <h4 class="text-lg font-bold mb-2 text-blue-600">Tavsiyalarimiz:</h4>
-          <p class="text-gray-600 italic leading-relaxed">{{ result()!.recommendation }}</p>
+  } @else {
+    <!-- Test Result -->
+    @if (result()) {
+      <nz-result
+        nzStatus="success"
+        nzTitle="Test muvaffaqiyatli yakunlandi!"
+        [nzSubTitle]="'Sizning natijangiz: ' + result()!.score + ' ball'"
+      >
+        <div nz-result-content>
+          <div class="bg-gray-50 p-6 rounded-xl border border-gray-100 mb-6">
+            <h4 class="text-lg font-bold mb-2">Xulosa:</h4>
+            <p class="text-gray-700 text-lg mb-4">{{ result()!.resultText }}</p>
+            <h4 class="text-lg font-bold mb-2 text-blue-600">Tavsiyalarimiz:</h4>
+            <p class="text-gray-600 italic leading-relaxed">{{ result()!.recommendation }}</p>
+          </div>
         </div>
-      </div>
-      <div nz-result-extra>
-        <button nz-button nzType="primary" (click)="backToList()">Boshqa testlarni ko'rish</button>
-      </div>
-    </nz-result>
-  }
-
-  <!-- Test Questions (Step by Step) -->
-  @else if (selectedTest()) {
-    <div class="animate-fade-in max-w-3xl mx-auto">
-      <!-- Header -->
-      <div class="flex items-center gap-4 mb-6">
-        <button nz-button nzType="text" nzShape="circle" (click)="backToList()">
-          <span nz-icon nzType="arrow-left"></span>
-        </button>
-        <div class="flex-1">
-          <h2 class="text-xl font-bold m-0">{{ selectedTest()!.title }}</h2>
-          <nz-progress
-            [nzPercent]="progress()"
-            [nzShowInfo]="false"
-            [nzStrokeColor]="'#1890ff'"
-            class="mt-2">
-          </nz-progress>
+        <div nz-result-extra>
+          <button nz-button nzType="primary" (click)="backToList()">Boshqa testlarni ko'rish</button>
         </div>
-        <div class="text-gray-500 font-medium whitespace-nowrap">
-          {{ currentQuestionIndex() + 1 }} / {{ selectedTest()?.questions?.length || 0 }}
-        </div>
-      </div>
-
-      <!-- Question Card -->
-      @if (currentQuestion(); as question) {
-        <nz-card class="shadow-sm rounded-xl mb-6 min-h-[400px] flex flex-col">
-          <div class="flex-1">
-            <h3 class="text-xl font-bold mb-6 text-gray-800">{{ question.text }}</h3>
-
-            <div class="space-y-3">
-              @for (option of question.options; track option.id) {
-                <div
-                  class="p-4 rounded-lg border-2 cursor-pointer transition-all hover:bg-blue-50"
-                  [class.border-blue-500]="isOptionSelected(question.id, option.id)"
-                  [class.bg-blue-50]="isOptionSelected(question.id, option.id)"
-                  [class.border-gray-200]="!isOptionSelected(question.id, option.id)"
-                  (click)="selectOption(question.id, option.id)"
-                >
-                  <div class="flex items-center gap-3">
-                    <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
-                      [class.border-blue-500]="isOptionSelected(question.id, option.id)"
-                      [class.border-gray-300]="!isOptionSelected(question.id, option.id)"
-                    >
-                      @if (isOptionSelected(question.id, option.id)) {
-                        <div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
-                      }
-                    </div>
-                    <span class="text-lg">{{ option.text }}</span>
-                  </div>
-                </div>
-              }
+      </nz-result>
+    } @else {
+      <!-- Test Questions (Step by Step) -->
+      @if (selectedTest()) {
+        <div class="animate-fade-in max-w-3xl mx-auto">
+          <!-- Header -->
+          <div class="flex items-center gap-4 mb-6">
+            <button nz-button nzType="text" nzShape="circle" (click)="backToList()">
+              <span nz-icon nzType="arrow-left"></span>
+            </button>
+            <div class="flex-1">
+              <h2 class="text-xl font-bold m-0">{{ selectedTest()!.title }}</h2>
+              <nz-progress
+                [nzPercent]="progress()"
+                [nzShowInfo]="false"
+                [nzStrokeColor]="'#1890ff'"
+                class="mt-2">
+              </nz-progress>
+            </div>
+            <div class="text-gray-500 font-medium whitespace-nowrap">
+              {{ currentQuestionIndex() + 1 }} / {{ selectedTest()?.questions?.length || 0 }}
             </div>
           </div>
-        </nz-card>
 
-        <!-- Navigation Buttons -->
-        <div class="flex justify-between items-center">
-          <button
-            nz-button
-            nzType="default"
-            nzSize="large"
-            [disabled]="currentQuestionIndex() === 0"
-            (click)="previousQuestion()"
-          >
-            <span nz-icon nzType="left"></span> Oldingi
-          </button>
+          <!-- Question Card -->
+          @if (currentQuestion(); as question) {
+            <nz-card class="shadow-sm rounded-xl mb-6 min-h-[400px] flex flex-col">
+              <div class="flex-1">
+                <h3 class="text-xl font-bold mb-6 text-gray-800">{{ question.text }}</h3>
 
-          @if (isLastQuestion()) {
-            <button
-              nz-button
-              nzType="primary"
-              nzSize="large"
-              class="px-8"
-              [disabled]="!canGoNext() || submitting()"
-              [nzLoading]="submitting()"
-              (click)="confirmSubmit()"
-            >
-              Yakunlash <span nz-icon nzType="check"></span>
-            </button>
-          } @else {
-            <button
-              nz-button
-              nzType="primary"
-              nzSize="large"
-              class="px-8"
-              [disabled]="!canGoNext()"
-              (click)="nextQuestion()"
-            >
-              Keyingi <span nz-icon nzType="right"></span>
-            </button>
-          }
-        </div>
-      }
-    </div>
-  }
-
-  <!-- Tests List -->
-  @else {
-    <div class="animate-fade-in">
-      <div class="mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Diagnostik Testlar</h2>
-        <p class="text-gray-500 text-lg">Biznesingizning zaif nuqtalarini aniqlash uchun testlardan o'ting.</p>
-      </div>
-
-      @if (tests().length === 0) {
-        <div class="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed">
-          <span nz-icon nzType="info-circle" class="text-4xl text-gray-300 mb-4"></span>
-          <p class="text-gray-400 text-lg">Hozircha testlar mavjud emas</p>
-        </div>
-      } @else {
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          @for (test of tests(); track test.id) {
-            <nz-card
-              class="hover:shadow-lg transition-all duration-300 rounded-2xl cursor-pointer group border-gray-200 hover:border-blue-200 h-full flex flex-col"
-              [nzBodyStyle]="{ display: 'flex', flexDirection: 'column', height: '100%' }"
-              (click)="selectTest(test.slug)"
-            >
-              <div class="flex justify-between items-start mb-4">
-                <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                  <span nz-icon nzType="file-text" class="text-2xl"></span>
-                </div>
-                <nz-tag [nzColor]="'blue'">{{ test._count?.questions || 0 }} savol</nz-tag>
-              </div>
-
-              <h3 class="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors">{{ test.title }}</h3>
-              <p class="text-gray-500 line-clamp-3 mb-6 flex-1">{{ test.description }}</p>
-
-              <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between text-blue-600 font-bold">
-                <span>Boshlash</span>
-                <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
-                  <span nz-icon nzType="arrow-right"></span>
+                <div class="space-y-3">
+                  @for (option of question.options; track option.id) {
+                    <div
+                      class="p-4 rounded-lg border-2 cursor-pointer transition-all hover:bg-blue-50"
+                      [class.border-blue-500]="isOptionSelected(question.id, option.id)"
+                      [class.bg-blue-50]="isOptionSelected(question.id, option.id)"
+                      [class.border-gray-200]="!isOptionSelected(question.id, option.id)"
+                      (click)="selectOption(question.id, option.id)"
+                    >
+                      <div class="flex items-center gap-3">
+                        <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
+                          [class.border-blue-500]="isOptionSelected(question.id, option.id)"
+                          [class.border-gray-300]="!isOptionSelected(question.id, option.id)"
+                        >
+                          @if (isOptionSelected(question.id, option.id)) {
+                            <div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+                          }
+                        </div>
+                        <span class="text-lg">{{ option.text }}</span>
+                      </div>
+                    </div>
+                  }
                 </div>
               </div>
             </nz-card>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between items-center">
+              <button
+                nz-button
+                nzType="default"
+                nzSize="large"
+                [disabled]="currentQuestionIndex() === 0"
+                (click)="previousQuestion()"
+              >
+                <span nz-icon nzType="left"></span> Oldingi
+              </button>
+
+              @if (isLastQuestion()) {
+                <button
+                  nz-button
+                  nzType="primary"
+                  nzSize="large"
+                  class="px-8"
+                  [disabled]="!canGoNext() || submitting()"
+                  [nzLoading]="submitting()"
+                  (click)="confirmSubmit()"
+                >
+                  Yakunlash <span nz-icon nzType="check"></span>
+                </button>
+              } @else {
+                <button
+                  nz-button
+                  nzType="primary"
+                  nzSize="large"
+                  class="px-8"
+                  [disabled]="!canGoNext()"
+                  (click)="nextQuestion()"
+                >
+                  Keyingi <span nz-icon nzType="right"></span>
+                </button>
+              }
+            </div>
+          }
+        </div>
+      } @else {
+        <!-- Tests List -->
+        <div class="animate-fade-in">
+          <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-900">Diagnostik Testlar</h2>
+            <p class="text-gray-500 text-lg">Biznesingizning zaif nuqtalarini aniqlash uchun testlardan o'ting.</p>
+          </div>
+
+          @if (tests().length === 0) {
+            <div class="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed">
+              <span nz-icon nzType="info-circle" class="text-4xl text-gray-300 mb-4"></span>
+              <p class="text-gray-400 text-lg">Hozircha testlar mavjud emas</p>
+            </div>
+          } @else {
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              @for (test of tests(); track test.id) {
+                <nz-card
+                  class="hover:shadow-lg transition-all duration-300 rounded-2xl cursor-pointer group border-gray-200 hover:border-blue-200 h-full flex flex-col"
+                  [nzBodyStyle]="{ display: 'flex', flexDirection: 'column', height: '100%' }"
+                  (click)="selectTest(test.slug)"
+                >
+                  <div class="flex justify-between items-start mb-4">
+                    <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                      <span nz-icon nzType="file-text" class="text-2xl"></span>
+                    </div>
+                    <nz-tag [nzColor]="'blue'">{{ test._count?.questions || 0 }} savol</nz-tag>
+                  </div>
+
+                  <h3 class="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors">{{ test.title }}</h3>
+                  <p class="text-gray-500 line-clamp-3 mb-6 flex-1">{{ test.description }}</p>
+
+                  <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between text-blue-600 font-bold">
+                    <span>Boshlash</span>
+                    <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
+                      <span nz-icon nzType="arrow-right"></span>
+                    </div>
+                  </div>
+                </nz-card>
+              }
+            </div>
           }
         </div>
       }
-    </div>
+    }
   }
 </div>

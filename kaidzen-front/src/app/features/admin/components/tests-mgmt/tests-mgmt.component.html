@@ -105,15 +105,15 @@
 
         <nz-tab [nzTitle]="'Savollar (' + questions.length + ')'">
           <div formArrayName="questions" class="space-y-6 pt-4 max-h-[500px] overflow-y-auto pr-2">
-            @for (q of questions.controls; track $index) {
-              <div [formGroupName]="$index" class="p-4 border rounded-xl bg-gray-50 relative">
-                <button nz-button nzType="text" nzDanger class="absolute top-2 right-2" (click)="removeQuestion($index)">
+            @for (q of questions.controls; track q; let i = $index) {
+              <div [formGroupName]="i" class="p-4 border rounded-xl bg-gray-50 relative">
+                <button nz-button nzType="text" nzDanger class="absolute top-2 right-2" (click)="removeQuestion(i)">
                   <span nz-icon nzType="delete"></span>
                 </button>
 
                 <div class="flex gap-4 mb-4">
                   <div class="flex-1">
-                    <label class="block text-xs font-bold mb-1 uppercase">#{{$index + 1}} Savol matni</label>
+                    <label class="block text-xs font-bold mb-1 uppercase">#{{i + 1}} Savol matni</label>
                     <input nz-input formControlName="text" placeholder="Savolni kiriting..." />
                   </div>
                   <div class="w-24">
@@ -123,16 +123,16 @@
                 </div>
 
                 <div formArrayName="options" class="ml-6 space-y-2 border-l-2 pl-4 border-blue-200">
-                  @for (opt of (q.get('options') | any).controls; track optIdx; let optIdx = $index) {
+                  @for (opt of (q.get('options') | any).controls; track opt; let optIdx = $index) {
                     <div [formGroupName]="optIdx" class="flex gap-2 items-center">
                       <input nz-input formControlName="text" placeholder="Variant..." class="flex-1" />
-                      <nz-input-number formControlName="score" placeholder="Ball" class="w-20"></nz-input-number>
-                      <button nz-button nzType="text" nzDanger (click)="removeOption($index, optIdx)">
+                      <nz-input-number formControlName="score" nzPlaceHolder="Ball" class="w-20"></nz-input-number>
+                      <button nz-button nzType="text" nzDanger (click)="removeOption(i, optIdx)">
                         <span nz-icon nzType="minus-circle"></span>
                       </button>
                     </div>
                   }
-                  <button nz-button nzType="dashed" nzSize="small" (click)="addOption($index)">
+                  <button nz-button nzType="dashed" nzSize="small" (click)="addOption(i)">
                     <span nz-icon nzType="plus"></span> Variant qo'shish
                   </button>
                 </div>
@@ -146,15 +146,15 @@
 
         <nz-tab nzTitle="Natija logikasi">
           <div formArrayName="resultLogic" class="space-y-4 pt-4">
-            @for (logic of resultLogic.controls; track $index) {
-              <div [formGroupName]="$index" class="p-4 border rounded-lg bg-green-50">
+            @for (logic of resultLogic.controls; track logic; let i = $index) {
+              <div [formGroupName]="i" class="p-4 border rounded-lg bg-green-50">
                 <div class="grid grid-cols-2 gap-4 mb-2">
                   <nz-input-number formControlName="minScore" nzPlaceHolder="Min Ball" class="w-full"></nz-input-number>
                   <nz-input-number formControlName="maxScore" nzPlaceHolder="Max Ball" class="w-full"></nz-input-number>
                 </div>
                 <input nz-input formControlName="resultText" placeholder="Natija nomi" class="mb-2" />
                 <textarea nz-input formControlName="recommendation" placeholder="Tavsiya..."></textarea>
-                <button nz-button nzType="link" nzDanger (click)="removeResultLogic($index)">O'chirish</button>
+                <button nz-button nzType="link" nzDanger (click)="removeResultLogic(i)">O'chirish</button>
               </div>
             }
             <button nz-button nzType="dashed" nzBlock (click)="addResultLogic()">

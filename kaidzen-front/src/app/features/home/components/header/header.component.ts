@@ -87,7 +87,7 @@ export class HeaderComponent {
             }
           });
         },
-        error: (err) => {
+        error: () => {
           this.notification.error(
             'Kirish rad etildi',
             'Login yoki parol noto\'g\'ri!'

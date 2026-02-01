@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, signal, ChangeDetectionStrategy, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators, FormArray, FormsModule } from '@angular/forms';
 import { environment } from '../../../../../environments/environment';
@@ -49,7 +49,6 @@ export class TestsMgmtComponent implements OnInit {
   private http = inject(HttpClient);
   private fb = inject(FormBuilder);
   private notification = inject(NzNotificationService);
-  private platformId = inject(PLATFORM_ID);
 
   // States (Signals)
   tests = signal<Test[]>([]);
