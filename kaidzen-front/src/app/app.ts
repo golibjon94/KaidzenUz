@@ -15,11 +15,9 @@ export class App implements OnInit {
   private authStore = inject(AuthStore);
 
   ngOnInit() {
-    // Sahifa yangilanganda tokenni tekshirish va user ma'lumotlarini yuklash
     if (this.authStore.isAuthenticated()) {
       this.authService.getMe().subscribe({
         error: () => {
-          // Agar token yaroqsiz bo'lsa yoki xatolik yuz bersa, auth holatini tozalash
           this.authStore.clearAuth();
         }
       });

@@ -10,8 +10,7 @@ export const authGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  // Agar foydalanuvchi login qilmagan bo'lsa, home sahifasiga qaytarish
-  // (Home sahifasida login modalini ochish mantiqi bor)
+  // If user is not authenticated, redirect to home
   router.navigate(['/']);
   return false;
 };
