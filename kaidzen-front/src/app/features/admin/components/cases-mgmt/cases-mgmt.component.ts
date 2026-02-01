@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -37,6 +37,7 @@ export class CasesMgmtComponent implements OnInit {
   private fb = inject(FormBuilder);
   private message = inject(NzMessageService);
   private modal = inject(NzModalService);
+  private platformId = inject(PLATFORM_ID);
 
   cases = signal<BusinessCase[]>([]);
   loading = signal(true);
@@ -52,7 +53,11 @@ export class CasesMgmtComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.loadCases();
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadCases();
+    } else {
+      this.loading.set(false); // SSR da loadingni o'chirish
+    }
   }
 
   loadCases() {

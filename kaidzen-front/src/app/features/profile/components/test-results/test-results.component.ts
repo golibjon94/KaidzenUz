@@ -43,13 +43,18 @@ export class TestResultsComponent implements OnInit {
   loadResults() {
     this.loading.set(true);
     this.testsService.getMyResults().subscribe({
-      next: (data) => {
-        this.results.set(data);
+      next: (res: any) => {
+        // API dan kelayotgan 'res.data' ni tekshiramiz
+        // Agar 'data' mavjud bo'lsa uni olamiz, aks holda bo'sh massiv qaytaramiz
+        const actualData = res && res.data ? res.data : (Array.isArray(res) ? res : []);
+
+        this.results.set(actualData);
         this.loading.set(false);
       },
       error: (err) => {
         this.error.set('Natijalarni yuklashda xatolik');
         this.loading.set(false);
+        this.results.set([]); // Xato bo'lsa jadval bo'sh qolsin, xato bermasin
       },
     });
   }

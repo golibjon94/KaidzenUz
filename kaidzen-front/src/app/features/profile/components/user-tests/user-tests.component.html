@@ -43,10 +43,15 @@
         </button>
         <div class="flex-1">
           <h2 class="text-xl font-bold m-0">{{ selectedTest()!.title }}</h2>
-          <nz-progress [nzPercent]="progress()" [nzShowInfo]="false" [nzStrokeColor]="'#1890ff'" class="mt-2"></nz-progress>
+          <nz-progress
+            [nzPercent]="progress()"
+            [nzShowInfo]="false"
+            [nzStrokeColor]="'#1890ff'"
+            class="mt-2">
+          </nz-progress>
         </div>
         <div class="text-gray-500 font-medium whitespace-nowrap">
-          {{ currentQuestionIndex() + 1 }} / {{ selectedTest()!.questions.length }}
+          {{ currentQuestionIndex() + 1 }} / {{ selectedTest()?.questions?.length || 0 }}
         </div>
       </div>
 

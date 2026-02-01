@@ -6,7 +6,6 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
-import { REQUEST, RESPONSE } from './app/core/tokens/express.tokens';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -41,12 +40,7 @@ app.use(
  */
 app.use((req, res, next) => {
   angularApp
-    .handle(req, {
-      providers: [
-        { provide: REQUEST, useValue: req },
-        { provide: RESPONSE, useValue: res },
-      ],
-    })
+    .handle(req)
     .then((response) =>
       response ? writeResponseToNodeResponse(response, res) : next(),
     )

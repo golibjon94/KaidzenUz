@@ -52,7 +52,8 @@ export class UserTestsComponent implements OnInit {
   currentQuestion = computed(() => {
     const test = this.selectedTest();
     const index = this.currentQuestionIndex();
-    if (!test || !test.questions || test.questions.length === 0) return null;
+    // Savollar mavjudligini qat'iy tekshiramiz
+    if (!test || !test.questions || !test.questions[index]) return null;
     return test.questions[index];
   });
 
@@ -65,9 +66,8 @@ export class UserTestsComponent implements OnInit {
 
   isLastQuestion = computed(() => {
     const test = this.selectedTest();
-    const index = this.currentQuestionIndex();
     if (!test || !test.questions) return false;
-    return index === test.questions.length - 1;
+    return this.currentQuestionIndex() === test.questions.length - 1;
   });
 
   canGoNext = computed(() => {
@@ -101,8 +101,10 @@ export class UserTestsComponent implements OnInit {
     this.currentQuestionIndex.set(0);
 
     this.testsService.getBySlug(slug).subscribe({
-      next: (test) => {
-        this.selectedTest.set(test);
+      next: (res: any) => {
+        // MUHIM: Bekenddan kelgan 'data' o'ramini tekshiramiz
+        const testData = res.data ? res.data : res;
+        this.selectedTest.set(testData);
         this.loading.set(false);
       },
       error: (err) => {
@@ -111,7 +113,6 @@ export class UserTestsComponent implements OnInit {
       },
     });
   }
-
   selectOption(questionId: string, optionId: string) {
     const answers = new Map(this.selectedAnswers());
     answers.set(questionId, optionId);

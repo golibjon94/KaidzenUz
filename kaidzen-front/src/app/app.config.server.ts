@@ -2,10 +2,13 @@ import { mergeApplicationConfig, ApplicationConfig } from '@angular/core';
 import { provideServerRendering, withRoutes } from '@angular/ssr';
 import { appConfig } from './app.config';
 import { serverRoutes } from './app.routes.server';
+import { provideNzIcons } from 'ng-zorro-antd/icon';
+import { icons } from './icons-provider';
 
 const serverConfig: ApplicationConfig = {
   providers: [
-    provideServerRendering(withRoutes(serverRoutes))
+    provideServerRendering(withRoutes(serverRoutes)),
+    provideNzIcons(icons)
   ]
 };
 

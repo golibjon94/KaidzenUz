@@ -1,7 +1,10 @@
-import { Component, OnInit, inject, signal, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { FormBuilder, ReactiveFormsModule, Validators, FormArray, FormGroup, FormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators, FormArray, FormsModule } from '@angular/forms';
+import { environment } from '../../../../../environments/environment';
+
+// Ng-Zorro Modullari
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzTagModule } from 'ng-zorro-antd/tag';
@@ -15,9 +18,8 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
-import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { environment } from '../../../../../environments/environment';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { AnyPipe } from '../../../../core/pipes/any.pipe';
 
 interface Test {
   id: string;
@@ -26,34 +28,19 @@ interface Test {
   description: string;
   isActive: boolean;
   createdAt: string;
-  _count?: {
-    questions: number;
-  };
+  _count?: { questions: number };
 }
 
 @Component({
   selector: 'app-tests-mgmt',
   standalone: true,
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    NzTableModule,
-    NzButtonModule,
-    NzTagModule,
-    NzIconModule,
-    NzEmptyModule,
-    NzModalModule,
-    NzFormModule,
-    NzInputModule,
-    NzInputNumberModule,
-    NzSwitchModule,
-    NzTabsModule,
-    NzPopconfirmModule,
-    NzCardModule,
-    NzDividerModule,
+    CommonModule, ReactiveFormsModule, FormsModule,
+    NzTableModule, NzButtonModule, NzTagModule, NzIconModule,
+    NzEmptyModule, NzModalModule, NzFormModule, NzInputModule,
+    NzInputNumberModule, NzSwitchModule, NzTabsModule, NzPopconfirmModule,
+    NzBadgeModule, AnyPipe
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './tests-mgmt.component.html',
   styleUrl: './tests-mgmt.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,14 +49,17 @@ export class TestsMgmtComponent implements OnInit {
   private http = inject(HttpClient);
   private fb = inject(FormBuilder);
   private message = inject(NzMessageService);
+  private platformId = inject(PLATFORM_ID);
 
+  // States (Signals)
   tests = signal<Test[]>([]);
-  loading = signal(true);
+  loading = signal(false);
   isVisible = signal(false);
   isSubmitting = signal(false);
   editMode = signal(false);
   currentTestId = signal<string | null>(null);
 
+  // Form Initializatsiya
   testForm = this.fb.group({
     title: ['', [Validators.required]],
     slug: ['', [Validators.required]],
@@ -79,18 +69,16 @@ export class TestsMgmtComponent implements OnInit {
     resultLogic: this.fb.array([])
   });
 
-  get questions() {
-    return this.testForm.get('questions') as FormArray;
-  }
-
-  get resultLogic() {
-    return this.testForm.get('resultLogic') as FormArray;
-  }
+  get questions() { return this.testForm.get('questions') as FormArray; }
+  get resultLogic() { return this.testForm.get('resultLogic') as FormArray; }
 
   ngOnInit() {
     this.loadTests();
+    this.setupAutoSlug();
+  }
 
-    // Auto-generate slug from title
+  // Avtomatik slug yaratish (Faqat brauzerda va tahrirlash bo'lmaganda)
+  private setupAutoSlug() {
     this.testForm.get('title')?.valueChanges.subscribe(value => {
       if (value && !this.editMode()) {
         const slug = value.toLowerCase()
@@ -103,16 +91,13 @@ export class TestsMgmtComponent implements OnInit {
 
   loadTests() {
     this.loading.set(true);
-    this.http.get<Test[] | {data: Test[]}>(`${environment.apiUrl}/tests/admin/all`).subscribe({
+    this.http.get<any>(`${environment.apiUrl}/tests/admin/all`).subscribe({
       next: (res) => {
-        // Handle both array and object with data property
-        const data = Array.isArray(res) ? res : (res as any).data || [];
-        this.tests.set(data);
+        this.tests.set(Array.isArray(res) ? res : res.data || []);
         this.loading.set(false);
       },
       error: () => {
-        this.message.error('Testlarni yuklashda xatolik');
-        this.tests.set([]);
+        this.message.error('Ma\'lumotlarni yuklashda xatolik yuz berdi');
         this.loading.set(false);
       }
     });
@@ -124,8 +109,7 @@ export class TestsMgmtComponent implements OnInit {
     this.testForm.reset({ isActive: true });
     this.questions.clear();
     this.resultLogic.clear();
-    this.addQuestion();
-    this.addResultLogic();
+    this.addQuestion(); // Bitta bo'sh savol bilan boshlash
     this.isVisible.set(true);
   }
 
@@ -133,193 +117,95 @@ export class TestsMgmtComponent implements OnInit {
     this.loading.set(true);
     this.http.get<any>(`${environment.apiUrl}/tests/admin/${id}`).subscribe({
       next: (res) => {
-        const test = res.data || res; // Handle wrapped response
-
+        const test = res.data || res;
         this.editMode.set(true);
         this.currentTestId.set(id);
 
-        // Clear arrays
+        // Formni tozalash va to'ldirish
         this.questions.clear();
         this.resultLogic.clear();
+        this.testForm.patchValue(test);
 
-        // Populate form
-        this.testForm.patchValue({
-          title: test.title,
-          slug: test.slug,
-          description: test.description,
-          isActive: test.isActive
-        });
-
-        // Populate questions
-        if (test.questions && test.questions.length > 0) {
-          test.questions.forEach((q: any) => {
-            const questionGroup = this.fb.group({
-              text: [q.text, Validators.required],
-              order: [q.order, Validators.required],
-              options: this.fb.array([])
-            });
-
-            const optionsArray = questionGroup.get('options') as FormArray;
-            if (q.options && q.options.length > 0) {
-              q.options.forEach((o: any) => {
-                optionsArray.push(this.fb.group({
-                  text: [o.text, Validators.required],
-                  score: [o.score, Validators.required],
-                  order: [o.order, Validators.required]
-                }));
-              });
-            } else {
-              // Add at least one empty option if none exist
-              this.addOptionToGroup(optionsArray);
-            }
-
-            this.questions.push(questionGroup);
-          });
-        } else {
-          this.addQuestion();
-        }
-
-        // Populate result logic
-        if (test.resultLogic && test.resultLogic.length > 0) {
-          test.resultLogic.forEach((l: any) => {
-            this.resultLogic.push(this.fb.group({
-              minScore: [l.minScore, [Validators.required, Validators.min(0)]],
-              maxScore: [l.maxScore, [Validators.required, Validators.min(0)]],
-              resultText: [l.resultText, Validators.required],
-              recommendation: [l.recommendation, Validators.required]
-            }));
-          });
-        } else {
-          this.addResultLogic();
-        }
+        // Dinamik savollarni qo'shish
+        test.questions?.forEach((q: any) => this.addQuestion(q));
+        test.resultLogic?.forEach((l: any) => this.addResultLogic(l));
 
         this.loading.set(false);
         this.isVisible.set(true);
       },
+      error: () => this.message.error('Tahrirlash uchun ma\'lumot topilmadi')
+    });
+  }
+
+  // Dinamik Form Metodlari
+  addQuestion(data: any = null) {
+    const qGroup = this.fb.group({
+      text: [data?.text || '', Validators.required],
+      order: [data?.order || this.questions.length + 1],
+      options: this.fb.array([])
+    });
+    this.questions.push(qGroup);
+
+    const qIdx = this.questions.length - 1;
+    if (data?.options) {
+      data.options.forEach((o: any) => this.addOption(qIdx, o));
+    } else {
+      this.addOption(qIdx); // Kamida 1 ta variant
+    }
+  }
+
+  addOption(qIdx: number, data: any = null) {
+    const options = this.questions.at(qIdx).get('options') as FormArray;
+    options.push(this.fb.group({
+      text: [data?.text || '', Validators.required],
+      score: [data?.score || 0],
+      order: [data?.order || options.length + 1]
+    }));
+  }
+
+  addResultLogic(data: any = null) {
+    this.resultLogic.push(this.fb.group({
+      minScore: [data?.minScore || 0, [Validators.required, Validators.min(0)]],
+      maxScore: [data?.maxScore || 0, [Validators.required, Validators.min(0)]],
+      resultText: [data?.resultText || '', Validators.required],
+      recommendation: [data?.recommendation || '']
+    }));
+  }
+
+  removeQuestion(idx: number) { this.questions.removeAt(idx); }
+  removeOption(qIdx: number, oIdx: number) { (this.questions.at(qIdx).get('options') as FormArray).removeAt(oIdx); }
+  removeResultLogic(idx: number) { this.resultLogic.removeAt(idx); }
+
+  handleCancel() { this.isVisible.set(false); }
+
+  submitForm() {
+    if (this.testForm.invalid) {
+      this.message.warning('Iltimos, barcha majburiy maydonlarni to\'ldiring');
+      return;
+    }
+
+    this.isSubmitting.set(true);
+    const url = this.editMode() ? `${environment.apiUrl}/tests/${this.currentTestId()}` : `${environment.apiUrl}/tests`;
+    const method = this.editMode() ? 'put' : 'post';
+
+    this.http[method](url, this.testForm.value).subscribe({
+      next: () => {
+        this.message.success('Muvaffaqiyatli saqlandi');
+        this.isVisible.set(false);
+        this.loadTests();
+        this.isSubmitting.set(false);
+      },
       error: () => {
-        this.message.error('Test ma\'lumotlarini yuklashda xatolik');
-        this.loading.set(false);
+        this.message.error('Saqlashda xatolik yuz berdi');
+        this.isSubmitting.set(false);
       }
     });
   }
 
   deleteTest(id: string) {
     this.http.delete(`${environment.apiUrl}/tests/${id}`).subscribe({
-      next: () => {
-        this.message.success('Test o\'chirildi');
-        this.loadTests();
-      },
-      error: () => {
-        this.message.error('Testni o\'chirishda xatolik');
-      }
+      next: () => { this.message.success('O\'chirildi'); this.loadTests(); },
+      error: () => this.message.error('O\'chirishda xatolik')
     });
-  }
-
-  toggleActive(id: string) {
-    this.http.put(`${environment.apiUrl}/tests/${id}/toggle-active`, {}).subscribe({
-      next: () => {
-        this.message.success('Status o\'zgartirildi');
-        this.loadTests();
-      },
-      error: () => {
-        this.message.error('Statusni o\'zgartirishda xatolik');
-      }
-    });
-  }
-
-  handleCancel() {
-    this.isVisible.set(false);
-  }
-
-  addQuestion() {
-    const questionGroup = this.fb.group({
-      text: ['', Validators.required],
-      order: [this.questions.length + 1, Validators.required],
-      options: this.fb.array([])
-    });
-    this.questions.push(questionGroup);
-
-    // Add 2 default options
-    this.addOption(this.questions.length - 1);
-    this.addOption(this.questions.length - 1);
-  }
-
-  removeQuestion(index: number) {
-    this.questions.removeAt(index);
-  }
-
-  getOptions(questionIndex: number) {
-    return this.questions.at(questionIndex).get('options') as FormArray;
-  }
-
-  addOption(questionIndex: number) {
-    const options = this.getOptions(questionIndex);
-    this.addOptionToGroup(options);
-  }
-
-  private addOptionToGroup(options: FormArray) {
-    const optionGroup = this.fb.group({
-      text: ['', Validators.required],
-      score: [0, Validators.required],
-      order: [options.length + 1, Validators.required]
-    });
-    options.push(optionGroup);
-  }
-
-  removeOption(questionIndex: number, optionIndex: number) {
-    this.getOptions(questionIndex).removeAt(optionIndex);
-  }
-
-  addResultLogic() {
-    const logicGroup = this.fb.group({
-      minScore: [0, [Validators.required, Validators.min(0)]],
-      maxScore: [0, [Validators.required, Validators.min(0)]],
-      resultText: ['', Validators.required],
-      recommendation: ['', Validators.required]
-    });
-    this.resultLogic.push(logicGroup);
-  }
-
-  removeResultLogic(index: number) {
-    this.resultLogic.removeAt(index);
-  }
-
-  submitForm() {
-    if (this.testForm.valid) {
-      this.isSubmitting.set(true);
-
-      const request = this.editMode()
-        ? this.http.put(`${environment.apiUrl}/tests/${this.currentTestId()}`, this.testForm.value)
-        : this.http.post(`${environment.apiUrl}/tests`, this.testForm.value);
-
-      request.subscribe({
-        next: () => {
-          this.message.success(this.editMode() ? 'Test yangilandi' : 'Test yaratildi');
-          this.isVisible.set(false);
-          this.loadTests();
-          this.isSubmitting.set(false);
-        },
-        error: () => {
-          this.message.error('Xatolik yuz berdi');
-          this.isSubmitting.set(false);
-        }
-      });
-    } else {
-      Object.values(this.testForm.controls).forEach(control => {
-        if (control.invalid) {
-          control.markAsDirty();
-          control.updateValueAndValidity({ onlySelf: true });
-        }
-      });
-
-      // Mark nested form arrays as touched
-      this.questions.controls.forEach((q: any) => {
-        q.markAllAsTouched();
-        const options = q.get('options') as FormArray;
-        options.controls.forEach((o: any) => o.markAllAsTouched());
-      });
-
-      this.resultLogic.controls.forEach((l: any) => l.markAllAsTouched());
-    }
   }
 }
