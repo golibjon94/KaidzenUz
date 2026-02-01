@@ -69,7 +69,6 @@ export class HeaderComponent {
         next: () => {
           this.authService.getMe().subscribe({
             next: () => {
-              // Notification success xabari
               this.notification.success(
                 'Muvaffaqiyat',
                 'Tizimga muvaffaqiyatli kirdingiz!'

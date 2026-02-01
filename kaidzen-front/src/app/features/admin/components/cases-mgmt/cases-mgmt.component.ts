@@ -9,7 +9,7 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
-import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { AdminCasesService } from '../../services/admin-cases.service';
 import { BusinessCase } from '../../../../core/models/case.model';
 
@@ -35,7 +35,7 @@ import { BusinessCase } from '../../../../core/models/case.model';
 export class CasesMgmtComponent implements OnInit {
   private casesService = inject(AdminCasesService);
   private fb = inject(FormBuilder);
-  private message = inject(NzMessageService);
+  private notification = inject(NzNotificationService);
   private modal = inject(NzModalService);
   private platformId = inject(PLATFORM_ID);
 
@@ -88,13 +88,13 @@ export class CasesMgmtComponent implements OnInit {
       this.isSubmitting.set(true);
       this.casesService.createCase(this.caseForm.value).subscribe({
         next: () => {
-          this.message.success('Keys yaratildi');
+          this.notification.success('Muvaffaqiyat', 'Keys yaratildi');
           this.isModalVisible.set(false);
           this.isSubmitting.set(false);
           this.loadCases();
         },
         error: () => {
-          this.message.error('Xatolik yuz berdi');
+          this.notification.error('Xatolik', 'Xatolik yuz berdi');
           this.isSubmitting.set(false);
         }
       });
@@ -116,7 +116,7 @@ export class CasesMgmtComponent implements OnInit {
       nzOkDanger: true,
       nzOnOk: () => {
         this.casesService.deleteCase(id).subscribe(() => {
-          this.message.success('Keys o\'chirildi');
+          this.notification.success('Muvaffaqiyat', 'Keys o\'chirildi');
           this.loadCases();
         });
       }

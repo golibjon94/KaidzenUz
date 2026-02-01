@@ -5,7 +5,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
@@ -26,7 +26,7 @@ export class RegisterComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private message = inject(NzMessageService);
+  private notification = inject(NzNotificationService);
 
   isLoading = signal(false);
 
@@ -46,12 +46,12 @@ export class RegisterComponent {
       };
       this.authService.signup(registerData).subscribe({
         next: () => {
-          this.message.success('Ro\'yxatdan o\'tish muvaffaqiyatli amalga oshirildi!');
+          this.notification.success('Muvaffaqiyat', 'Ro\'yxatdan o\'tish muvaffaqiyatli amalga oshirildi!');
           this.isLoading.set(false);
           this.router.navigate(['/profile']);
         },
         error: (err) => {
-          this.message.error('Ro\'yxatdan o\'tishda xatolik yuz berdi!');
+          this.notification.error('Xatolik', 'Ro\'yxatdan o\'tishda xatolik yuz berdi!');
           this.isLoading.set(false);
         }
       });

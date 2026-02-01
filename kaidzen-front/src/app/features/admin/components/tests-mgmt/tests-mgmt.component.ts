@@ -15,7 +15,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
-import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
@@ -48,7 +48,7 @@ interface Test {
 export class TestsMgmtComponent implements OnInit {
   private http = inject(HttpClient);
   private fb = inject(FormBuilder);
-  private message = inject(NzMessageService);
+  private notification = inject(NzNotificationService);
   private platformId = inject(PLATFORM_ID);
 
   // States (Signals)
@@ -97,7 +97,7 @@ export class TestsMgmtComponent implements OnInit {
         this.loading.set(false);
       },
       error: () => {
-        this.message.error('Ma\'lumotlarni yuklashda xatolik yuz berdi');
+        this.notification.error('Xatolik', 'Ma\'lumotlarni yuklashda xatolik yuz berdi');
         this.loading.set(false);
       }
     });
@@ -133,7 +133,7 @@ export class TestsMgmtComponent implements OnInit {
         this.loading.set(false);
         this.isVisible.set(true);
       },
-      error: () => this.message.error('Tahrirlash uchun ma\'lumot topilmadi')
+      error: () => this.notification.error('Xatolik', 'Tahrirlash uchun ma\'lumot topilmadi')
     });
   }
 
@@ -180,7 +180,7 @@ export class TestsMgmtComponent implements OnInit {
 
   submitForm() {
     if (this.testForm.invalid) {
-      this.message.warning('Iltimos, barcha majburiy maydonlarni to\'ldiring');
+      this.notification.warning('Diqqat', 'Iltimos, barcha majburiy maydonlarni to\'ldiring');
       return;
     }
 
@@ -190,13 +190,13 @@ export class TestsMgmtComponent implements OnInit {
 
     this.http[method](url, this.testForm.value).subscribe({
       next: () => {
-        this.message.success('Muvaffaqiyatli saqlandi');
+        this.notification.success('Muvaffaqiyat', 'Muvaffaqiyatli saqlandi');
         this.isVisible.set(false);
         this.loadTests();
         this.isSubmitting.set(false);
       },
       error: () => {
-        this.message.error('Saqlashda xatolik yuz berdi');
+        this.notification.error('Xatolik', 'Saqlashda xatolik yuz berdi');
         this.isSubmitting.set(false);
       }
     });
@@ -204,8 +204,8 @@ export class TestsMgmtComponent implements OnInit {
 
   deleteTest(id: string) {
     this.http.delete(`${environment.apiUrl}/tests/${id}`).subscribe({
-      next: () => { this.message.success('O\'chirildi'); this.loadTests(); },
-      error: () => this.message.error('O\'chirishda xatolik')
+      next: () => { this.notification.success('Muvaffaqiyat', 'O\'chirildi'); this.loadTests(); },
+      error: () => this.notification.error('Xatolik', 'O\'chirishda xatolik')
     });
   }
 }

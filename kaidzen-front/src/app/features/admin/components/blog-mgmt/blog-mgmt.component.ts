@@ -11,7 +11,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzUploadModule, NzUploadFile } from 'ng-zorro-antd/upload';
-import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { AdminBlogService } from '../../services/admin-blog.service';
 import { FileService } from '../../../../core/services/file.service';
 import { BlogPost } from '../../../../core/models/blog.model';
@@ -42,7 +42,7 @@ export class BlogMgmtComponent implements OnInit {
   private blogService = inject(AdminBlogService);
   private fileService = inject(FileService);
   private fb = inject(FormBuilder);
-  private message = inject(NzMessageService);
+  private notification = inject(NzNotificationService);
   private modal = inject(NzModalService);
 
   posts = signal<BlogPost[]>([]);
@@ -106,10 +106,10 @@ export class BlogMgmtComponent implements OnInit {
       next: (res) => {
         // Backend returns { data: { id: "uuid", url: "/uploads/filename.ext" } } due to TransformInterceptor
         this.blogForm.patchValue({ imageId: res.data.id });
-        this.message.success('Rasm muvaffaqiyatli yuklandi');
+        this.notification.success('Muvaffaqiyat', 'Rasm muvaffaqiyatli yuklandi');
       },
       error: () => {
-        this.message.error('Rasmni yuklashda xatolik yuz berdi');
+        this.notification.error('Xatolik', 'Rasmni yuklashda xatolik yuz berdi');
       }
     });
     return false;
@@ -126,13 +126,13 @@ export class BlogMgmtComponent implements OnInit {
 
       request.subscribe({
         next: () => {
-          this.message.success(this.editingPost() ? 'Maqola yangilandi' : 'Maqola yaratildi');
+          this.notification.success('Muvaffaqiyat', this.editingPost() ? 'Maqola yangilandi' : 'Maqola yaratildi');
           this.isModalVisible.set(false);
           this.isSubmitting.set(false);
           this.loadPosts();
         },
         error: () => {
-          this.message.error('Xatolik yuz berdi');
+          this.notification.error('Xatolik', 'Xatolik yuz berdi');
           this.isSubmitting.set(false);
         }
       });
@@ -154,7 +154,7 @@ export class BlogMgmtComponent implements OnInit {
       nzOkDanger: true,
       nzOnOk: () => {
         this.blogService.deletePost(id).subscribe(() => {
-          this.message.success('Maqola o\'chirildi');
+          this.notification.success('Muvaffaqiyat', 'Maqola o\'chirildi');
           this.loadPosts();
         });
       }
