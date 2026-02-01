@@ -1,12 +1,18 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+
+// Ng-Zorro Modullari
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+
+// Ng-Zorro Notification Servisi
+import { NzNotificationService } from 'ng-zorro-antd/notification'; // Message o'rniga
+
+// Shaxsiy Servislar va Store
 import { AuthService } from '../../../../core/services/auth.service';
 import { AuthStore } from '../../../../core/stores/auth.store';
 
@@ -29,13 +35,14 @@ export class HeaderComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private message = inject(NzMessageService);
+  private notification = inject(NzNotificationService);
   private modal = inject(NzModalService);
   public authStore = inject(AuthStore);
 
   isLoginModalVisible = signal(false);
   isLoading = signal(false);
 
+  // Login formasi
   loginForm: FormGroup = this.fb.group({
     phone: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
     password: ['', [Validators.required, Validators.minLength(6)]]
@@ -57,28 +64,40 @@ export class HeaderComponent {
         ...this.loginForm.value,
         phone: `+998${this.loginForm.value.phone}`
       };
+
       this.authService.login(loginData).subscribe({
         next: () => {
           this.authService.getMe().subscribe({
             next: () => {
-              this.message.success('Tizimga muvaffaqiyatli kirdingiz!');
+              // Notification success xabari
+              this.notification.success(
+                'Muvaffaqiyat',
+                'Tizimga muvaffaqiyatli kirdingiz!'
+              );
               this.isLoginModalVisible.set(false);
               this.loginForm.reset();
               this.isLoading.set(false);
               this.router.navigate(['/profile']);
             },
             error: () => {
-              this.message.error('Profil ma\'lumotlarini yuklashda xatolik!');
+              this.notification.error(
+                'Xatolik',
+                'Profil ma\'lumotlarini yuklashda xatolik yuz berdi!'
+              );
               this.isLoading.set(false);
             }
           });
         },
         error: (err) => {
-          this.message.error('Login yoki parol noto\'g\'ri!');
+          this.notification.error(
+            'Kirish rad etildi',
+            'Login yoki parol noto\'g\'ri!'
+          );
           this.isLoading.set(false);
         }
       });
     } else {
+      // Formani validatsiyadan o'tkazish
       Object.values(this.loginForm.controls).forEach(control => {
         if (control.invalid) {
           control.markAsDirty();
@@ -86,11 +105,6 @@ export class HeaderComponent {
         }
       });
     }
-  }
-
-  goToRegister() {
-    this.isLoginModalVisible.set(false);
-    this.router.navigate(['/auth/register']);
   }
 
   logout() {
@@ -102,16 +116,28 @@ export class HeaderComponent {
       nzOnOk: () => {
         this.authService.logout().subscribe({
           next: () => {
-            this.message.success('Tizimdan chiqdingiz');
+            this.notification.success(
+              'Tizimdan chiqish',
+              'Siz hisobingizdan muvaffaqiyatli chiqdingiz'
+            );
             this.router.navigate(['/']);
           },
           error: () => {
-            this.message.error('Xatolik yuz berdi');
+            this.notification.error(
+              'Xatolik',
+              'Tizimdan chiqishda muammo yuz berdi'
+            );
           }
         });
       },
       nzCancelText: 'Bekor qilish'
     });
+  }
+
+  // Navigatsiya metodlari
+  goToRegister() {
+    this.isLoginModalVisible.set(false);
+    this.router.navigate(['/auth/register']);
   }
 
   goToProfile() {

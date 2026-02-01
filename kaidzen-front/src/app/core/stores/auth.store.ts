@@ -6,15 +6,11 @@ import { CookieService } from '../services/cookie.service';
 export class AuthStore {
   private cookieService = inject(CookieService);
 
-  // Signals
   private _user = signal<User | null>(null);
   private _loading = signal(false);
 
-  // Initialize tokens from cookies (works on both SSR and Browser)
-  private _accessToken = signal<string | null>(this.cookieService.get('accessToken'));
-  private _refreshToken = signal<string | null>(this.cookieService.get('refreshToken'));
-
-  // Computed signals
+  private _accessToken = signal<string | null>(this.cookieService.get('access_token'));
+  private _refreshToken = signal<string | null>(this.cookieService.get('refresh_token'));
   readonly user = this._user.asReadonly();
   readonly loading = this._loading.asReadonly();
   readonly accessToken = this._accessToken.asReadonly();
@@ -31,8 +27,8 @@ export class AuthStore {
     this._accessToken.set(accessToken);
     this._refreshToken.set(refreshToken);
 
-    this.cookieService.set('accessToken', accessToken);
-    this.cookieService.set('refreshToken', refreshToken);
+    this.cookieService.set('access_token', accessToken, 7, '/');
+    this.cookieService.set('refresh_token', refreshToken, 7, '/');
   }
 
   clearAuth() {
@@ -40,10 +36,9 @@ export class AuthStore {
     this._accessToken.set(null);
     this._refreshToken.set(null);
 
-    this.cookieService.delete('accessToken');
-    this.cookieService.delete('refreshToken');
+    this.cookieService.delete('access_token', '/');
+    this.cookieService.delete('refresh_token', '/');
   }
-
   getAccessToken() {
     return this._accessToken();
   }

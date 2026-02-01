@@ -5,6 +5,7 @@ import { AuthResponse, User } from '../models/user.model';
 import { SignupDto, LoginDto } from '../models/auth.model';
 import { AuthStore } from '../stores/auth.store';
 import { tap, catchError, of } from 'rxjs';
+import { SsrCookieService } from 'ngx-cookie-service-ssr'; // Qo'shildi
 
 const USER_KEY = makeStateKey<User>('auth_user');
 
@@ -16,8 +17,12 @@ export class AuthService {
   private authStore = inject(AuthStore);
   private transferState = inject(TransferState);
   private platformId = inject(PLATFORM_ID);
+  private cookieService = inject(SsrCookieService); // Inject qilindi
   private apiUrl = '/auth';
   private usersUrl = '/users';
+
+  // Cookie sozlamalari (Options)
+  private cookieOptions = { path: '/', secure: true, sameSite: 'Lax' as const };
 
   getMe() {
     if (this.transferState.hasKey(USER_KEY)) {
@@ -42,6 +47,8 @@ export class AuthService {
   signup(data: SignupDto) {
     return this.http.post<{ data: AuthResponse }>(`${this.apiUrl}/signup`, data).pipe(
       tap(res => {
+        // MUHIM: Tokenlarni cookie-ga yozish
+        this.setCookies(res.data.accessToken, res.data.refreshToken);
         this.authStore.setTokens(res.data.accessToken, res.data.refreshToken);
         this.authStore.setUser(res.data.user);
       })
@@ -51,6 +58,8 @@ export class AuthService {
   login(data: LoginDto) {
     return this.http.post<{ data: AuthResponse }>(`${this.apiUrl}/login`, data).pipe(
       tap(res => {
+        // MUHIM: Tokenlarni cookie-ga yozish
+        this.setCookies(res.data.accessToken, res.data.refreshToken);
         this.authStore.setTokens(res.data.accessToken, res.data.refreshToken);
         this.authStore.setUser(res.data.user);
       })
@@ -60,9 +69,9 @@ export class AuthService {
   logout() {
     const refreshToken = this.authStore.refreshToken();
     return this.http.post(`${this.apiUrl}/logout`, { refreshToken }).pipe(
-      tap(() => this.authStore.clearAuth()),
+      tap(() => this.clearAllAuth()),
       catchError(err => {
-        this.authStore.clearAuth();
+        this.clearAllAuth();
         throw err;
       })
     );
@@ -70,7 +79,22 @@ export class AuthService {
 
   refreshToken(token: string) {
     return this.http.post<{ accessToken: string, refreshToken: string }>(`${this.apiUrl}/refresh`, { refreshToken: token }).pipe(
-      tap(res => this.authStore.setTokens(res.accessToken, res.refreshToken))
+      tap(res => {
+        this.setCookies(res.accessToken, res.refreshToken);
+        this.authStore.setTokens(res.accessToken, res.refreshToken);
+      })
     );
+  }
+
+  // Yordamchi metodlar
+  private setCookies(access: string, refresh: string) {
+    this.cookieService.set('access_token', access, this.cookieOptions);
+    this.cookieService.set('refresh_token', refresh, this.cookieOptions);
+  }
+
+  private clearAllAuth() {
+    this.cookieService.delete('access_token', '/');
+    this.cookieService.delete('refresh_token', '/');
+    this.authStore.clearAuth();
   }
 }

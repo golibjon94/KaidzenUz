@@ -1,10 +1,11 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { AuthStore } from '../stores/auth.store';
+import { SsrCookieService } from 'ngx-cookie-service-ssr';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const authStore = inject(AuthStore);
-  const token = authStore.getAccessToken();
+  const cookieService = inject(SsrCookieService);
+
+  const token = cookieService.get('access_token');
 
   if (token) {
     req = req.clone({

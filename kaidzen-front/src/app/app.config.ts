@@ -14,8 +14,17 @@ import { provideNzIcons } from 'ng-zorro-antd/icon';
 import { baseUrlInterceptor } from './core/interceptors/base-url.interceptor';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import {SsrCookieService } from 'ngx-cookie-service-ssr';
+import {NzConfig, provideNzConfig} from 'ng-zorro-antd/core/config';
 
 registerLocaleData(en);
+
+const nzConfig: NzConfig = {
+  notification: {
+    nzPlacement: 'topRight',
+    nzDuration: 4000,
+    nzMaxStack: 5,
+  }
+};
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,6 +34,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([baseUrlInterceptor, authInterceptor]), withFetch()),
     provideAnimationsAsync(),
     provideNzI18n(en_US),
+    provideNzConfig(nzConfig),
     importProvidersFrom(FormsModule),
     provideNzIcons(icons),
     SsrCookieService
