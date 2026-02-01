@@ -1,62 +1,74 @@
-<header class="bg-white border-b border-gray-100">
+<header class="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
   <nav class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-    <a routerLink="/">
-      <div class="flex items-center gap-2">
-        <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+    <a routerLink="/" class="group">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 bg-linear-to-tr from-blue-600 to-blue-400 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200 group-hover:scale-105 transition-transform">
           <span class="text-white font-bold text-xl">K</span>
         </div>
-        <span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+        <span class="text-2xl font-black bg-gradient-to-r from-blue-700 to-blue-500 bg-clip-text text-transparent tracking-tight">
           Kaidzen
         </span>
       </div>
     </a>
 
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-6">
       @if (authStore.isAuthenticated()) {
-        <div class="flex items-center gap-3">
-          <button class="font-medium flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors" routerLink="/profile">
-            <span nz-icon nzType="user"></span>
-            {{ authStore.user()?.fullName }}
-          </button>
-          <button class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors" (click)="logout()" title="Chiqish">
-            <span nz-icon nzType="logout"></span>
-          </button>
+        <div class="flex items-center gap-4 bg-gray-50 pl-4 pr-2 py-1.5 rounded-full border border-gray-100">
+          <span class="text-sm font-semibold text-gray-700">{{ authStore.user()?.fullName }}</span>
+          <nz-avatar [nzSize]="36" nzIcon="user" class="bg-blue-600 shadow-sm"></nz-avatar>
         </div>
       }
     </div>
   </nav>
 </header>
 
-<div class="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row gap-8">
-  <!-- Sidebar -->
-  <aside class="w-full md:w-64 space-y-2">
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-      <div class="flex flex-col items-center text-center">
-        <nz-avatar [nzSize]="80" nzIcon="user" class="bg-blue-600 mb-4"></nz-avatar>
-        <h3 class="text-lg font-bold">{{ authStore.user()?.fullName }}</h3>
-        <p class="text-gray-500 text-sm">{{ authStore.user()?.phone }}</p>
+<div class="bg-gray-50/50 min-h-[calc(100vh-80px)]">
+  <div class="max-w-7xl mx-auto px-6 py-10 flex flex-col lg:flex-row gap-8">
+
+    <aside class="w-full lg:w-72 space-y-6">
+      <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+        <div class="flex flex-col items-center text-center">
+          <div class="relative mb-4">
+            <nz-avatar [nzSize]="100" nzIcon="user" class="bg-gradient-to-b from-blue-500 to-blue-700 shadow-xl border-4 border-white"></nz-avatar>
+            <div class="absolute -bottom-1 -right-1 bg-green-500 w-5 h-5 rounded-full border-4 border-white"></div>
+          </div>
+          <h3 class="text-xl font-extrabold text-gray-800 mb-1">{{ authStore.user()?.fullName }}</h3>
+          <nz-tag nzColor="blue" class="rounded-full px-3 py-0.5 font-bold uppercase text-[10px]">Foydalanuvchi</nz-tag>
+          <p class="text-gray-400 text-sm mt-3 flex items-center gap-1">
+            <span nz-icon nzType="phone" nzTheme="outline"></span> {{ authStore.user()?.phone }}
+          </p>
+        </div>
       </div>
-    </div>
 
-    <nav class="bg-white rounded-2xl shadow-sm border border-gray-100 p-2">
-      <a routerLink="./overview" routerLinkActive="text-blue-600 bg-blue-50" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-all font-medium">
-        <span nz-icon nzType="user"></span> Profil ma'lumotlari
-      </a>
-      <a routerLink="./tests" routerLinkActive="text-blue-600 bg-blue-50" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-all font-medium">
-        <span nz-icon nzType="solution"></span> Diagnostik testlar
-      </a>
-      <a routerLink="./results" routerLinkActive="text-blue-600 bg-blue-50" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-all font-medium">
-        <span nz-icon nzType="bar-chart"></span> Test natijalari
-      </a>
-      <div class="border-t border-gray-100 my-2"></div>
-      <button (click)="logout()" class="flex items-center gap-3 p-3 w-full rounded-xl hover:bg-red-50 text-red-500 transition-all font-medium">
-        <span nz-icon nzType="logout"></span> Chiqish
-      </button>
-    </nav>
-  </aside>
+      <nav class="bg-white rounded-3xl shadow-sm border border-gray-100 p-3 space-y-1">
+        <a routerLink="./overview"
+           routerLinkActive="bg-blue-600 text-white shadow-lg shadow-blue-200"
+           class="flex items-center gap-4 p-4 rounded-2xl text-gray-500 hover:text-blue-600 hover:bg-blue-50/50 transition-all duration-300 font-semibold">
+          <span nz-icon nzType="dashboard" class="text-lg"></span>
+          <span>Umumiy ma'lumot</span>
+        </a>
+        <a routerLink="./tests" routerLinkActive="active-link" class="nav-item">
+          <span nz-icon nzType="file-done" nzTheme="outline" class="text-lg"></span>
+          <span>Diagnostik testlar</span>
+        </a>
+        <a routerLink="./results" routerLinkActive="active-link" class="nav-item">
+          <span nz-icon nzType="pie-chart" nzTheme="outline" class="text-lg"></span>
+          <span>Mening natijalarim</span>
+        </a>
 
-  <!-- Content -->
-  <main class="flex-1">
-    <router-outlet></router-outlet>
-  </main>
+        <div class="h-px bg-gray-100 mx-4 my-3"></div>
+
+        <button (click)="logout()" class="nav-item text-red-500 hover:bg-red-50 w-full group">
+          <span nz-icon nzType="logout" nzTheme="outline" class="text-lg group-hover:translate-x-1 transition-transform"></span>
+          <span>Chiqish</span>
+        </button>
+      </nav>
+    </aside>
+
+    <main class="flex-1">
+      <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 min-h-[600px]">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
 </div>

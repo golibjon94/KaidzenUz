@@ -23,7 +23,7 @@ import {
   ProjectOutline,
   DownOutline,
   BarChartOutline,
-  SearchOutline
+  SearchOutline, FileDoneOutline
 } from '@ant-design/icons-angular/icons';
 
 export const icons = [
@@ -51,5 +51,6 @@ export const icons = [
   ProjectOutline,
   DownOutline,
   BarChartOutline,
-  SearchOutline
+  SearchOutline,
+  FileDoneOutline
 ];

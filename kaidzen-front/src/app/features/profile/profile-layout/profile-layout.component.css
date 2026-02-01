@@ -1,0 +1,9 @@
+@reference "../../../../styles.css";
+
+.nav-item {
+  @apply flex items-center gap-4 p-4 rounded-2xl text-gray-500 hover:text-blue-600 hover:bg-blue-50/50 transition-all duration-300 font-semibold;
+}
+
+.active-link {
+  @apply bg-blue-600 text-white shadow-lg shadow-blue-200;
+}

@@ -5,13 +5,18 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import {NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { AuthService } from '../../../core/services/auth.service';
 import { AuthStore } from '../../../core/stores/auth.store';
 
 @Component({
   selector: 'app-profile-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, NzIconModule, NzAvatarModule, NzModalModule],
+  imports: [
+    CommonModule, RouterOutlet, RouterLink, RouterLinkActive,
+    NzIconModule, NzAvatarModule, NzModalModule, NzTagModule, NzTooltipModule
+  ],
   templateUrl: './profile-layout.component.html',
   styleUrl: './profile-layout.component.css',
 })
@@ -34,9 +39,7 @@ export class ProfileLayoutComponent {
             this.message.success('Tizimdan chiqdingiz');
             this.router.navigate(['/']);
           },
-          error: () => {
-            this.message.error('Xatolik yuz berdi');
-          }
+          error: () => this.message.error('Xatolik yuz berdi')
         });
       },
       nzCancelText: 'Bekor qilish'
