@@ -2,6 +2,8 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { User } from '../models/user.model';
 import { CookieService } from '../services/cookie.service';
 
+import { LocalStorageEnum } from '../models/enums';
+
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
   private cookieService = inject(CookieService);
@@ -9,8 +11,8 @@ export class AuthStore {
   private _user = signal<User | null>(null);
   private _loading = signal(false);
 
-  private _accessToken = signal<string | null>(this.cookieService.get('access_token'));
-  private _refreshToken = signal<string | null>(this.cookieService.get('refresh_token'));
+  private _accessToken = signal<string | null>(this.cookieService.get(LocalStorageEnum.AccessToken));
+  private _refreshToken = signal<string | null>(this.cookieService.get(LocalStorageEnum.RefreshToken));
   readonly user = this._user.asReadonly();
   readonly loading = this._loading.asReadonly();
   readonly accessToken = this._accessToken.asReadonly();
@@ -28,8 +30,8 @@ export class AuthStore {
     this._refreshToken.set(refreshToken);
 
     // set(name, value, days, path) - ob'ekt emas, raqam bering!
-    this.cookieService.set('access_token', accessToken, 7, '/');
-    this.cookieService.set('refresh_token', refreshToken, 7, '/');
+    this.cookieService.set(LocalStorageEnum.AccessToken, accessToken, 7, '/');
+    this.cookieService.set(LocalStorageEnum.RefreshToken, refreshToken, 7, '/');
   }
 
   clearAuth() {
@@ -37,8 +39,8 @@ export class AuthStore {
     this._accessToken.set(null);
     this._refreshToken.set(null);
 
-    this.cookieService.delete('access_token', '/');
-    this.cookieService.delete('refresh_token', '/');
+    this.cookieService.delete(LocalStorageEnum.AccessToken, '/');
+    this.cookieService.delete(LocalStorageEnum.RefreshToken, '/');
   }
   getAccessToken() {
     return this._accessToken();

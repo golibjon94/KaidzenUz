@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { Test, TestResult, SubmitTestDto } from '../models/test.model';
 import { map } from 'rxjs';
 
@@ -9,7 +8,7 @@ import { map } from 'rxjs';
 })
 export class TestsService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/tests`;
+  private apiUrl = '/tests';
 
   getTests() {
     return this.http.get<Test[] | {data: Test[]}>(this.apiUrl).pipe(

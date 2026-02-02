@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { BlogPost, CreatePostDto } from '../models/blog.model';
 import { BlogStatus } from '../models/enums';
 import { map } from 'rxjs';
@@ -10,7 +9,7 @@ import { map } from 'rxjs';
 })
 export class BlogService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/blog`;
+  private apiUrl = '/blog';
 
   getPosts(status?: BlogStatus) {
     let params = new HttpParams();

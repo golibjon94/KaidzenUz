@@ -7,6 +7,8 @@ import { AuthStore } from '../stores/auth.store';
 import { tap, catchError, of } from 'rxjs';
 import { SsrCookieService } from 'ngx-cookie-service-ssr'; // Qo'shildi
 
+import { LocalStorageEnum } from '../models/enums';
+
 const USER_KEY = makeStateKey<User>('auth_user');
 
 @Injectable({
@@ -77,24 +79,25 @@ export class AuthService {
     );
   }
 
-  refreshToken(token: string) {
-    return this.http.post<{ accessToken: string, refreshToken: string }>(`${this.apiUrl}/refresh`, { refreshToken: token }).pipe(
-      tap(res => {
-        this.setCookies(res.accessToken, res.refreshToken);
-        this.authStore.setTokens(res.accessToken, res.refreshToken);
-      })
-    );
+  updateTokenWithRefreshToken() {
+    const refreshToken = this.authStore.refreshToken();
+    return this.http.post<{ data: { accessToken: string, refreshToken: string } }>(`${this.apiUrl}/refresh`, { refreshToken });
+  }
+
+  removeTokensAndNavigate() {
+    this.clearAllAuth();
+    // Bu yerda router inject qilib navigate qilish mumkin
   }
 
   // Yordamchi metodlar
   private setCookies(access: string, refresh: string) {
-    this.cookieService.set('access_token', access, this.cookieOptions);
-    this.cookieService.set('refresh_token', refresh, this.cookieOptions);
+    this.cookieService.set(LocalStorageEnum.AccessToken, access, this.cookieOptions);
+    this.cookieService.set(LocalStorageEnum.RefreshToken, refresh, this.cookieOptions);
   }
 
   private clearAllAuth() {
-    this.cookieService.delete('access_token', '/');
-    this.cookieService.delete('refresh_token', '/');
+    this.cookieService.delete(LocalStorageEnum.AccessToken, '/');
+    this.cookieService.delete(LocalStorageEnum.RefreshToken, '/');
     this.authStore.clearAuth();
   }
 }

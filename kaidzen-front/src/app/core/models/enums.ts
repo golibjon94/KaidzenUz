@@ -3,6 +3,12 @@ export enum Role {
   ADMIN = 'ADMIN'
 }
 
+export enum LocalStorageEnum {
+  AccessToken = 'access_token',
+  RefreshToken = 'refresh_token',
+  User = 'user'
+}
+
 export enum ApplicationStatus {
   PENDING = 'PENDING',
   CONTACTED = 'CONTACTED',

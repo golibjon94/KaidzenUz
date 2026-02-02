@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { BusinessCase, CreateCaseDto } from '../models/case.model';
 import { map } from 'rxjs';
 
@@ -9,7 +8,7 @@ import { map } from 'rxjs';
 })
 export class CasesService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/cases`;
+  private apiUrl = '/cases';
 
   getCases() {
     return this.http.get<{data: BusinessCase[]}>(this.apiUrl).pipe(

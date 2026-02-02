@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { Application, CreateApplicationDto } from '../models/application.model';
 import { ApplicationStatus } from '../models/enums';
 import { map } from 'rxjs';
@@ -10,7 +9,7 @@ import { map } from 'rxjs';
 })
 export class ApplicationsService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/applications`;
+  private apiUrl = '/applications';
 
   submitApplication(data: CreateApplicationDto) {
     return this.http.post<Application>(this.apiUrl, data);

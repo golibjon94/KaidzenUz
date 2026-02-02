@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { User, UpdateUserDto } from '../models/user.model';
 import { AuthStore } from '../stores/auth.store';
 import { tap, map } from 'rxjs';
@@ -11,7 +10,7 @@ import { tap, map } from 'rxjs';
 export class UsersService {
   private http = inject(HttpClient);
   private authStore = inject(AuthStore);
-  private apiUrl = `${environment.apiUrl}/users`;
+  private apiUrl = '/users';
 
   getMe() {
     return this.http.get<User>(`${this.apiUrl}/me`).pipe(

@@ -13,7 +13,9 @@ import { provideNzIcons } from 'ng-zorro-antd/icon';
 
 import { baseUrlInterceptor } from './core/interceptors/base-url.interceptor';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
-import {SsrCookieService } from 'ngx-cookie-service-ssr';
+import { refreshTokenInterceptor } from './core/interceptors/refresh-token.interceptor';
+import { httpErrorInterceptor } from './core/interceptors/error.interceptor';
+import { SsrCookieService } from 'ngx-cookie-service-ssr';
 import {NzConfig, provideNzConfig} from 'ng-zorro-antd/core/config';
 
 registerLocaleData(en);
@@ -31,7 +33,15 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    provideHttpClient(withInterceptors([baseUrlInterceptor, authInterceptor]), withFetch()),
+    provideHttpClient(
+      withInterceptors([
+        baseUrlInterceptor,
+        authInterceptor,
+        refreshTokenInterceptor,
+        httpErrorInterceptor
+      ]),
+      withFetch()
+    ),
     provideAnimationsAsync(),
     provideNzI18n(en_US),
     provideNzConfig(nzConfig),
