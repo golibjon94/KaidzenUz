@@ -36,10 +36,10 @@ export class BlogController {
   }
 
   @Public()
-  @Get(':slug')
-  @ApiOperation({ summary: 'Get blog post by slug' })
-  findOne(@Param('slug') slug: string) {
-    return this.blogService.findOne(slug);
+  @Get(':id')
+  @ApiOperation({ summary: 'Get blog post by id or slug' })
+  findOne(@Param('id') id: string) {
+    return this.blogService.findOne(id);
   }
 
   @ApiBearerAuth()

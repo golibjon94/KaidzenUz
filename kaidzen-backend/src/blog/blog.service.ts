@@ -22,11 +22,27 @@ export class BlogService {
     });
   }
 
-  async findOne(slug: string) {
-    const post = await this.prisma.blogPost.findUnique({
-      where: { slug },
-      include: { image: true },
-    });
+  async findOne(idOrSlug: string) {
+    const searchKey = idOrSlug.trim();
+    // Standard UUID regex
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(searchKey);
+    
+    let post;
+
+    if (isUuid) {
+      post = await this.prisma.blogPost.findUnique({
+        where: { id: searchKey },
+        include: { image: true },
+      });
+    }
+
+    if (!post) {
+      post = await this.prisma.blogPost.findUnique({
+        where: { slug: searchKey },
+        include: { image: true },
+      });
+    }
+
     if (!post) throw new NotFoundException('Post not found');
     return post;
   }
