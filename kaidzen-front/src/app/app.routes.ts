@@ -17,6 +17,16 @@ export const routes: Routes = [
         title: 'Kaidzen.uz - Biznes Diagnostika va Konsalting'
       },
       {
+        path: 'diagnostika',
+        loadComponent: () => import('./features/diagnostika/diagnostika-list/diagnostika-list.component').then(m => m.CaseListComponent),
+        title: 'Diagnostika - Kaidzen.uz'
+      },
+      // {
+      //   path: 'diagnostika/:id',
+      //   loadComponent: () => import('./features/blog/blog-list/blog-list.component').then(m => m.BlogListComponent),
+      //   title: 'Diagnostika  - Kaidzen.uz'
+      // },
+      {
         path: 'blog',
         loadComponent: () => import('./features/blog/blog-list/blog-list.component').then(m => m.BlogListComponent),
         title: 'Blog - Kaidzen.uz'
