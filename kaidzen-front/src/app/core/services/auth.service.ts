@@ -81,6 +81,10 @@ export class AuthService {
 
   updateTokenWithRefreshToken() {
     const refreshToken = this.authStore.refreshToken();
+    if (!refreshToken) {
+      this.removeTokensAndNavigate();
+      return of(null as any);
+    }
     return this.http.post<{ data: { accessToken: string, refreshToken: string } }>(`${this.apiUrl}/refresh`, { refreshToken });
   }
 
