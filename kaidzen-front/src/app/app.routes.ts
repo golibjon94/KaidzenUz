@@ -35,6 +35,11 @@ export const routes: Routes = [
         path: 'cases/:id',
         loadComponent: () => import('./features/cases/case-details/case-details.component').then(m => m.CaseDetailsComponent),
         title: 'Keys - Kaidzen.uz'
+      },
+      {
+        path: 'about',
+        loadComponent: () => import('./features/about/about').then(m => m.About),
+        title: 'Biz haqimizda - Kaidzen.uz'
       }
     ]
   },

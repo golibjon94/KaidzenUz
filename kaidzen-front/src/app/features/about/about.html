@@ -1,0 +1,260 @@
+<!-- about.component.html -->
+<app-header></app-header>
+
+<div class="bg-gradient-to-br from-gray-50 via-white to-gray-50">
+  <!-- Hero Section -->
+  <section class="relative bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 text-white py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="absolute inset-0">
+      <div class="absolute top-0 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+      <div class="text-center max-w-3xl mx-auto">
+        <span class="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-semibold mb-4 border border-white/30">
+          Biz haqimizda
+        </span>
+        <h1 class="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
+          Biznesingizni yangi <span class="bg-gradient-to-r from-yellow-200 to-yellow-400 bg-clip-text text-transparent">bosqichga</span> olib chiqamiz
+        </h1>
+        <p class="text-xl text-blue-100 leading-relaxed">
+          Professional konsalting va diagnostika xizmatlari orqali kompaniyangizning muvaffaqiyatiga hissa qo'shamiz
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        @for (stat of stats; track stat.label; let i = $index) {
+          <div class="text-center group cursor-pointer transform transition-all duration-300 hover:scale-110"
+               [style.animation-delay]="i * 100 + 'ms'">
+            <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl p-8 border border-blue-100 hover:shadow-xl transition-all duration-300">
+              <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg transform transition-transform duration-300 group-hover:rotate-12">
+                <span nz-icon [nzType]="stat.icon" class="text-3xl text-white"></span>
+              </div>
+              <div class="text-4xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                {{ stat.value }}
+              </div>
+              <div class="text-gray-600 font-medium">{{ stat.label }}</div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission Section -->
+  <section class="py-20 bg-gradient-to-br from-gray-50 to-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <span class="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">
+            Bizning missiyamiz
+          </span>
+          <h2 class="text-4xl font-bold text-gray-900 mb-6">
+            O'zbekiston biznesini <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">rivojlantirish</span>
+          </h2>
+          <p class="text-gray-600 text-lg leading-relaxed mb-6">
+            Biz O'zbekistondagi biznes muhitini yaxshilash va kompaniyalarning raqobatbardoshligini oshirish uchun professional konsalting xizmatlarini taqdim etamiz. Har bir mijozimizning o'ziga xos ehtiyojlariga individual yondashamiz.
+          </p>
+          <p class="text-gray-600 text-lg leading-relaxed mb-8">
+            Bizning maqsadimiz - mahalliy bizneslarni xalqaro standartlar darajasiga ko'tarish va ularning barqaror rivojlanishiga hissa qo'shishdir.
+          </p>
+          <div class="flex gap-4">
+            <button nz-button nzType="primary" nzSize="large"
+                    class="h-14 px-8 rounded-full font-semibold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+              <span class="flex items-center gap-2">
+                Biz bilan bog'laning
+                <span nz-icon nzType="arrow-right"></span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div class="absolute -inset-4 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl blur-2xl opacity-20"></div>
+          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800"
+               alt="Team"
+               class="relative rounded-3xl shadow-2xl w-full transform transition-transform duration-500 hover:scale-105">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values Section -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <span class="inline-block px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-4">
+          Bizning qadriyatlarimiz
+        </span>
+        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          Biz nimaga <span class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">ishonamiz</span>
+        </h2>
+        <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+          Bizning qadriyatlarimiz har bir mijozimiz bilan ishimizda ko'rsatiladi
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        @for (value of values; track value.title; let i = $index) {
+          <div class="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-8 border-2 border-gray-100 hover:border-{{value.color}}-300 transition-all duration-500 group cursor-pointer transform hover:-translate-y-2 hover:shadow-2xl"
+               [style.animation-delay]="i * 100 + 'ms'">
+            <div class="flex items-start gap-6">
+              <div class="w-16 h-16 bg-gradient-to-br from-{{value.color}}-500 to-{{value.color}}-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
+                <span nz-icon [nzType]="value.icon" class="text-3xl text-white"></span>
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-{{value.color}}-600 transition-colors duration-300">
+                  {{ value.title }}
+                </h3>
+                <p class="text-gray-600 leading-relaxed">{{ value.description }}</p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline Section -->
+  <section class="py-20 bg-gradient-to-br from-gray-50 to-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <span class="inline-block px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-4">
+          Bizning tariximiz
+        </span>
+        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          Rivojlanish <span class="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">yo'li</span>
+        </h2>
+      </div>
+
+      <div class="relative">
+        <!-- Timeline Line -->
+        <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500 hidden md:block"></div>
+
+        <div class="space-y-12">
+          @for (item of timeline; track item.year; let i = $index) {
+            <div class="relative">
+              <div class="md:grid md:grid-cols-2 md:gap-8 items-center">
+                @if (i % 2 === 0) {
+                  <div class="md:text-right mb-4 md:mb-0">
+                    <div class="inline-block bg-white rounded-3xl shadow-xl p-8 border-2 border-blue-100 hover:border-blue-300 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-1">
+                      <span class="inline-block px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full text-sm font-bold mb-3 shadow-lg">
+                        {{ item.year }}
+                      </span>
+                      <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ item.title }}</h3>
+                      <p class="text-gray-600">{{ item.description }}</p>
+                    </div>
+                  </div>
+                  <div></div>
+                } @else {
+                  <div></div>
+                  <div class="mb-4 md:mb-0">
+                    <div class="inline-block bg-white rounded-3xl shadow-xl p-8 border-2 border-purple-100 hover:border-purple-300 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-1">
+                      <span class="inline-block px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full text-sm font-bold mb-3 shadow-lg">
+                        {{ item.year }}
+                      </span>
+                      <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ item.title }}</h3>
+                      <p class="text-gray-600">{{ item.description }}</p>
+                    </div>
+                  </div>
+                }
+              </div>
+
+              <!-- Timeline Dot -->
+              <div class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden md:block">
+                <div class="w-6 h-6 bg-white border-4 border-blue-600 rounded-full shadow-lg"></div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <span class="inline-block px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-semibold mb-4">
+          Bizning jamoa
+        </span>
+        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          Professional <span class="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">ekspertlar</span>
+        </h2>
+        <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+          Tajribali mutaxassislarimiz bilan tanishing
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        @for (member of team; track member.name; let i = $index) {
+          <div class="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
+               [style.animation-delay]="i * 100 + 'ms'">
+            <div class="relative overflow-hidden h-64">
+              <img [src]="member.image"
+                   [alt]="member.name"
+                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+              <!-- Social Links -->
+              <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <a [href]="member.social.linkedin"
+                   class="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors duration-300">
+                  <span nz-icon nzType="linkedin" class="text-lg"></span>
+                </a>
+                <a [href]="member.social.twitter"
+                   class="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-blue-400 hover:text-white transition-colors duration-300">
+                  <span nz-icon nzType="twitter" class="text-lg"></span>
+                </a>
+              </div>
+            </div>
+
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors duration-300">
+                {{ member.name }}
+              </h3>
+              <p class="text-blue-600 font-semibold mb-3">{{ member.position }}</p>
+              <p class="text-gray-600 text-sm">{{ member.description }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="absolute inset-0">
+      <div class="absolute top-0 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6">
+        Biznesingizni rivojlantirishga tayyormisiz?
+      </h2>
+      <p class="text-xl text-blue-100 mb-8">
+        Bugun biz bilan bog'laning va bepul konsultatsiya oling
+      </p>
+      <div class="flex flex-wrap gap-4 justify-center">
+        <button nz-button nzType="default" nzSize="large"
+                class="h-14 px-8 rounded-full font-semibold bg-white text-blue-600 hover:bg-gray-50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-95">
+          <span>Konsultatsiya olish</span>
+        </button>
+        <button nz-button nzType="primary" nzSize="large"
+                class="h-14 px-8 rounded-full font-semibold bg-blue-700 text-white border-none hover:bg-blue-800 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-95">
+          Biz haqimizda ko'proq
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<app-footer></app-footer>
