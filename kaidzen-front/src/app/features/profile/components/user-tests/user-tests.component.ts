@@ -45,6 +45,7 @@ export class UserTestsComponent implements OnInit {
   submitting = signal(false);
   result = signal<TestResult | null>(null);
   error = signal<string | null>(null);
+  protected readonly String = String;
 
   // Test taking state
   currentQuestionIndex = signal(0);

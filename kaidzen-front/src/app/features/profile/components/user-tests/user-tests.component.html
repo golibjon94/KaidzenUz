@@ -1,100 +1,219 @@
-<div class="p-6">
+<!-- user-tests.component.html -->
+<div class="space-y-6">
   <!-- Error message -->
   @if (error()) {
-    <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg flex justify-between items-center">
-      <span>{{ error() }}</span>
-      <button (click)="error.set(null)" class="text-xl">&times;</button>
+    <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-2xl flex items-start gap-4 shadow-sm animate-fade-in">
+      <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
+        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+      </div>
+      <div class="flex-1">
+        <h4 class="font-bold text-red-900 mb-1">Xatolik yuz berdi</h4>
+        <p class="text-red-700">{{ error() }}</p>
+      </div>
+      <button (click)="error.set(null)"
+              class="text-red-400 hover:text-red-600 transition-colors duration-300">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
     </div>
   }
 
   <!-- Loading Skeleton -->
   @if (loading()) {
-    <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 10 }"></nz-skeleton>
+    <div class="space-y-6">
+      <div class="animate-pulse">
+        <div class="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
+        <div class="h-4 bg-gray-200 rounded w-2/3 mb-8"></div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (i of [1,2,3]; track i) {
+          <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 animate-pulse">
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-12 h-12 bg-gray-200 rounded-xl"></div>
+              <div class="w-20 h-6 bg-gray-200 rounded-full"></div>
+            </div>
+            <div class="h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
+            <div class="h-4 bg-gray-200 rounded w-full mb-2"></div>
+            <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+          </div>
+        }
+      </div>
+    </div>
   } @else {
     <!-- Test Result -->
     @if (result()) {
-      <nz-result
-        nzStatus="success"
-        nzTitle="Test muvaffaqiyatli yakunlandi!"
-        [nzSubTitle]="'Sizning natijangiz: ' + result()!.score + ' ball'"
-      >
-        <div nz-result-content>
-          <div class="bg-gray-50 p-6 rounded-xl border border-gray-100 mb-6">
-            <h4 class="text-lg font-bold mb-2">Xulosa:</h4>
-            <p class="text-gray-700 text-lg mb-4">{{ result()!.resultText }}</p>
-            <h4 class="text-lg font-bold mb-2 text-blue-600">Tavsiyalarimiz:</h4>
-            <p class="text-gray-600 italic leading-relaxed">{{ result()!.recommendation }}</p>
+      <div class="max-w-3xl mx-auto animate-fade-in">
+        <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl p-8 md:p-12 text-center border-2 border-green-200 shadow-xl relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-64 h-64 bg-green-100 rounded-full blur-3xl opacity-50"></div>
+
+          <div class="relative z-10">
+            <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl">
+              <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-3">Test muvaffaqiyatli yakunlandi!</h2>
+            <p class="text-xl text-gray-600 mb-8">Tabriklaymiz, siz testni muvaffaqiyatli topshirdingiz</p>
+
+            <div class="inline-flex items-center gap-3 bg-white px-8 py-4 rounded-2xl shadow-lg mb-8">
+              <svg class="w-8 h-8 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+              </svg>
+              <div class="text-left">
+                <p class="text-sm text-gray-500">Sizning natijangiz</p>
+                <p class="text-3xl font-extrabold text-gray-900">{{ result()!.score }} ball</p>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 mb-6 shadow-lg text-left">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                  <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                </div>
+                <h4 class="text-xl font-bold text-gray-900">Xulosa</h4>
+              </div>
+              <p class="text-gray-700 text-lg leading-relaxed">{{ result()!.resultText }}</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-2xl p-8 shadow-lg text-left">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                  </svg>
+                </div>
+                <h4 class="text-xl font-bold text-gray-900">Tavsiyalarimiz</h4>
+              </div>
+              <p class="text-gray-700 text-lg leading-relaxed italic">{{ result()!.recommendation }}</p>
+            </div>
+
+            <div class="flex gap-3 justify-center mt-8">
+              <button nz-button nzType="primary" (click)="backToList()"
+                      class="h-12 px-8 rounded-full font-semibold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <span class="flex items-center gap-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                  </svg>
+                  Boshqa testlarni ko'rish
+                </span>
+              </button>
+              <button nz-button nzType="default" routerLink="../results"
+                      class="h-12 px-8 rounded-full font-semibold hover:shadow-lg transition-all duration-300">
+                Natijalarimga o'tish
+              </button>
+            </div>
           </div>
         </div>
-        <div nz-result-extra>
-          <button nz-button nzType="primary" (click)="backToList()">Boshqa testlarni ko'rish</button>
-        </div>
-      </nz-result>
+      </div>
     } @else {
       <!-- Test Questions (Step by Step) -->
       @if (selectedTest()) {
-        <div class="animate-fade-in max-w-3xl mx-auto">
+        <div class="animate-fade-in max-w-4xl mx-auto">
           <!-- Header -->
-          <div class="flex items-center gap-4 mb-6">
-            <button nz-button nzType="text" nzShape="circle" (click)="backToList()">
-              <span nz-icon nzType="arrow-left"></span>
-            </button>
-            <div class="flex-1">
-              <h2 class="text-xl font-bold m-0">{{ selectedTest()!.title }}</h2>
-              <nz-progress
-                [nzPercent]="progress()"
-                [nzShowInfo]="false"
-                [nzStrokeColor]="'#1890ff'"
-                class="mt-2">
-              </nz-progress>
+          <div class="bg-white rounded-3xl shadow-lg border border-gray-100 p-6 mb-6">
+            <div class="flex items-center gap-4 mb-4">
+              <button nz-button nzType="text" nzShape="circle" (click)="backToList()"
+                      class="hover:bg-blue-50 transition-colors duration-300">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+              </button>
+              <div class="flex-1">
+                <h2 class="text-2xl font-bold text-gray-900 mb-1">{{ selectedTest()!.title }}</h2>
+                <p class="text-gray-500">Savollar soni: {{ selectedTest()?.questions?.length || 0 }}</p>
+              </div>
+              <div class="text-right">
+                <p class="text-sm text-gray-500 mb-1">Savol</p>
+                <p class="text-2xl font-bold text-blue-600">
+                  {{ currentQuestionIndex() + 1 }} / {{ selectedTest()?.questions?.length || 0 }}
+                </p>
+              </div>
             </div>
-            <div class="text-gray-500 font-medium whitespace-nowrap">
-              {{ currentQuestionIndex() + 1 }} / {{ selectedTest()?.questions?.length || 0 }}
+
+            <div class="relative">
+              <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full transition-all duration-500 shadow-lg"
+                     [style.width.%]="progress()"></div>
+              </div>
+              <p class="text-sm text-gray-600 text-center mt-2 font-medium">{{ progress() }}% yakunlandi</p>
             </div>
           </div>
 
           <!-- Question Card -->
           @if (currentQuestion(); as question) {
-            <nz-card class="shadow-sm rounded-xl mb-6 min-h-[400px] flex flex-col">
+            <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-10 mb-6 min-h-[500px] flex flex-col animate-slide-in">
               <div class="flex-1">
-                <h3 class="text-xl font-bold mb-6 text-gray-800">{{ question.text }}</h3>
+                <div class="flex items-start gap-4 mb-8">
+                  <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                  </div>
+                  <h3 class="text-2xl font-bold text-gray-900 leading-relaxed flex-1">{{ question.text }}</h3>
+                </div>
 
-                <div class="space-y-3">
-                  @for (option of question.options; track option.id) {
+                <div class="space-y-4">
+                  @for (option of question.options; track option.id; let i = $index) {
                     <div
-                      class="p-4 rounded-lg border-2 cursor-pointer transition-all hover:bg-blue-50"
+                      class="group relative p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg"
                       [class.border-blue-500]="isOptionSelected(question.id, option.id)"
-                      [class.bg-blue-50]="isOptionSelected(question.id, option.id)"
+                      [class.bg-gradient-to-r]="isOptionSelected(question.id, option.id)"
+                      [class.from-blue-50]="isOptionSelected(question.id, option.id)"
+                      [class.to-purple-50]="isOptionSelected(question.id, option.id)"
+                      [class.shadow-lg]="isOptionSelected(question.id, option.id)"
                       [class.border-gray-200]="!isOptionSelected(question.id, option.id)"
+                      [class.hover:border-blue-300]="!isOptionSelected(question.id, option.id)"
+                      [class.hover:bg-blue-50/50]="!isOptionSelected(question.id, option.id)"
                       (click)="selectOption(question.id, option.id)"
-                    >
-                      <div class="flex items-center gap-3">
-                        <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
-                          [class.border-blue-500]="isOptionSelected(question.id, option.id)"
-                          [class.border-gray-300]="!isOptionSelected(question.id, option.id)"
-                        >
-                          @if (isOptionSelected(question.id, option.id)) {
-                            <div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
-                          }
-                        </div>
-                        <span class="text-lg">{{ option.text }}</span>
+                      >
+                    <div class="flex items-start gap-4">
+                      <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-300"
+                           [class.border-blue-500]="isOptionSelected(question.id, option.id)"
+                           [class.bg-blue-500]="isOptionSelected(question.id, option.id)"
+                           [class.border-gray-300]="!isOptionSelected(question.id, option.id)"
+                           [class.group-hover:border-blue-400]="!isOptionSelected(question.id, option.id)"
+                      >
+                        @if (isOptionSelected(question.id, option.id)) {
+                          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                          </svg>
+                        } @else {
+                          <span class="text-gray-400 font-bold text-sm">{{ String.fromCharCode(65 + i) }}</span>
+                        }
                       </div>
+                      <span class="text-lg text-gray-800 leading-relaxed flex-1"
+                            [class.font-semibold]="isOptionSelected(question.id, option.id)">
+                          {{ option.text }}
+                        </span>
+                    </div>
                     </div>
                   }
                 </div>
               </div>
-            </nz-card>
+            </div>
 
             <!-- Navigation Buttons -->
-            <div class="flex justify-between items-center">
+            <div class="flex justify-between items-center gap-4">
               <button
                 nz-button
                 nzType="default"
                 nzSize="large"
                 [disabled]="currentQuestionIndex() === 0"
                 (click)="previousQuestion()"
+                class="h-14 px-8 rounded-2xl font-semibold hover:shadow-lg transition-all duration-300 disabled:opacity-50"
               >
-                <span nz-icon nzType="left"></span> Oldingi
+                <span class="flex items-center gap-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                  </svg>
+                  Oldingi
+                </span>
               </button>
 
               @if (isLastQuestion()) {
@@ -102,23 +221,33 @@
                   nz-button
                   nzType="primary"
                   nzSize="large"
-                  class="px-8"
+                  class="h-14 px-10 rounded-2xl font-semibold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                   [disabled]="!canGoNext() || submitting()"
                   [nzLoading]="submitting()"
                   (click)="confirmSubmit()"
                 >
-                  Yakunlash <span nz-icon nzType="check"></span>
+                  <span class="flex items-center gap-2">
+                    Yakunlash
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                  </span>
                 </button>
               } @else {
                 <button
                   nz-button
                   nzType="primary"
                   nzSize="large"
-                  class="px-8"
+                  class="h-14 px-10 rounded-2xl font-semibold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                   [disabled]="!canGoNext()"
                   (click)="nextQuestion()"
                 >
-                  Keyingi <span nz-icon nzType="right"></span>
+                  <span class="flex items-center gap-2">
+                    Keyingi
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </span>
                 </button>
               }
             </div>
@@ -128,40 +257,64 @@
         <!-- Tests List -->
         <div class="animate-fade-in">
           <div class="mb-8">
-            <h2 class="text-2xl font-bold text-gray-900">Diagnostik Testlar</h2>
-            <p class="text-gray-500 text-lg">Biznesingizning zaif nuqtalarini aniqlash uchun testlardan o'ting.</p>
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                </svg>
+              </div>
+              <div>
+                <h2 class="text-3xl font-bold text-gray-900">Diagnostik Testlar</h2>
+                <p class="text-gray-600 text-lg">Biznesingizning zaif nuqtalarini aniqlash uchun testlardan o'ting</p>
+              </div>
+            </div>
           </div>
 
           @if (tests().length === 0) {
-            <div class="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed">
-              <span nz-icon nzType="info-circle" class="text-4xl text-gray-300 mb-4"></span>
-              <p class="text-gray-400 text-lg">Hozircha testlar mavjud emas</p>
+            <div class="bg-gradient-to-br from-gray-50 to-blue-50/30 rounded-3xl p-16 text-center border-2 border-dashed border-gray-300">
+              <div class="w-24 h-24 bg-gray-200 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-gray-900 mb-2">Hozircha testlar mavjud emas</h3>
+              <p class="text-gray-500">Tez orada yangi testlar qo'shiladi</p>
             </div>
           } @else {
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              @for (test of tests(); track test.id) {
-                <nz-card
-                  class="hover:shadow-lg transition-all duration-300 rounded-2xl cursor-pointer group border-gray-200 hover:border-blue-200 h-full flex flex-col"
-                  [nzBodyStyle]="{ display: 'flex', flexDirection: 'column', height: '100%' }"
+              @for (test of tests(); track test.id; let i = $index) {
+                <div
+                  class="bg-white hover:shadow-2xl transition-all duration-500 rounded-3xl cursor-pointer group border-2 border-gray-100 hover:border-blue-200 overflow-hidden transform hover:-translate-y-2"
                   (click)="selectTest(test.slug)"
+                  [style.animation-delay]="i * 100 + 'ms'"
                 >
-                  <div class="flex justify-between items-start mb-4">
-                    <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                      <span nz-icon nzType="file-text" class="text-2xl"></span>
+                  <div class="p-6">
+                    <div class="flex justify-between items-start mb-5">
+                      <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white shadow-lg transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                      </div>
+                      <span class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-bold shadow-sm">
+                        {{ test._count?.questions || 0 }} savol
+                      </span>
                     </div>
-                    <nz-tag [nzColor]="'blue'">{{ test._count?.questions || 0 }} savol</nz-tag>
-                  </div>
 
-                  <h3 class="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors">{{ test.title }}</h3>
-                  <p class="text-gray-500 line-clamp-3 mb-6 flex-1">{{ test.description }}</p>
+                    <h3 class="text-xl font-bold mb-3 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
+                      {{ test.title }}
+                    </h3>
+                    <p class="text-gray-600 line-clamp-3 mb-6 leading-relaxed">{{ test.description }}</p>
 
-                  <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between text-blue-600 font-bold">
-                    <span>Boshlash</span>
-                    <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
-                      <span nz-icon nzType="arrow-right"></span>
+                    <div class="pt-4 border-t border-gray-100 flex items-center justify-between text-blue-600 font-bold group-hover:gap-2 transition-all duration-300">
+                      <span>Boshlash</span>
+                      <div class="w-10 h-10 rounded-full bg-blue-50 group-hover:bg-blue-600 flex items-center justify-center transition-all duration-300">
+                        <svg class="w-5 h-5 group-hover:text-white transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                      </div>
                     </div>
                   </div>
-                </nz-card>
+                </div>
               }
             </div>
           }
