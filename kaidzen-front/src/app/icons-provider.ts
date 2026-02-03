@@ -27,7 +27,8 @@ import {
   FileDoneOutline,
   InboxOutline,
   UserAddOutline,
-  FileSearchOutline
+  FileSearchOutline,
+  EnvironmentOutline
 } from '@ant-design/icons-angular/icons';
 
 export const icons = [
@@ -59,5 +60,6 @@ export const icons = [
   FileDoneOutline,
   InboxOutline,
   UserAddOutline,
-  FileSearchOutline
+  FileSearchOutline,
+  EnvironmentOutline
 ];

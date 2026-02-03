@@ -2,7 +2,6 @@ import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
-// Ng-Zorro Modullari
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -11,7 +10,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 
 // Ng-Zorro Notification Servisi
-import { NzNotificationService } from 'ng-zorro-antd/notification'; // Message o'rniga
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 // Shaxsiy Servislar va Store
 import { AuthService } from '../../../../core/services/auth.service';
