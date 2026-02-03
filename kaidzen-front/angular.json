@@ -65,6 +65,9 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "port": 3200
+          },
           "configurations": {
             "production": {
               "buildTarget": "kaidzen-front:build:production"

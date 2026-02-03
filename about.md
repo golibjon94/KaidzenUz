@@ -428,7 +428,7 @@ model BusinessCase {
   JWT_EXPIRES_IN=15m
   JWT_REFRESH_EXPIRES_IN=7d
   PORT=3000
-  CORS_ORIGIN=http://localhost:4200
+  CORS_ORIGIN=http://localhost:3200
   ```
 
 ### 7. Prisma Service:
