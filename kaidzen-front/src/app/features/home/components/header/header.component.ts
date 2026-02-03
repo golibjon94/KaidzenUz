@@ -8,6 +8,7 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 
 // Ng-Zorro Notification Servisi
 import { NzNotificationService } from 'ng-zorro-antd/notification'; // Message o'rniga
@@ -26,6 +27,7 @@ import { AuthStore } from '../../../../core/stores/auth.store';
     NzInputModule,
     ReactiveFormsModule,
     NzIconModule,
+    NzTooltipModule,
     RouterLink
   ],
   templateUrl: './header.component.html',
@@ -144,6 +146,10 @@ export class HeaderComponent {
   }
 
   goToTests() {
-    this.router.navigate(['/profile/tests']);
+    if (this.authStore.isAuthenticated()) {
+      this.router.navigate(['/profile/tests']);
+    } else {
+      this.showLoginModal();
+    }
   }
 }

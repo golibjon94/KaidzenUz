@@ -6,6 +6,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HomeService } from './services/home.service';
@@ -14,11 +15,13 @@ import { BusinessCase } from '../../core/models/case.model';
 import { Test } from '../../core/models/test.model';
 import { environment } from '../../../environments/environment';
 import { catchError, of } from 'rxjs';
+import { AuthStore } from '../../core/stores/auth.store';
+import { ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, NzButtonModule, NzIconModule, NzCardModule, NzTagModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterLink, NzButtonModule, NzIconModule, NzCardModule, NzTagModule, NzTooltipModule, HeaderComponent, FooterComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,6 +32,9 @@ export class HomeComponent implements OnInit {
   private metaService = inject(Meta);
   private homeService = inject(HomeService);
   private router = inject(Router);
+  public authStore = inject(AuthStore);
+
+  @ViewChild(HeaderComponent) headerComponent!: HeaderComponent;
 
   baseUrl = environment.apiUrl.replace('/api', '');
 
@@ -74,7 +80,11 @@ export class HomeComponent implements OnInit {
   }
 
   goToTests() {
-    this.router.navigate(['/profile/tests']);
+    if (this.authStore.isAuthenticated()) {
+      this.router.navigate(['/profile/tests']);
+    } else {
+      this.headerComponent.showLoginModal();
+    }
   }
 
   scrollToServices() {
