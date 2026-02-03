@@ -1,0 +1,146 @@
+<!-- CASE LIST -->
+<app-header></app-header>
+
+<div class="bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
+  <!-- Hero Section -->
+  <div class="relative bg-gradient-to-br from-orange-600 via-red-600 to-pink-600 text-white py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="absolute inset-0">
+      <div class="absolute top-0 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+      <div class="text-center max-w-3xl mx-auto">
+        <span class="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-semibold mb-4 border border-white/30">
+          Muvaffaqiyat Tarixi
+        </span>
+        <h1 class="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
+          Biznes <span class="bg-gradient-to-r from-yellow-200 to-yellow-400 bg-clip-text text-transparent">Keyslar</span>
+        </h1>
+        <p class="text-xl text-orange-100 leading-relaxed">
+          Mijozlarimiz bilan birga erishgan muvaffaqiyatlar va real natijalar.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 py-16">
+    @if (loading()) {
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        @for (i of [1,2,3,4]; track i) {
+          <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse">
+            <div class="p-8 space-y-4">
+              <div class="h-6 bg-gray-200 rounded w-3/4"></div>
+              <div class="h-4 bg-gray-200 rounded w-full"></div>
+              <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+              <div class="h-4 bg-gray-200 rounded w-4/5"></div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      @if (cases().length === 0) {
+        <div class="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
+          <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-2">Hozircha keyslar mavjud emas</h3>
+          <p class="text-gray-500 text-lg">Tez orada yangi muvaffaqiyat tarihlari qo'shiladi.</p>
+        </div>
+      } @else {
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          @for (item of cases(); track item.id; let i = $index) {
+            <div class="relative bg-white rounded-3xl p-8 border-2 border-gray-100 hover:border-orange-300 transition-all duration-500 cursor-pointer group transform hover:-translate-y-2 hover:shadow-2xl overflow-hidden"
+                 [routerLink]="['/cases', item.id]"
+                 [style.animation-delay]="i * 150 + 'ms'">
+              <!-- Gradient Background on Hover -->
+              <div class="absolute inset-0 bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+              <div class="relative z-10">
+                <!-- Header -->
+                <div class="flex items-center justify-between mb-6">
+                  <span class="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full text-sm font-semibold shadow-lg">
+                    Business Case
+                  </span>
+                  <div class="flex items-center gap-2 text-gray-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span class="text-sm font-medium">{{ item.date | date:'yyyy' }}</span>
+                  </div>
+                </div>
+
+                <!-- Title -->
+                <div class="flex items-center gap-4 mb-6">
+                  <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center text-white shadow-lg transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                    </svg>
+                  </div>
+                  <h3 class="text-2xl font-bold text-gray-900 group-hover:text-orange-600 transition-colors duration-300 flex-1">
+                    {{ item.title }}
+                  </h3>
+                </div>
+
+                <!-- Content -->
+                <div class="space-y-5 mb-6">
+                  <div class="pl-4 border-l-4 border-red-500 group-hover:border-red-600 transition-colors duration-300">
+                    <h4 class="font-bold text-red-600 uppercase text-xs tracking-wider mb-2 flex items-center gap-2">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                      </svg>
+                      Muammo
+                    </h4>
+                    <p class="text-gray-600 line-clamp-2 leading-relaxed">{{ item.problem }}</p>
+                  </div>
+
+                  <div class="pl-4 border-l-4 border-blue-500 group-hover:border-blue-600 transition-colors duration-300">
+                    <h4 class="font-bold text-blue-600 uppercase text-xs tracking-wider mb-2 flex items-center gap-2">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                      </svg>
+                      Yechim
+                    </h4>
+                    <p class="text-gray-600 line-clamp-2 leading-relaxed">{{ item.solution }}</p>
+                  </div>
+
+                  <div class="pl-4 border-l-4 border-green-500 group-hover:border-green-600 transition-colors duration-300">
+                    <h4 class="font-bold text-green-600 uppercase text-xs tracking-wider mb-2 flex items-center gap-2">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                      Natija
+                    </h4>
+                    <p class="text-green-700 font-medium line-clamp-2 leading-relaxed">"{{ item.result }}"</p>
+                  </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                  <div class="flex items-center text-orange-600 font-bold group-hover:gap-3 transition-all duration-300">
+                    <span>Batafsil o'qish</span>
+                    <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                  </div>
+                  <div class="flex items-center gap-1 text-gray-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    <span class="text-sm">O'qish</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+</div>
+
+<app-footer></app-footer>

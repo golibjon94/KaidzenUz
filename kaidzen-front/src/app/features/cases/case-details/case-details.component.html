@@ -1,0 +1,185 @@
+<!-- CASE DETAILS -->
+<app-header></app-header>
+
+<div class="bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
+  @if (loading()) {
+    <div class="max-w-4xl mx-auto px-6 py-12">
+      <div class="animate-pulse space-y-8">
+        <div class="h-12 bg-gray-200 rounded w-3/4"></div>
+        <div class="h-6 bg-gray-200 rounded w-1/2"></div>
+        <div class="h-64 bg-gray-200 rounded-2xl"></div>
+        <div class="h-64 bg-gray-200 rounded-2xl"></div>
+        <div class="h-64 bg-gray-200 rounded-2xl"></div>
+      </div>
+    </div>
+  } @else if (caseItem()) {
+    <!-- Back Button -->
+    <div class="bg-white border-b border-gray-100 sticky top-20 z-40 backdrop-blur-md bg-white/80">
+      <div class="max-w-4xl mx-auto px-6 py-4">
+        <button nz-button nzType="link" routerLink="/cases"
+                class="p-0 flex items-center gap-2 text-gray-600 hover:text-orange-600 transition-all duration-300 group hover:gap-3">
+          <svg class="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+          </svg>
+          <span class="font-medium">Keyslarga qaytish</span>
+        </button>
+      </div>
+    </div>
+
+    <article class="max-w-4xl mx-auto px-6 py-12 animate-fade-in">
+      <!-- Header -->
+      <header class="mb-12">
+        <div class="flex items-center gap-3 mb-6">
+          <span class="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full text-sm font-semibold shadow-lg">
+            Business Case
+          </span>
+          <div class="flex items-center gap-2 text-gray-500 text-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            {{ caseItem()!.date | date:'MMMM, yyyy' }}
+          </div>
+        </div>
+
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6 leading-tight bg-gradient-to-r from-gray-900 via-orange-900 to-red-900 bg-clip-text text-transparent">
+          {{ caseItem()!.title }}
+        </h1>
+
+        <!-- Success Indicator -->
+        <div class="flex items-center gap-4 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-100">
+          <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white shadow-lg">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <div>
+            <p class="font-bold text-gray-900">Muvaffaqiyatli yakunlandi</p>
+            <p class="text-sm text-gray-600">Mijoz erishgan natijalar bilan to'liq qoniqdi</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content Sections -->
+      <div class="space-y-8">
+        <!-- Problem Section -->
+        <section class="group">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500 to-red-600 text-white flex items-center justify-center text-xl font-bold shadow-lg transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
+              1
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
+              Muammo
+            </h2>
+          </div>
+          <div class="relative bg-white p-8 md:p-10 rounded-3xl border-2 border-red-100 shadow-sm group-hover:shadow-xl transition-all duration-500 overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-red-50 to-red-100 rounded-full blur-3xl opacity-50"></div>
+            <div class="relative z-10">
+              <div class="flex items-start gap-4 mb-4">
+                <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-sm font-bold text-red-600 uppercase tracking-wider mb-2">Mijoz duch kelgan qiyinchilik</h3>
+                  <p class="text-gray-700 text-lg leading-relaxed whitespace-pre-wrap">{{ caseItem()!.problem }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Solution Section -->
+        <section class="group">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center text-xl font-bold shadow-lg transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
+              2
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
+              Yechim
+            </h2>
+          </div>
+          <div class="relative bg-white p-8 md:p-10 rounded-3xl border-2 border-blue-100 shadow-sm group-hover:shadow-xl transition-all duration-500 overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-50 to-blue-100 rounded-full blur-3xl opacity-50"></div>
+            <div class="relative z-10">
+              <div class="flex items-start gap-4 mb-4">
+                <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-sm font-bold text-blue-600 uppercase tracking-wider mb-2">Bizning taklif etgan strategiya</h3>
+                  <p class="text-gray-700 text-lg leading-relaxed whitespace-pre-wrap">{{ caseItem()!.solution }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Result Section -->
+        <section class="group">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 text-white flex items-center justify-center text-xl font-bold shadow-lg transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
+              3
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
+              Natija
+            </h2>
+          </div>
+          <div class="relative bg-gradient-to-br from-green-50 to-emerald-50 p-8 md:p-10 rounded-3xl border-2 border-green-200 shadow-sm group-hover:shadow-xl transition-all duration-500 overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-100 to-green-200 rounded-full blur-3xl opacity-50"></div>
+            <div class="relative z-10">
+              <div class="flex items-start gap-4 mb-4">
+                <div class="w-10 h-10 bg-green-200 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <svg class="w-6 h-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-sm font-bold text-green-700 uppercase tracking-wider mb-2">Erishilgan yutuqlar</h3>
+                  <p class="text-gray-800 text-lg leading-relaxed font-medium italic whitespace-pre-wrap">"{{ caseItem()!.result }}"</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- CTA Section -->
+      <div class="mt-12 p-8 bg-gradient-to-br from-orange-600 via-red-600 to-pink-600 rounded-3xl text-white text-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-black/10"></div>
+        <div class="relative z-10">
+          <h3 class="text-2xl font-bold mb-3">Sizning biznesingiz ham muvaffaqiyatga erisha oladi</h3>
+          <p class="text-orange-100 mb-6">Professional konsalting xizmatlari bilan kompaniyangizni rivojlantiring</p>
+          <div class="flex flex-wrap gap-3 justify-center">
+            <button nz-button nzType="default" routerLink="/cases"
+                    class="h-12 px-8 rounded-full font-semibold bg-white text-orange-600 hover:bg-gray-50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-95">
+              Boshqa keyslar
+            </button>
+            <button nz-button nzType="default" routerLink="/"
+                    class="h-12 px-8 rounded-full font-semibold bg-white/20 backdrop-blur-sm text-white border-white/30 hover:bg-white/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-95">
+              Bosh sahifa
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+  } @else {
+    <div class="max-w-4xl mx-auto px-6 py-20 text-center">
+      <div class="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg class="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+      </div>
+      <h2 class="text-3xl font-bold text-gray-900 mb-3">Keys topilmadi</h2>
+      <p class="text-gray-600 mb-6">Siz qidirayotgan keys mavjud emas yoki o'chirilgan.</p>
+      <button nz-button nzType="primary" routerLink="/cases"
+              class="h-12 px-8 rounded-full font-semibold transition-all duration-300 hover:shadow-lg hover:-translate-y-1 active:scale-95">
+        Keyslarga qaytish
+      </button>
+    </div>
+  }
+</div>
+
+<app-footer></app-footer>
