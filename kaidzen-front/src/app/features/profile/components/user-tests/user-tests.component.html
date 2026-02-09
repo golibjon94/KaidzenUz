@@ -204,7 +204,7 @@
                 nz-button
                 nzType="default"
                 nzSize="large"
-                [disabled]="currentQuestionIndex() === 0"
+                [disabled]="!canGoBack()"
                 (click)="previousQuestion()"
                 class="h-14 px-8 rounded-2xl font-semibold hover:shadow-lg transition-all duration-300 disabled:opacity-50"
               >

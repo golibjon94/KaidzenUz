@@ -85,6 +85,16 @@ export const routes: Routes = [
             title: 'Testlar boshqaruvi - Kaidzen.uz'
           },
           {
+            path: 'tests/add',
+            loadComponent: () => import('./features/admin/components/tests-mgmt/add-test/add-test').then(m => m.AddTest),
+            title: 'Yangi test yaratish - Kaidzen.uz'
+          },
+          {
+            path: 'tests/edit/:id',
+            loadComponent: () => import('./features/admin/components/tests-mgmt/add-test/add-test').then(m => m.AddTest),
+            title: 'Testni tahrirlash - Kaidzen.uz'
+          },
+          {
             path: 'blog',
             loadComponent: () => import('./features/admin/components/blog-mgmt/blog-mgmt.component').then(m => m.BlogMgmtComponent),
             title: 'Blog boshqaruvi - Kaidzen.uz'

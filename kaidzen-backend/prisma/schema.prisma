@@ -84,11 +84,12 @@ model Application {
 // ============================================
 
 model Test {
-  id          String  @id @default(uuid())
-  title       String
-  slug        String  @unique
-  description String?
-  isActive    Boolean @default(true) @map("is_active")
+  id               String  @id @default(uuid())
+  title            String
+  slug             String  @unique
+  description      String?
+  isActive         Boolean @default(true) @map("is_active")
+  startQuestionId  String? @map("start_question_id")
 
   questions   Question[]
   resultLogic ResultLogic[]
@@ -101,12 +102,14 @@ model Test {
 }
 
 model Question {
-  id     String @id @default(uuid())
-  testId String @map("test_id")
-  text   String
-  order  Int
+  id              String  @id @default(uuid())
+  testId          String  @map("test_id")
+  text            String
+  order           Int
+  isStartQuestion Boolean @default(false) @map("is_start_question")
 
-  options Option[]
+  options     Option[]
+  nextOptions Option[] @relation("NextQuestion")
 
   test Test @relation(fields: [testId], references: [id], onDelete: Cascade)
 
@@ -114,13 +117,17 @@ model Question {
 }
 
 model Option {
-  id         String @id @default(uuid())
-  questionId String @map("question_id")
-  text       String
-  score      Int
-  order      Int
+  id             String  @id @default(uuid())
+  questionId     String  @map("question_id")
+  text           String
+  score          Int
+  order          Int
+  nextQuestionId String? @map("next_question_id")
+  feedbackText   String? @map("feedback_text") @db.Text
+  isTerminal     Boolean @default(false) @map("is_terminal")
 
-  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  question     Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  nextQuestion Question? @relation("NextQuestion", fields: [nextQuestionId], references: [id], onDelete: SetNull)
 
   @@map("options")
 }

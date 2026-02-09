@@ -49,25 +49,59 @@ export class UserTestsComponent implements OnInit {
 
   // Test taking state
   currentQuestionIndex = signal(0);
+  questionPath = signal<string[]>([]);
+  collectedFeedback = signal<string[]>([]);
 
   currentQuestion = computed(() => {
     const test = this.selectedTest();
+    if (!test || !test.questions || test.questions.length === 0) return null;
+
+    const path = this.questionPath();
+    if (path.length > 0) {
+      const currentId = path[path.length - 1];
+      return test.questions.find(q => q.id === currentId) || null;
+    }
+
+    // Fallback: sequential mode
     const index = this.currentQuestionIndex();
-    // Savollar mavjudligini qat'iy tekshiramiz
-    if (!test || !test.questions || !test.questions[index]) return null;
+    if (!test.questions[index]) return null;
     return test.questions[index];
+  });
+
+  private isDynamicFlow = computed(() => {
+    const test = this.selectedTest();
+    if (!test || !test.questions) return false;
+    return test.questions.some(q => q.isStartQuestion) ||
+      test.questions.some(q => q.options.some(o => o.nextQuestionId || o.isTerminal));
   });
 
   progress = computed(() => {
     const test = this.selectedTest();
-    const index = this.currentQuestionIndex();
     if (!test || !test.questions || test.questions.length === 0) return 0;
+    if (this.isDynamicFlow()) {
+      const path = this.questionPath();
+      const answered = this.selectedAnswers().size;
+      return Math.round((answered / test.questions.length) * 100);
+    }
+    const index = this.currentQuestionIndex();
     return Math.round(((index + 1) / test.questions.length) * 100);
   });
 
   isLastQuestion = computed(() => {
     const test = this.selectedTest();
     if (!test || !test.questions) return false;
+
+    if (this.isDynamicFlow()) {
+      const current = this.currentQuestion();
+      const answers = this.selectedAnswers();
+      if (!current) return false;
+      const selectedOptionId = answers.get(current.id);
+      if (!selectedOptionId) return false;
+      const selectedOption = current.options.find(o => o.id === selectedOptionId);
+      // Terminal yoki keyingi savol yo'q bo'lsa - bu oxirgi savol
+      return selectedOption?.isTerminal === true || !selectedOption?.nextQuestionId;
+    }
+
     return this.currentQuestionIndex() === test.questions.length - 1;
   });
 
@@ -75,6 +109,13 @@ export class UserTestsComponent implements OnInit {
     const current = this.currentQuestion();
     const answers = this.selectedAnswers();
     return current ? answers.has(current.id) : false;
+  });
+
+  canGoBack = computed(() => {
+    if (this.isDynamicFlow()) {
+      return this.questionPath().length > 1;
+    }
+    return this.currentQuestionIndex() > 0;
   });
 
   ngOnInit() {
@@ -100,12 +141,21 @@ export class UserTestsComponent implements OnInit {
     this.result.set(null);
     this.selectedAnswers.set(new Map());
     this.currentQuestionIndex.set(0);
+    this.questionPath.set([]);
+    this.collectedFeedback.set([]);
 
     this.testsService.getBySlug(slug).subscribe({
       next: (res: any) => {
         // MUHIM: Bekenddan kelgan 'data' o'ramini tekshiramiz
         const testData = res.data ? res.data : res;
         this.selectedTest.set(testData);
+
+        // Initialize dynamic flow path
+        if (testData.questions && testData.questions.length > 0) {
+          const startQ = testData.questions.find((q: any) => q.isStartQuestion) || testData.questions[0];
+          this.questionPath.set([startQ.id]);
+        }
+
         this.loading.set(false);
       },
       error: () => {
@@ -125,13 +175,53 @@ export class UserTestsComponent implements OnInit {
   }
 
   nextQuestion() {
-    if (this.canGoNext() && !this.isLastQuestion()) {
-      this.currentQuestionIndex.update(i => i + 1);
+    const current = this.currentQuestion();
+    const answers = this.selectedAnswers();
+    if (!current || !this.canGoNext()) return;
+
+    const selectedOptionId = answers.get(current.id);
+    if (!selectedOptionId) return;
+
+    const selectedOption = current.options.find(o => o.id === selectedOptionId);
+    if (!selectedOption) return;
+
+    // Collect feedback
+    if (selectedOption.feedbackText) {
+      this.collectedFeedback.update(fb => [...fb, selectedOption.feedbackText!]);
+    }
+
+    if (this.isDynamicFlow()) {
+      // Check if terminal
+      if (selectedOption.isTerminal || !selectedOption.nextQuestionId) {
+        this.confirmSubmit();
+        return;
+      }
+      // Navigate to next question via dynamic flow
+      this.questionPath.update(path => [...path, selectedOption.nextQuestionId!]);
+    } else {
+      // Sequential fallback
+      if (!this.isLastQuestion()) {
+        this.currentQuestionIndex.update(i => i + 1);
+      }
     }
   }
 
   previousQuestion() {
-    this.currentQuestionIndex.update(i => Math.max(0, i - 1));
+    if (this.isDynamicFlow()) {
+      const path = this.questionPath();
+      if (path.length > 1) {
+        // Remove last feedback if it was from the current question's selected option
+        const currentQ = this.currentQuestion();
+        if (currentQ) {
+          const answers = this.selectedAnswers();
+          answers.delete(currentQ.id);
+          this.selectedAnswers.set(new Map(answers));
+        }
+        this.questionPath.set(path.slice(0, -1));
+      }
+    } else {
+      this.currentQuestionIndex.update(i => Math.max(0, i - 1));
+    }
   }
 
   confirmSubmit() {
@@ -174,6 +264,8 @@ export class UserTestsComponent implements OnInit {
     this.result.set(null);
     this.selectedAnswers.set(new Map());
     this.currentQuestionIndex.set(0);
-    this.loadTests(); // Refresh list to update counts if needed
+    this.questionPath.set([]);
+    this.collectedFeedback.set([]);
+    this.loadTests();
   }
 }

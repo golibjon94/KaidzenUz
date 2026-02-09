@@ -9,42 +9,102 @@ export class TestsService {
   constructor(private prisma: PrismaService) {}
 
   async create(dto: CreateTestDto) {
-    return this.prisma.test.create({
-      data: {
-        title: dto.title,
-        slug: dto.slug,
-        description: dto.description,
-        isActive: dto.isActive ?? true,
-        questions: {
-          create: dto.questions.map((q) => ({
-            text: q.text,
-            order: q.order,
-            options: {
-              create: q.options.map((o) => ({
-                text: o.text,
-                score: o.score,
-                order: o.order,
-              })),
-            },
-          })),
-        },
-        resultLogic: {
-          create: dto.resultLogic.map((l) => ({
-            minScore: l.minScore,
-            maxScore: l.maxScore,
-            resultText: l.resultText,
-            recommendation: l.recommendation,
-          })),
-        },
-      },
-      include: {
-        questions: {
-          include: {
-            options: true,
+    return this.prisma.$transaction(async (prisma) => {
+      // Step 1: Create test with questions and options (nextQuestionId = null temporarily)
+      const test = await prisma.test.create({
+        data: {
+          title: dto.title,
+          slug: dto.slug,
+          description: dto.description,
+          isActive: dto.isActive ?? true,
+          questions: {
+            create: dto.questions.map((q) => ({
+              text: q.text,
+              order: q.order,
+              isStartQuestion: q.isStartQuestion ?? false,
+              options: {
+                create: q.options.map((o) => ({
+                  text: o.text,
+                  score: o.score,
+                  order: o.order,
+                  nextQuestionId: null, // Will be updated in step 2
+                  feedbackText: o.feedbackText,
+                  isTerminal: o.isTerminal ?? false,
+                })),
+              },
+            })),
+          },
+          resultLogic: {
+            create: dto.resultLogic.map((l) => ({
+              minScore: l.minScore,
+              maxScore: l.maxScore,
+              resultText: l.resultText,
+              recommendation: l.recommendation,
+            })),
           },
         },
-        resultLogic: true,
-      },
+        include: {
+          questions: {
+            orderBy: { order: 'asc' },
+            include: {
+              options: {
+                orderBy: { order: 'asc' },
+              },
+            },
+          },
+        },
+      });
+
+      // Step 2: Build mapping from temp indices to real question IDs
+      const questionIdMap = new Map<number, string>();
+      test.questions.forEach((q, idx) => {
+        questionIdMap.set(idx, q.id);
+      });
+
+      // Step 3: Update options with correct nextQuestionId
+      for (let qIdx = 0; qIdx < dto.questions.length; qIdx++) {
+        const questionDto = dto.questions[qIdx];
+        const createdQuestion = test.questions[qIdx];
+
+        for (let oIdx = 0; oIdx < questionDto.options.length; oIdx++) {
+          const optionDto = questionDto.options[oIdx];
+          const createdOption = createdQuestion.options[oIdx];
+
+          // Parse temp_X format to get question index
+          if (optionDto.nextQuestionId && optionDto.nextQuestionId.startsWith('temp_')) {
+            const targetIdx = parseInt(optionDto.nextQuestionId.replace('temp_', ''), 10);
+            const realNextQuestionId = questionIdMap.get(targetIdx);
+
+            if (realNextQuestionId) {
+              await prisma.option.update({
+                where: { id: createdOption.id },
+                data: { nextQuestionId: realNextQuestionId },
+              });
+            }
+          }
+        }
+      }
+
+      // Step 4: Return complete test with updated relations
+      return prisma.test.findUnique({
+        where: { id: test.id },
+        include: {
+          questions: {
+            orderBy: { order: 'asc' },
+            include: {
+              options: {
+                orderBy: { order: 'asc' },
+                include: {
+                  nextQuestion: {
+                    select: { id: true, text: true },
+                  },
+                },
+              },
+            },
+          },
+          resultLogic: true,
+        },
+      });
     });
   }
 
@@ -134,8 +194,8 @@ export class TestsService {
       await prisma.question.deleteMany({ where: { testId: id } });
       await prisma.resultLogic.deleteMany({ where: { testId: id } });
 
-      // Update test and recreate relations
-      return prisma.test.update({
+      // Step 1: Update test and create questions with options (nextQuestionId = null temporarily)
+      const test = await prisma.test.update({
         where: { id },
         data: {
           title: dto.title,
@@ -146,11 +206,15 @@ export class TestsService {
             create: dto.questions?.map((q) => ({
               text: q.text,
               order: q.order,
+              isStartQuestion: q.isStartQuestion ?? false,
               options: {
                 create: q.options.map((o) => ({
                   text: o.text,
                   score: o.score,
                   order: o.order,
+                  nextQuestionId: null, // Will be updated in step 2
+                  feedbackText: o.feedbackText,
+                  isTerminal: o.isTerminal ?? false,
                 })),
               },
             })),
@@ -166,8 +230,63 @@ export class TestsService {
         },
         include: {
           questions: {
+            orderBy: { order: 'asc' },
             include: {
-              options: true,
+              options: {
+                orderBy: { order: 'asc' },
+              },
+            },
+          },
+        },
+      });
+
+      // Step 2: Build mapping from temp indices to real question IDs
+      const questionIdMap = new Map<number, string>();
+      test.questions.forEach((q, idx) => {
+        questionIdMap.set(idx, q.id);
+      });
+
+      // Step 3: Update options with correct nextQuestionId
+      if (dto.questions) {
+        for (let qIdx = 0; qIdx < dto.questions.length; qIdx++) {
+          const questionDto = dto.questions[qIdx];
+          const createdQuestion = test.questions[qIdx];
+
+          for (let oIdx = 0; oIdx < questionDto.options.length; oIdx++) {
+            const optionDto = questionDto.options[oIdx];
+            const createdOption = createdQuestion.options[oIdx];
+
+            // Parse temp_X format to get question index
+            if (optionDto.nextQuestionId && optionDto.nextQuestionId.startsWith('temp_')) {
+              const targetIdx = parseInt(optionDto.nextQuestionId.replace('temp_', ''), 10);
+              const realNextQuestionId = questionIdMap.get(targetIdx);
+
+              if (realNextQuestionId) {
+                await prisma.option.update({
+                  where: { id: createdOption.id },
+                  data: { nextQuestionId: realNextQuestionId },
+                });
+              }
+            }
+          }
+        }
+      }
+
+      // Step 4: Return complete test with updated relations
+      return prisma.test.findUnique({
+        where: { id },
+        include: {
+          questions: {
+            orderBy: { order: 'asc' },
+            include: {
+              options: {
+                orderBy: { order: 'asc' },
+                include: {
+                  nextQuestion: {
+                    select: { id: true, text: true },
+                  },
+                },
+              },
             },
           },
           resultLogic: true,
@@ -198,7 +317,13 @@ export class TestsService {
       where: { id: dto.testId },
       include: {
         questions: {
-          include: { options: true },
+          include: {
+            options: {
+              include: {
+                nextQuestion: true,
+              },
+            },
+          },
         },
         resultLogic: true,
       },
@@ -207,12 +332,18 @@ export class TestsService {
     if (!test) throw new NotFoundException('Test not found');
 
     let totalScore = 0;
+    const feedbackList: string[] = [];
+
     dto.answers.forEach((ans) => {
       const question = test.questions.find((q) => q.id === ans.questionId);
       if (question) {
         const option = question.options.find((o) => o.id === ans.optionId);
         if (option) {
           totalScore += option.score;
+
+          if (option.feedbackText) {
+            feedbackList.push(option.feedbackText);
+          }
         }
       }
     });
@@ -221,16 +352,66 @@ export class TestsService {
       (logic) => totalScore >= logic.minScore && totalScore <= logic.maxScore,
     );
 
+    const finalResultText = result?.resultText || 'Natija topilmadi';
+    const finalRecommendation = [
+      result?.recommendation || '',
+      ...feedbackList,
+    ]
+      .filter(Boolean)
+      .join('\n\n');
+
     return this.prisma.testResult.create({
       data: {
         userId,
         testId: test.id,
         score: totalScore,
-        resultText: result?.resultText || 'Natija topilmadi',
-        recommendation: result?.recommendation || 'Tavsiya yo\'q',
+        resultText: finalResultText,
+        recommendation: finalRecommendation || 'Tavsiya yo\'q',
         answers: dto.answers as any,
       },
     });
+  }
+
+  async validateTestFlow(testId: string): Promise<{
+    valid: boolean;
+    errors: string[];
+  }> {
+    const test = await this.findOneById(testId);
+    const errors: string[] = [];
+
+    const startQuestions = test.questions.filter((q) => q.isStartQuestion);
+    if (startQuestions.length === 0) {
+      errors.push('No start question defined');
+    } else if (startQuestions.length > 1) {
+      errors.push('Multiple start questions defined');
+    }
+
+    const reachableQuestions = new Set<string>();
+    const startQ = startQuestions[0];
+    if (startQ) {
+      const queue = [startQ.id];
+      while (queue.length > 0) {
+        const qId = queue.shift()!;
+        reachableQuestions.add(qId);
+        const question = test.questions.find((q) => q.id === qId);
+        question?.options.forEach((opt) => {
+          if (opt.nextQuestionId && !reachableQuestions.has(opt.nextQuestionId)) {
+            queue.push(opt.nextQuestionId);
+          }
+        });
+      }
+    }
+
+    test.questions.forEach((q) => {
+      if (!reachableQuestions.has(q.id)) {
+        errors.push(`Question "${q.text}" is not reachable`);
+      }
+    });
+
+    return {
+      valid: errors.length === 0,
+      errors,
+    };
   }
 
   async getUserResults(userId: string) {

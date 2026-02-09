@@ -12,6 +12,10 @@ export interface Option {
   text: string;
   score: number;
   order: number;
+  nextQuestionId?: string | null;
+  feedbackText?: string | null;
+  isTerminal?: boolean;
+  nextQuestion?: { id: string; text: string };
 }
 
 export interface Question {
@@ -19,6 +23,7 @@ export interface Question {
   testId: string;
   text: string;
   order: number;
+  isStartQuestion?: boolean;
   options: Option[];
 }
 
@@ -37,8 +42,9 @@ export interface Test {
   slug: string;
   description?: string;
   isActive: boolean;
+  startQuestionId?: string | null;
   questions: Question[];
-  resultLogic: ResultLogic[];
+  resultLogic?: ResultLogic[];
   createdAt: Date;
   updatedAt: Date;
   _count?: {

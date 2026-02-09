@@ -46,6 +46,14 @@ export class TestsController {
 
   @ApiBearerAuth()
   @Roles(Role.ADMIN)
+  @Get('admin/:id/validate')
+  @ApiOperation({ summary: 'Validate test flow integrity' })
+  validateTest(@Param('id') id: string) {
+    return this.testsService.validateTestFlow(id);
+  }
+
+  @ApiBearerAuth()
+  @Roles(Role.ADMIN)
   @Get('admin/:id')
   @ApiOperation({ summary: 'Get test details by ID for admin' })
   findOneById(@Param('id') id: string) {

@@ -15,6 +15,21 @@ export class CreateOptionDto {
   @ApiProperty()
   @IsInt()
   order: number;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  nextQuestionId?: string | null;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  feedbackText?: string | null;
+
+  @ApiProperty({ required: false })
+  @IsBoolean()
+  @IsOptional()
+  isTerminal?: boolean;
 }
 
 export class CreateQuestionDto {
@@ -26,6 +41,11 @@ export class CreateQuestionDto {
   @ApiProperty()
   @IsInt()
   order: number;
+
+  @ApiProperty({ required: false })
+  @IsBoolean()
+  @IsOptional()
+  isStartQuestion?: boolean;
 
   @ApiProperty({ type: [CreateOptionDto] })
   @IsArray()
@@ -76,6 +96,11 @@ export class CreateTestDto {
   @IsBoolean()
   @IsOptional()
   isActive?: boolean;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  startQuestionId?: string | null;
 
   @ApiProperty({ type: [CreateQuestionDto] })
   @IsArray()
