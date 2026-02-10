@@ -1,6 +1,6 @@
 <div class="p-6">
   <!-- Header -->
-  <div class="flex items-center justify-between mb-1">
+  <div class="flex items-center justify-between mb-6">
     <h3 class="text-lg font-semibold text-gray-800">Testlar boshqaruvi</h3>
 
     <div class="flex items-center gap-3">
@@ -37,7 +37,15 @@
 
   <!-- Table -->
   @else {
-    <table mat-table [dataSource]="tests()" class="w-full clean-table">
+    <table mat-table [dataSource]="dataSource" class="w-full clean-table">
+
+      <!-- Number -->
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef class="w-16"> № </th>
+        <td mat-cell *matCellDef="let test; let i = index">
+          {{ (paginator?.pageIndex ?? 0) * (paginator?.pageSize ?? 0) + i + 1 }}
+        </td>
+      </ng-container>
 
       <!-- Title -->
       <ng-container matColumnDef="title">
@@ -52,7 +60,9 @@
 
       <!-- Slug -->
       <ng-container matColumnDef="slug">
-        <th mat-header-cell *matHeaderCellDef>Slug</th>
+        <th mat-header-cell *matHeaderCellDef matTooltip="Slug - bu testning URL manzili uchun ishlatiladigan qisqa nom (masalan: test-nomi)">
+          Slug <mat-icon class="!text-xs text-gray-400 align-middle">info</mat-icon>
+        </th>
         <td mat-cell *matCellDef="let test">
           <span class="slug-text">{{ test.slug }}</span>
         </td>
@@ -98,5 +108,10 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                   showFirstLastButtons
+                   class="mt-4 !bg-transparent">
+    </mat-paginator>
   }
 </div>

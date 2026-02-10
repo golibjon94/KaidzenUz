@@ -1,10 +1,11 @@
-import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy, ViewChild, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../../../../environments/environment';
 
-import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -30,6 +31,7 @@ interface Test {
   imports: [
     CommonModule,
     MatTableModule,
+    MatPaginatorModule,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
@@ -47,8 +49,26 @@ export class TestsMgmtComponent implements OnInit {
   private router = inject(Router);
 
   tests = signal<Test[]>([]);
+  dataSource = new MatTableDataSource<Test>([]);
   loading = signal(false);
-  displayedColumns: string[] = ['title', 'slug', 'questions', 'status', 'actions'];
+  displayedColumns: string[] = ['position', 'title', 'slug', 'questions', 'status', 'actions'];
+
+  @ViewChild(MatPaginator) set paginator(content: MatPaginator | undefined) {
+    if (content) {
+      this.dataSource.paginator = content;
+      this._paginator = content;
+    }
+  }
+  private _paginator?: MatPaginator;
+  get paginator(): MatPaginator | undefined {
+    return this._paginator;
+  }
+
+  constructor() {
+    effect(() => {
+      this.dataSource.data = this.tests();
+    });
+  }
 
   ngOnInit() {
     this.loadTests();

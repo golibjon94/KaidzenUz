@@ -57,9 +57,12 @@
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="flex-1">
-                  <mat-label>Slug (URL)</mat-label>
+                  <mat-label>Slug (URL manzili)</mat-label>
                   <input matInput formControlName="slug" [readonly]="editMode()" placeholder="test-nomi">
                   <mat-icon matPrefix>link</mat-icon>
+                  <mat-hint matTooltip="Slug - bu testning URL manzili uchun ishlatiladigan qisqa nom. Masalan: test-nomi">
+                    Havola uchun qisqa nom <mat-icon class="!text-[10px] text-gray-400 align-middle">info</mat-icon>
+                  </mat-hint>
                 </mat-form-field>
               </div>
 

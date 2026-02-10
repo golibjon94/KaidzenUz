@@ -1,7 +1,8 @@
-import { Component, OnInit, inject, signal, ChangeDetectionStrategy, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy, PLATFORM_ID, ViewChild, effect } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -22,6 +23,7 @@ import Swal from 'sweetalert2';
     CommonModule,
     ReactiveFormsModule,
     MatTableModule,
+    MatPaginatorModule,
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
@@ -41,8 +43,26 @@ export class CasesMgmtComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
 
   cases = signal<BusinessCase[]>([]);
+  dataSource = new MatTableDataSource<BusinessCase>([]);
   loading = signal(true);
-  displayedColumns: string[] = ['title', 'problem', 'solution', 'date', 'actions'];
+  displayedColumns: string[] = ['position', 'title', 'problem', 'solution', 'date', 'actions'];
+
+  @ViewChild(MatPaginator) set paginator(content: MatPaginator | undefined) {
+    if (content) {
+      this.dataSource.paginator = content;
+      this._paginator = content;
+    }
+  }
+  private _paginator?: MatPaginator;
+  get paginator(): MatPaginator | undefined {
+    return this._paginator;
+  }
+
+  constructor() {
+    effect(() => {
+      this.dataSource.data = this.cases();
+    });
+  }
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {

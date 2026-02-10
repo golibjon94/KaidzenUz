@@ -44,10 +44,13 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="flex-1">
-          <mat-label>Slug</mat-label>
+          <mat-label>Slug (Havola nomi)</mat-label>
           <input matInput formControlName="slug" placeholder="maqola-manzili">
           <mat-icon matPrefix>link</mat-icon>
-          <mat-hint>/blog/{{ form.get('slug')?.value || 'slug' }}</mat-hint>
+          <mat-hint matTooltip="Slug - bu sahifaning URL manzili uchun ishlatiladigan qisqa nom. Masalan: maqola-nomi">
+            /blog/{{ form.get('slug')?.value || 'slug' }}
+            <mat-icon class="!text-[10px] text-gray-400 align-middle">info</mat-icon>
+          </mat-hint>
           <mat-error>Slugni kiriting</mat-error>
         </mat-form-field>
       </div>
