@@ -1,28 +1,30 @@
 import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { NzTableModule } from 'ng-zorro-antd/table';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzTagModule } from 'ng-zorro-antd/tag';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzEmptyModule } from 'ng-zorro-antd/empty';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AdminBlogService } from '../../services/admin-blog.service';
 import { BlogPost } from '../../../../core/models/blog.model';
 import { environment } from '../../../../../environments/environment';
+import { NotifyService } from '../../../../core/services/notify.service';
 
 @Component({
   selector: 'app-blog-mgmt',
   standalone: true,
   imports: [
     CommonModule,
-    NzTableModule,
-    NzButtonModule,
-    NzTagModule,
-    NzIconModule,
-    NzEmptyModule,
-    NzModalModule
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
   ],
   templateUrl: './blog-mgmt.component.html',
   styleUrl: './blog-mgmt.component.css',
@@ -30,12 +32,12 @@ import { environment } from '../../../../../environments/environment';
 })
 export class BlogMgmtComponent implements OnInit {
   private blogService = inject(AdminBlogService);
-  private notification = inject(NzNotificationService);
-  private modal = inject(NzModalService);
+  private notify = inject(NotifyService);
   private router = inject(Router);
 
   posts = signal<BlogPost[]>([]);
   loading = signal(true);
+  displayedColumns: string[] = ['image', 'title', 'slug', 'status', 'createdAt', 'actions'];
 
   baseUrl = environment.apiUrl.replace('/api', '');
 
@@ -53,7 +55,7 @@ export class BlogMgmtComponent implements OnInit {
       error: () => {
         this.posts.set([]);
         this.loading.set(false);
-      }
+      },
     });
   }
 
@@ -66,17 +68,16 @@ export class BlogMgmtComponent implements OnInit {
   }
 
   deletePost(id: string) {
-    this.modal.confirm({
-      nzTitle: 'O\'chirishni tasdiqlaysizmi?',
-      nzContent: 'Ushbu maqolani qayta tiklab bo\'lmaydi',
-      nzOkText: 'O\'chirish',
-      nzOkDanger: true,
-      nzOnOk: () => {
-        this.blogService.deletePost(id).subscribe(() => {
-          this.notification.success('Muvaffaqiyat', 'Maqola o\'chirildi');
+    if (confirm("O'chirishni tasdiqlaysizmi? Ushbu maqolani qayta tiklab bo'lmaydi.")) {
+      this.blogService.deletePost(id).subscribe({
+        next: () => {
+          this.notify.success("Maqola muvaffaqiyatli o'chirildi");
           this.loadPosts();
-        });
-      }
-    });
+        },
+        error: () => {
+          this.notify.error("Maqolani o'chirishda xatolik yuz berdi");
+        },
+      });
+    }
   }
 }

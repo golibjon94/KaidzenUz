@@ -1,13 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, NzIconModule, NzAvatarModule],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, MatIconModule],
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.css',
 })

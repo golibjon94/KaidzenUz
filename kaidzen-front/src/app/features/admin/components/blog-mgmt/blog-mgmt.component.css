@@ -1,0 +1,75 @@
+/* Clean table */
+.clean-table .mat-mdc-header-row {
+  background: #fafafa;
+}
+
+.clean-table .mat-mdc-header-cell {
+  color: #666;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.clean-table .mat-mdc-row:hover {
+  background: #fafafa;
+}
+
+/* Thumbnail */
+.post-thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.post-thumb-empty {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cbd5e1;
+}
+
+/* Slug */
+.slug-text {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+/* Status badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.badge-published {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge-published .badge-dot {
+  background: #4caf50;
+}
+
+.badge-draft {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.badge-draft .badge-dot {
+  background: #ff9800;
+}

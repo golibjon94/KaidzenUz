@@ -1,0 +1,23 @@
+/* Clean table */
+.clean-table .mat-mdc-header-row {
+  background: #fafafa;
+}
+
+.clean-table .mat-mdc-header-cell {
+  color: #666;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.clean-table .mat-mdc-row:hover {
+  background: #fafafa;
+}
+
+/* Truncate long text to 2 lines */
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 260px;
+}

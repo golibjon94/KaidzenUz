@@ -1,47 +1,94 @@
-<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-  <div class="p-6 border-b border-gray-100 flex items-center justify-between">
-    <h3 class="text-lg font-bold">Foydalanuvchilar ro'yxati</h3>
-    <div class="flex gap-4">
-      <nz-input-group [nzSuffix]="suffixIconSearch">
-        <input type="text" nz-input placeholder="Qidirish..." />
-      </nz-input-group>
-      <ng-template #suffixIconSearch><span nz-icon nzType="search"></span></ng-template>
+<div class="p-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-1">
+    <h3 class="text-lg font-semibold text-gray-800">Foydalanuvchilar</h3>
+
+    <div class="flex items-center gap-3">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput placeholder="Qidirish...">
+      </mat-form-field>
+
+      <button mat-icon-button matTooltip="Yangilash" (click)="loadUsers()">
+        <mat-icon>refresh</mat-icon>
+      </button>
     </div>
   </div>
 
-  @if (!loading() && users().length === 0) {
-    <div class="p-8 text-center">
-      <nz-empty nzNotFoundContent="Hozircha foydalanuvchilar yo'q"></nz-empty>
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="flex justify-center py-16">
+      <mat-spinner diameter="40"></mat-spinner>
     </div>
-  } @else {
-    <nz-table #basicTable [nzData]="users()" [nzLoading]="loading()">
-      <thead>
-        <tr>
-          <th>F.I.SH</th>
-          <th>Telefon</th>
-          <th>Roli</th>
-          <th>Ro'yxatdan o'tgan</th>
-          <th>Amallar</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (data of basicTable.data; track data.id) {
-          <tr>
-            <td>{{ data.fullName }}</td>
-            <td>{{ data.phone }}</td>
-            <td>
-              <nz-tag [nzColor]="data.role === 'ADMIN' ? 'red' : 'blue'">
-                {{ data.role }}
-              </nz-tag>
-            </td>
-            <td>{{ data.createdAt | date:'dd.MM.yyyy HH:mm' }}</td>
-            <td>
-              <a class="text-blue-600 hover:text-blue-800 mr-4">Tahrirlash</a>
-              <a class="text-red-600 hover:text-red-800">O'chirish</a>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </nz-table>
+  }
+
+  <!-- Empty -->
+  @else if (users().length === 0) {
+    <div class="text-center py-16">
+      <mat-icon class="!text-5xl text-gray-300 mb-3">people_outline</mat-icon>
+      <p class="text-gray-400 text-sm">Foydalanuvchilar topilmadi</p>
+    </div>
+  }
+
+  <!-- Table -->
+  @else {
+    <table mat-table [dataSource]="users()" class="w-full clean-table">
+
+      <!-- Full Name -->
+      <ng-container matColumnDef="fullName">
+        <th mat-header-cell *matHeaderCellDef>F.I.SH</th>
+        <td mat-cell *matCellDef="let user">
+          <div class="flex items-center gap-3">
+            <span class="avatar">{{ user.fullName?.charAt(0)?.toUpperCase() }}</span>
+            <span class="font-medium text-gray-800">{{ user.fullName }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Phone -->
+      <ng-container matColumnDef="phone">
+        <th mat-header-cell *matHeaderCellDef>Telefon</th>
+        <td mat-cell *matCellDef="let user">
+          <div class="flex items-center gap-1.5 text-gray-600">
+            <mat-icon class="!text-base text-green-500">phone</mat-icon>
+            {{ user.phone }}
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Role -->
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef>Roli</th>
+        <td mat-cell *matCellDef="let user">
+          <span class="badge" [ngClass]="'badge-' + user.role?.toLowerCase()">
+            {{ getRoleLabel(user.role) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Created At -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>Sana</th>
+        <td mat-cell *matCellDef="let user" class="text-gray-500 text-sm">
+          {{ user.createdAt | date:'dd.MM.yyyy' }}
+        </td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Amallar</th>
+        <td mat-cell *matCellDef="let user">
+          <button mat-icon-button color="primary" matTooltip="Tahrirlash">
+            <mat-icon class="!text-xl">edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matTooltip="O'chirish">
+            <mat-icon class="!text-xl">delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
   }
 </div>

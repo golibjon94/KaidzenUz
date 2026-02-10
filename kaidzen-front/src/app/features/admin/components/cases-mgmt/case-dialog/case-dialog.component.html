@@ -1,0 +1,71 @@
+<div class="dialog-wrapper">
+  <div class="dialog-header">
+    <mat-icon class="header-icon">work_outline</mat-icon>
+    <div>
+      <h2 class="dialog-title">Yangi biznes keys</h2>
+      <p class="dialog-subtitle">Keysning barcha ma'lumotlarini kiriting</p>
+    </div>
+  </div>
+
+  <mat-dialog-content>
+    <form [formGroup]="caseForm" class="form-grid">
+
+      <!-- Title - full width -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Sarlavha</mat-label>
+        <input matInput formControlName="title" placeholder="Keys sarlavhasi">
+        <mat-icon matPrefix>title</mat-icon>
+        <mat-error *ngIf="caseForm.get('title')?.hasError('required')">
+          Sarlavhani kiriting
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Problem -->
+      <mat-form-field appearance="outline">
+        <mat-label>Muammo</mat-label>
+        <textarea matInput formControlName="problem" rows="4"
+                  placeholder="Muammo nima edi?"></textarea>
+        <mat-error *ngIf="caseForm.get('problem')?.hasError('required')">
+          Muammoni kiriting
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Solution -->
+      <mat-form-field appearance="outline">
+        <mat-label>Yechim</mat-label>
+        <textarea matInput formControlName="solution" rows="4"
+                  placeholder="Qanday yechim taklif qilindi?"></textarea>
+        <mat-error *ngIf="caseForm.get('solution')?.hasError('required')">
+          Yechimni kiriting
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Result -->
+      <mat-form-field appearance="outline">
+        <mat-label>Natija</mat-label>
+        <textarea matInput formControlName="result" rows="4"
+                  placeholder="Qanday natija olindi?"></textarea>
+        <mat-error *ngIf="caseForm.get('result')?.hasError('required')">
+          Natijani kiriting
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Date - native input -->
+      <mat-form-field appearance="outline">
+        <mat-label>Sana</mat-label>
+        <input matInput formControlName="date" type="date">
+        <mat-error *ngIf="caseForm.get('date')?.hasError('required')">
+          Sanani kiriting
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Bekor qilish</button>
+    <button mat-flat-button color="primary" (click)="onSubmit()">
+      <mat-icon>save</mat-icon>
+      Saqlash
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,94 +1,94 @@
-<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-  <div class="p-6 border-b border-gray-100 flex items-center justify-between">
-    <h3 class="text-lg font-bold">Biznes keyslar</h3>
-    <button nz-button nzType="primary" (click)="showModal()">
-      <span nz-icon nzType="plus"></span>
-      <span>Yangi keys</span>
-    </button>
+<div class="p-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-1">
+    <h3 class="text-lg font-semibold text-gray-800">Biznes keyslar</h3>
+
+    <div class="flex items-center gap-3">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput placeholder="Qidirish...">
+      </mat-form-field>
+
+      <button mat-icon-button matTooltip="Yangilash" (click)="loadCases()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+
+      <button mat-flat-button color="primary" (click)="openDialog()">
+        <mat-icon>add</mat-icon>
+        Yangi keys
+      </button>
+    </div>
   </div>
 
-  @if (!loading() && cases().length === 0) {
-    <div class="p-8 text-center">
-      <nz-empty nzNotFoundContent="Hozircha biznes keyslar yo'q"></nz-empty>
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="flex justify-center py-16">
+      <mat-spinner diameter="40"></mat-spinner>
     </div>
-  } @else {
-    <nz-table #casesTable [nzData]="cases()" [nzLoading]="loading()">
-      <thead>
-        <tr>
-          <th>Sarlavha</th>
-          <th>Muammo</th>
-          <th>Yechim</th>
-          <th>Sana</th>
-          <th>Amallar</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (data of casesTable.data; track data.id) {
-          <tr>
-            <td>{{ data.title }}</td>
-            <td class="max-w-xs truncate">{{ data.problem }}</td>
-            <td class="max-w-xs truncate">{{ data.solution }}</td>
-            <td>{{ data.date | date:'dd.MM.yyyy' }}</td>
-            <td>
-              <a class="text-blue-600 hover:text-blue-800 mr-4">Tahrirlash</a>
-              <a (click)="deleteCase(data.id)" class="text-red-600 hover:text-red-800 cursor-pointer">O'chirish</a>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </nz-table>
+  }
+
+  <!-- Empty -->
+  @else if (cases().length === 0) {
+    <div class="text-center py-16">
+      <mat-icon class="!text-5xl text-gray-300 mb-3">folder_open</mat-icon>
+      <p class="text-gray-400 text-sm">Hozircha biznes keyslar yo'q</p>
+    </div>
+  }
+
+  <!-- Table -->
+  @else {
+    <table mat-table [dataSource]="cases()" class="w-full clean-table">
+
+      <!-- Title -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Sarlavha</th>
+        <td mat-cell *matCellDef="let item">
+          <div class="flex items-center gap-3">
+            <mat-icon class="!text-lg text-indigo-400">article</mat-icon>
+            <span class="font-medium text-gray-800">{{ item.title }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Problem -->
+      <ng-container matColumnDef="problem">
+        <th mat-header-cell *matHeaderCellDef>Muammo</th>
+        <td mat-cell *matCellDef="let item">
+          <span class="text-gray-600 line-clamp">{{ item.problem }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Solution -->
+      <ng-container matColumnDef="solution">
+        <th mat-header-cell *matHeaderCellDef>Yechim</th>
+        <td mat-cell *matCellDef="let item">
+          <span class="text-gray-600 line-clamp">{{ item.solution }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Date -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Sana</th>
+        <td mat-cell *matCellDef="let item" class="text-gray-500 text-sm">
+          {{ item.date | date:'dd.MM.yyyy' }}
+        </td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Amallar</th>
+        <td mat-cell *matCellDef="let item">
+          <button mat-icon-button color="primary" matTooltip="Tahrirlash">
+            <mat-icon class="!text-xl">edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matTooltip="O'chirish" (click)="deleteCase(item.id)">
+            <mat-icon class="!text-xl">delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
   }
 </div>
-
-<!-- Case Modal -->
-<nz-modal
-  [(nzVisible)]="isModalVisible"
-  nzTitle="Yangi biznes keys"
-  (nzOnCancel)="handleCancel()"
-  (nzOnOk)="submitForm()"
-  [nzOkLoading]="isSubmitting()"
-  nzWidth="700px"
->
-  <ng-container *nzModalContent>
-    <form nz-form [formGroup]="caseForm" [nzLayout]="'vertical'">
-      <nz-form-item>
-        <nz-form-label nzRequired>Sarlavha</nz-form-label>
-        <nz-form-control nzErrorTip="Sarlavhani kiriting">
-          <input nz-input formControlName="title" placeholder="Keys sarlavhasi" />
-        </nz-form-control>
-      </nz-form-item>
-
-      <div class="grid grid-cols-2 gap-4">
-        <nz-form-item>
-          <nz-form-label nzRequired>Muammo (Problem)</nz-form-label>
-          <nz-form-control nzErrorTip="Muammoni kiriting">
-            <textarea nz-input formControlName="problem" rows="4" placeholder="Muammo nima edi?"></textarea>
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label nzRequired>Yechim (Solution)</nz-form-label>
-          <nz-form-control nzErrorTip="Yechimni kiriting">
-            <textarea nz-input formControlName="solution" rows="4" placeholder="Qanday yechim taklif qilindi?"></textarea>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div class="grid grid-cols-2 gap-4">
-        <nz-form-item>
-          <nz-form-label nzRequired>Natija (Result)</nz-form-label>
-          <nz-form-control nzErrorTip="Natijani kiriting">
-            <textarea nz-input formControlName="result" rows="4" placeholder="Qanday natija olindi?"></textarea>
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label nzRequired>Sana</nz-form-label>
-          <nz-form-control nzErrorTip="Sanani tanlang">
-            <nz-date-picker formControlName="date" class="w-full"></nz-date-picker>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-    </form>
-  </ng-container>
-</nz-modal>

@@ -3,8 +3,8 @@
   <!-- Header -->
   <div class="flex items-center justify-between mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
     <div class="flex items-center gap-3">
-      <button nz-button nzType="text" nzShape="circle" (click)="goBack()">
-        <span nz-icon nzType="arrow-left"></span>
+      <button mat-icon-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
       </button>
       <div>
         <h1 class="text-2xl font-bold text-gray-800 m-0">
@@ -14,8 +14,11 @@
       </div>
     </div>
     <div class="flex gap-2">
-      <button nz-button nzType="default" (click)="goBack()">Bekor qilish</button>
-      <button nz-button nzType="primary" [nzLoading]="isSubmitting()" (click)="submitForm()">
+      <button mat-button (click)="goBack()">Bekor qilish</button>
+      <button mat-raised-button color="primary" [disabled]="isSubmitting()" (click)="submitForm()">
+        @if (isSubmitting()) {
+          <mat-spinner diameter="20" class="inline-block mr-2"></mat-spinner>
+        }
         {{ editMode() ? 'Yangilash' : 'Saqlash' }}
       </button>
     </div>
@@ -23,64 +26,65 @@
 
   @if (loading()) {
     <div class="text-center py-20">
-      <nz-spin nzSimple nzSize="large"></nz-spin>
+      <mat-spinner diameter="50"></mat-spinner>
     </div>
   } @else {
-    <form [formGroup]="testForm" nz-form nzLayout="vertical">
-      <nz-tabs nzType="card" [nzAnimated]="false">
+    <form [formGroup]="testForm">
+      <mat-tab-group animationDuration="0ms">
 
         <!-- Tab 1: Asosiy sozlamalar -->
-        <nz-tab nzTitle="Asosiy sozlamalar">
-          <div class="bg-white rounded-xl p-6 border border-gray-100">
+        <mat-tab label="Asosiy sozlamalar">
+          <div class="bg-white rounded-xl p-6 border border-gray-100 mt-4">
             <div class="grid grid-cols-2 gap-4">
-              <nz-form-item>
-                <nz-form-label nzRequired>Test sarlavhasi</nz-form-label>
-                <nz-form-control nzErrorTip="Sarlavha bo'sh bo'lmasligi kerak">
-                  <input nz-input formControlName="title" placeholder="Masalan: Psixologik test" />
-                </nz-form-control>
-              </nz-form-item>
-              <nz-form-item>
-                <nz-form-label nzRequired>Slug (URL)</nz-form-label>
-                <nz-form-control>
-                  <input nz-input formControlName="slug" [readonly]="editMode()" />
-                </nz-form-control>
-              </nz-form-item>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Test sarlavhasi</mat-label>
+                <input matInput formControlName="title" placeholder="Masalan: Psixologik test" />
+                @if (testForm.get('title')?.invalid && testForm.get('title')?.touched) {
+                  <mat-error>Sarlavha bo'sh bo'lmasligi kerak</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Slug (URL)</mat-label>
+                <input matInput formControlName="slug" [readonly]="editMode()" />
+              </mat-form-field>
             </div>
-            <nz-form-item>
-              <nz-form-label>Tavsif</nz-form-label>
-              <nz-form-control>
-                <textarea nz-input formControlName="description" rows="3"></textarea>
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label>Holati</nz-form-label>
-              <nz-form-control>
-                <nz-switch formControlName="isActive" nzCheckedChildren="Faol" nzUnCheckedChildren="Nofaol"></nz-switch>
-              </nz-form-control>
-            </nz-form-item>
+
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Tavsif</mat-label>
+              <textarea matInput formControlName="description" rows="3"></textarea>
+            </mat-form-field>
+
+            <div class="flex items-center gap-2">
+              <mat-slide-toggle formControlName="isActive">
+                {{ testForm.get('isActive')?.value ? 'Faol' : 'Nofaol' }}
+              </mat-slide-toggle>
+            </div>
           </div>
-        </nz-tab>
+        </mat-tab>
 
         <!-- Tab 2: Savollar -->
-        <nz-tab [nzTitle]="'Savollar (' + questions.length + ')'">
+        <mat-tab [label]="'Savollar (' + questions.length + ')'">
           <div formArrayName="questions" class="space-y-6 pt-4 max-h-[600px] overflow-y-auto pr-2">
             @for (q of questions.controls; track q; let i = $index) {
               <div [formGroupName]="i" class="p-4 border rounded-xl bg-gray-50 relative">
-                <button nz-button nzType="text" nzDanger class="absolute top-2 right-2" (click)="removeQuestion(i)">
-                  <span nz-icon nzType="delete"></span>
+                <button mat-icon-button color="warn" class="absolute top-2 right-2" (click)="removeQuestion(i)">
+                  <mat-icon>delete</mat-icon>
                 </button>
 
                 <div class="flex gap-4 mb-4">
-                  <div class="flex-1">
-                    <label class="block text-xs font-bold mb-1 uppercase">#{{i + 1}} Savol matni</label>
-                    <input nz-input formControlName="text" placeholder="Savolni kiriting..." />
-                  </div>
-                  <div class="w-24">
-                    <label class="block text-xs font-bold mb-1 uppercase">Tartib</label>
-                    <nz-input-number formControlName="order" class="w-full"></nz-input-number>
-                  </div>
-                  <div class="flex items-end pb-1">
-                    <label nz-checkbox formControlName="isStartQuestion">Boshlang'ich savol</label>
+                  <mat-form-field appearance="outline" class="flex-1">
+                    <mat-label>#{{i + 1}} Savol matni</mat-label>
+                    <input matInput formControlName="text" placeholder="Savolni kiriting..." />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="w-24">
+                    <mat-label>Tartib</mat-label>
+                    <input matInput type="number" formControlName="order" />
+                  </mat-form-field>
+
+                  <div class="flex items-center pb-1">
+                    <mat-checkbox formControlName="isStartQuestion">Boshlang'ich savol</mat-checkbox>
                   </div>
                 </div>
 
@@ -88,68 +92,94 @@
                   @for (opt of (q.get('options') | any).controls; track opt; let optIdx = $index) {
                     <div [formGroupName]="optIdx" class="p-3 bg-white rounded-lg border border-gray-200 space-y-2">
                       <div class="flex gap-2 items-center">
-                        <input nz-input formControlName="text" placeholder="Variant..." class="flex-1" />
-                        <nz-input-number
-  formControlName="score"
-  nzPlaceHolder="Ball"
-  class="w-24"
-  [nzMin]="0"
-  nz-tooltip
-  nzTooltipTitle="Variant tanlansa beriladigan ball"
-  aria-label="Variant balli"
-></nz-input-number>
-                        <button nz-button nzType="text" nzDanger (click)="removeOption(i, optIdx)">
-                          <span nz-icon nzType="minus-circle"></span>
+                        <mat-form-field appearance="outline" class="flex-1">
+                          <mat-label>Variant</mat-label>
+                          <input matInput formControlName="text" placeholder="Variant..." />
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="w-24">
+                          <mat-label>Ball</mat-label>
+                          <input matInput type="number" formControlName="score" placeholder="Ball" matTooltip="Variant tanlansa beriladigan ball" />
+                        </mat-form-field>
+
+                        <button mat-icon-button color="warn" (click)="removeOption(i, optIdx)">
+                          <mat-icon>remove_circle</mat-icon>
                         </button>
                       </div>
+
                       <div class="flex gap-2 items-center">
-                        <nz-select formControlName="nextQuestionId" nzPlaceHolder="Keyingi savol" nzAllowClear class="flex-1">
-                          @for (ql of getQuestionLabels(); track ql.index) {
-                            @if (ql.index !== i) {
-                              <nz-option [nzLabel]="ql.text" [nzValue]="'temp_' + ql.index"></nz-option>
+                        <mat-form-field appearance="outline" class="flex-1">
+                          <mat-label>Keyingi savol</mat-label>
+                          <mat-select formControlName="nextQuestionId">
+                            <mat-option [value]="null">Tanlang</mat-option>
+                            @for (ql of getQuestionLabels(); track ql.index) {
+                              @if (ql.index !== i) {
+                                <mat-option [value]="'temp_' + ql.index">{{ ql.text }}</mat-option>
+                              }
                             }
-                          }
-                        </nz-select>
-                        <label nz-checkbox formControlName="isTerminal">Testni tugatadi</label>
+                          </mat-select>
+                        </mat-form-field>
+
+                        <mat-checkbox formControlName="isTerminal">Testni tugatadi</mat-checkbox>
                       </div>
-                      <textarea nz-input formControlName="feedbackText" rows="2" placeholder="Javob izohi/tavsiya (ixtiyoriy)" class="w-full"></textarea>
+
+                      <mat-form-field appearance="outline" class="w-full">
+                        <mat-label>Javob izohi/tavsiya (ixtiyoriy)</mat-label>
+                        <textarea matInput formControlName="feedbackText" rows="2"></textarea>
+                      </mat-form-field>
                     </div>
                   }
-                  <button nz-button nzType="dashed" nzSize="small" (click)="addOption(i)">
-                    <span nz-icon nzType="plus"></span>
+                  <button mat-stroked-button (click)="addOption(i)">
+                    <mat-icon>add</mat-icon>
                     <span class="ml-2">Variant qo'shish</span>
                   </button>
                 </div>
               </div>
             }
-            <button nz-button nzType="dashed" nzBlock nzSize="large" (click)="addQuestion()">
-              <span nz-icon nzType="plus"></span>
+            <button mat-stroked-button class="w-full" (click)="addQuestion()">
+              <mat-icon>add</mat-icon>
               <span class="ml-2">Yangi savol qo'shish</span>
             </button>
           </div>
-        </nz-tab>
+        </mat-tab>
 
         <!-- Tab 3: Natija logikasi -->
-        <nz-tab nzTitle="Natija logikasi">
+        <mat-tab label="Natija logikasi">
           <div formArrayName="resultLogic" class="space-y-4 pt-4">
             @for (logic of resultLogic.controls; track logic; let i = $index) {
               <div [formGroupName]="i" class="p-4 border rounded-lg bg-green-50">
                 <div class="grid grid-cols-2 gap-4 mb-2">
-                  <nz-input-number formControlName="minScore" nzPlaceHolder="Min Ball" class="w-full"></nz-input-number>
-                  <nz-input-number formControlName="maxScore" nzPlaceHolder="Max Ball" class="w-full"></nz-input-number>
+                  <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Min Ball</mat-label>
+                    <input matInput type="number" formControlName="minScore" />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Max Ball</mat-label>
+                    <input matInput type="number" formControlName="maxScore" />
+                  </mat-form-field>
                 </div>
-                <input nz-input formControlName="resultText" placeholder="Natija nomi" class="mb-2" />
-                <textarea nz-input formControlName="recommendation" placeholder="Tavsiya..."></textarea>
-                <button nz-button nzType="link" nzDanger (click)="removeResultLogic(i)">O'chirish</button>
+
+                <mat-form-field appearance="outline" class="w-full mb-2">
+                  <mat-label>Natija nomi</mat-label>
+                  <input matInput formControlName="resultText" placeholder="Natija nomi" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full">
+                  <mat-label>Tavsiya</mat-label>
+                  <textarea matInput formControlName="recommendation" placeholder="Tavsiya..."></textarea>
+                </mat-form-field>
+
+                <button mat-button color="warn" (click)="removeResultLogic(i)">O'chirish</button>
               </div>
             }
-            <button nz-button nzType="dashed" nzBlock (click)="addResultLogic()">
-              <span nz-icon nzType="aim"></span>
+            <button mat-stroked-button class="w-full" (click)="addResultLogic()">
+              <mat-icon>track_changes</mat-icon>
               <span class="ml-2">Natija qo'shish</span>
             </button>
           </div>
-        </nz-tab>
-      </nz-tabs>
+        </mat-tab>
+      </mat-tab-group>
     </form>
   }
 </div>

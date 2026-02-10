@@ -1,116 +1,122 @@
-<div class="space-y-4">
-  <div class="flex items-center justify-between">
-    <div>
-      <h2 class="text-xl font-bold">{{ isEdit() ? 'Maqolani tahrirlash' : 'Yangi maqola' }}</h2>
-      <div class="text-sm text-gray-500">
-        Blog kontentini qulay tarzda yozing: sarlavhalar, ro'yxatlar, link va kod blok.
+<div class="p-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center gap-3">
+      <button mat-icon-button (click)="cancel()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h2 class="text-lg font-semibold text-gray-800">
+          {{ isEdit() ? 'Maqolani tahrirlash' : 'Yangi maqola' }}
+        </h2>
+        <p class="text-sm text-gray-400">Sarlavha, kontent va rasmni kiriting</p>
       </div>
     </div>
 
     <div class="flex items-center gap-2">
-      <button nz-button nzType="default" (click)="cancel()" [disabled]="saving()">Ortga</button>
-      <button nz-button nzType="primary" (click)="save()" [nzLoading]="saving()">
+      <button mat-button (click)="cancel()" [disabled]="saving()">Bekor qilish</button>
+      <button mat-flat-button color="primary" (click)="save()" [disabled]="saving()">
+        @if (saving()) {
+          <mat-spinner diameter="18" class="inline-block mr-2"></mat-spinner>
+        }
+        <mat-icon>save</mat-icon>
         {{ isEdit() ? 'Yangilash' : 'Saqlash' }}
       </button>
     </div>
   </div>
 
-  <nz-card>
-    <nz-spin [nzSpinning]="loading()">
-      <form nz-form [formGroup]="form" layout="vertical" class="space-y-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <nz-form-item>
-            <nz-form-label nzRequired>Sarlavha</nz-form-label>
-            <nz-form-control nzErrorTip="Sarlavhani kiriting">
-              <input nz-input formControlName="title" placeholder="Maqola sarlavhasi" />
-              <div class="text-xs text-gray-500 mt-1">
-                Sarlavha yozilganda slug avtomatik taklif qilinadi.
-              </div>
-            </nz-form-control>
-          </nz-form-item>
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="flex justify-center py-16">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else {
+    <form [formGroup]="form">
 
-          <nz-form-item>
-            <nz-form-label nzRequired>Slug</nz-form-label>
-            <nz-form-control nzErrorTip="Slugni kiriting">
-              <input nz-input formControlName="slug" placeholder="maqola-manzili" />
-              <div class="text-xs text-gray-500 mt-1">
-                URL ko'rinishi: <span class="font-mono">/blog/&lt;slug&gt;</span>
-              </div>
-            </nz-form-control>
-          </nz-form-item>
-        </div>
+      <!-- Row 1: Title + Slug -->
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="flex-1">
+          <mat-label>Sarlavha</mat-label>
+          <input matInput formControlName="title" placeholder="Maqola sarlavhasi">
+          <mat-icon matPrefix>title</mat-icon>
+          <mat-hint>Slug avtomatik hosil bo'ladi</mat-hint>
+          <mat-error>Sarlavhani kiriting</mat-error>
+        </mat-form-field>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <nz-form-item>
-            <nz-form-label>Rasm</nz-form-label>
-            <nz-form-control>
-              <div class="flex items-start gap-3">
-                <nz-upload
-                  nzListType="picture-card"
-                  [nzShowUploadList]="false"
-                  [nzBeforeUpload]="beforeUpload"
-                >
-                  @if (imagePreviewUrl()) {
-                    <img [src]="imagePreviewUrl()!" class="w-full h-full object-cover" alt="" />
-                  } @else {
-                    <div>
-                      <span nz-icon nzType="plus"></span>
-                      <div style="margin-top: 8px">Yuklash</div>
-                    </div>
-                  }
-                </nz-upload>
+        <mat-form-field appearance="outline" class="flex-1">
+          <mat-label>Slug</mat-label>
+          <input matInput formControlName="slug" placeholder="maqola-manzili">
+          <mat-icon matPrefix>link</mat-icon>
+          <mat-hint>/blog/{{ form.get('slug')?.value || 'slug' }}</mat-hint>
+          <mat-error>Slugni kiriting</mat-error>
+        </mat-form-field>
+      </div>
 
-                <div class="flex-1">
-                  <input type="hidden" formControlName="imageId" />
-
-                  <div class="text-xs text-gray-500">
-                    Tavsiya: 1200×630 (OG image). Yuklangandan keyin <span class="font-mono">imageId</span> saqlanadi.
-                  </div>
-
-                  @if (imagePreviewUrl()) {
-                    <button nz-button nzSize="small" nzType="default" class="mt-2" (click)="removeImage()" [disabled]="saving()">
-                      Rasmni olib tashlash
-                    </button>
-                  }
+      <!-- Row 2: Image + Status -->
+      <div class="form-row items-start">
+        <!-- Image upload -->
+        <div class="flex-1">
+          <label class="field-label">Rasm</label>
+          <div class="image-upload-area">
+            @if (imagePreviewUrl()) {
+              <div class="image-preview">
+                <img [src]="imagePreviewUrl()!" alt="">
+                <div class="image-overlay">
+                  <button mat-icon-button (click)="removeImage()" class="!text-white">
+                    <mat-icon>close</mat-icon>
+                  </button>
                 </div>
               </div>
-            </nz-form-control>
-          </nz-form-item>
-
-          <nz-form-item>
-            <nz-form-label nzRequired>Status</nz-form-label>
-            <nz-form-control>
-              <nz-select formControlName="status">
-                <nz-option [nzValue]="blogStatus.DRAFT" nzLabel="Qoralama (Draft)"></nz-option>
-                <nz-option [nzValue]="blogStatus.PUBLISHED" nzLabel="Chop etilgan (Published)"></nz-option>
-                <nz-option [nzValue]="blogStatus.ARCHIVED" nzLabel="Arxivlangan (Archived)"></nz-option>
-              </nz-select>
-            </nz-form-control>
-          </nz-form-item>
+              <input type="file" accept="image/*" (change)="onFileSelected($event)"
+                     class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+            } @else {
+              <label class="image-placeholder">
+                <mat-icon class="!text-3xl text-gray-300">add_photo_alternate</mat-icon>
+                <span class="text-xs text-gray-400 mt-1">Rasm yuklash</span>
+                <span class="text-xs text-gray-300">1200×630 tavsiya</span>
+                <input type="file" accept="image/*" (change)="onFileSelected($event)" class="hidden">
+              </label>
+            }
+          </div>
+          <input type="hidden" formControlName="imageId">
         </div>
 
-        <nz-form-item>
-          <nz-form-label nzRequired>Kontent</nz-form-label>
-          <nz-form-control nzErrorTip="Kontentni kiriting">
-            <quill-editor
-              formControlName="content"
-              [modules]="quillModules"
-              [styles]="{ height: '360px' }"
-              placeholder="Maqolani yozishni boshlang..."
-            ></quill-editor>
-            <div class="text-xs text-gray-500 mt-2">
-              Maslahat: Sarlavha (H1-H3), ro'yxat (•), link va code-block’dan foydalaning.
-            </div>
-          </nz-form-control>
-        </nz-form-item>
+        <!-- Status -->
+        <mat-form-field appearance="outline" class="flex-1">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option [value]="blogStatus.DRAFT">
+              <div class="flex items-center gap-2">
+                <span class="status-dot draft"></span> Qoralama
+              </div>
+            </mat-option>
+            <mat-option [value]="blogStatus.PUBLISHED">
+              <div class="flex items-center gap-2">
+                <span class="status-dot published"></span> Chop etilgan
+              </div>
+            </mat-option>
+            <mat-option [value]="blogStatus.ARCHIVED">
+              <div class="flex items-center gap-2">
+                <span class="status-dot archived"></span> Arxivlangan
+              </div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
-        <div class="flex items-center justify-end gap-2 pt-2">
-          <button nz-button nzType="default" (click)="cancel()" [disabled]="saving()">Bekor qilish</button>
-          <button nz-button nzType="primary" (click)="save()" [nzLoading]="saving()">
-            {{ isEdit() ? 'Yangilash' : 'Saqlash' }}
-          </button>
-        </div>
-      </form>
-    </nz-spin>
-  </nz-card>
+      <!-- Row 3: Quill Editor -->
+      <div class="editor-section">
+        <label class="field-label">Kontent</label>
+        <quill-editor
+          formControlName="content"
+          [modules]="quillModules"
+          [styles]="{ height: '380px' }"
+          placeholder="Maqolani yozishni boshlang..."
+        ></quill-editor>
+        @if (form.get('content')?.invalid && form.get('content')?.touched) {
+          <div class="text-xs text-red-500 mt-1">Kontentni kiriting</div>
+        }
+      </div>
+    </form>
+  }
 </div>

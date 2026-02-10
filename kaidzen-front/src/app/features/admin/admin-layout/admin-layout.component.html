@@ -3,39 +3,39 @@
   <aside class="w-64 bg-[#0f172a] text-white flex flex-col shadow-2xl border-r border-gray-800">
     <div class="p-6 text-2xl font-bold border-b border-gray-800 bg-[#0f172a]">
       <span class="flex items-center gap-3 text-white tracking-wide">
-        <span nz-icon nzType="appstore" class="text-blue-500 text-xl"></span>
+        <mat-icon class="text-blue-500 text-xl">apps</mat-icon>
         Kaidzen
       </span>
     </div>
     <nav class="flex-1 p-4 space-y-2 mt-2">
       <a routerLink="./dashboard" routerLinkActive="bg-blue-600 shadow-lg shadow-blue-900/50 text-white" class="flex items-center gap-3 p-3.5 rounded-xl hover:bg-gray-800 transition-all duration-300 text-gray-300 hover:text-white group">
-        <span nz-icon nzType="dashboard" class="text-lg group-hover:scale-110 transition-transform"></span>
+        <mat-icon class="text-lg group-hover:scale-110 transition-transform">dashboard</mat-icon>
         <span class="font-medium">Dashboard</span>
       </a>
       <a routerLink="./users" routerLinkActive="bg-blue-600 shadow-lg shadow-blue-900/50 text-white" class="flex items-center gap-3 p-3.5 rounded-xl hover:bg-gray-800 transition-all duration-300 text-gray-300 hover:text-white group">
-        <span nz-icon nzType="team" class="text-lg group-hover:scale-110 transition-transform"></span>
+        <mat-icon class="text-lg group-hover:scale-110 transition-transform">group</mat-icon>
         <span class="font-medium">Foydalanuvchilar</span>
       </a>
       <a routerLink="./tests" routerLinkActive="bg-blue-600 shadow-lg shadow-blue-900/50 text-white" class="flex items-center gap-3 p-3.5 rounded-xl hover:bg-gray-800 transition-all duration-300 text-gray-300 hover:text-white group">
-        <span nz-icon nzType="solution" class="text-lg group-hover:scale-110 transition-transform"></span>
+        <mat-icon class="text-lg group-hover:scale-110 transition-transform">assignment</mat-icon>
         <span class="font-medium">Testlar</span>
       </a>
       <a routerLink="./blog" routerLinkActive="bg-blue-600 shadow-lg shadow-blue-900/50 text-white" class="flex items-center gap-3 p-3.5 rounded-xl hover:bg-gray-800 transition-all duration-300 text-gray-300 hover:text-white group">
-        <span nz-icon nzType="form" class="text-lg group-hover:scale-110 transition-transform"></span>
+        <mat-icon class="text-lg group-hover:scale-110 transition-transform">article</mat-icon>
         <span class="font-medium">Blog</span>
       </a>
       <a routerLink="./cases" routerLinkActive="bg-blue-600 shadow-lg shadow-blue-900/50 text-white" class="flex items-center gap-3 p-3.5 rounded-xl hover:bg-gray-800 transition-all duration-300 text-gray-300 hover:text-white group">
-        <span nz-icon nzType="project" class="text-lg group-hover:scale-110 transition-transform"></span>
+        <mat-icon class="text-lg group-hover:scale-110 transition-transform">work</mat-icon>
         <span class="font-medium">Keyslar</span>
       </a>
       <a routerLink="./applications" routerLinkActive="bg-blue-600 shadow-lg shadow-blue-900/50 text-white" class="flex items-center gap-3 p-3.5 rounded-xl hover:bg-gray-800 transition-all duration-300 text-gray-300 hover:text-white group">
-        <span nz-icon nzType="mail" class="text-lg group-hover:scale-110 transition-transform"></span>
+        <mat-icon class="text-lg group-hover:scale-110 transition-transform">mail</mat-icon>
         <span class="font-medium">Arizalar</span>
       </a>
     </nav>
     <div class="p-4 border-t border-gray-800 bg-[#0f172a]">
       <button (click)="logout()" class="flex items-center gap-3 p-3.5 w-full rounded-xl hover:bg-red-500/10 text-red-400 hover:text-red-300 transition-all duration-300 group">
-        <span nz-icon nzType="logout" class="group-hover:-translate-x-1 transition-transform"></span>
+        <mat-icon class="group-hover:-translate-x-1 transition-transform">logout</mat-icon>
         <span class="font-medium">Chiqish</span>
       </button>
     </div>
@@ -50,7 +50,9 @@
           <div class="text-sm font-bold text-gray-900">Administrator</div>
           <div class="text-xs text-gray-500">Super Admin</div>
         </div>
-        <nz-avatar nzIcon="user" class="bg-gradient-to-br from-blue-500 to-blue-700 shadow-md cursor-pointer hover:scale-105 transition-transform"></nz-avatar>
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 shadow-md cursor-pointer hover:scale-105 transition-transform flex items-center justify-center">
+          <mat-icon class="text-white">person</mat-icon>
+        </div>
       </div>
     </header>
     <div class="flex-1 overflow-auto p-8">

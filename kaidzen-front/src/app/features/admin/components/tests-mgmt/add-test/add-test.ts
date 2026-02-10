@@ -5,17 +5,17 @@ import { FormBuilder, ReactiveFormsModule, Validators, FormArray, FormsModule } 
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../../../../environments/environment';
 
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
-import { NzSwitchModule } from 'ng-zorro-antd/switch';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { NzTabsModule } from 'ng-zorro-antd/tabs';
-import { NzSelectModule } from 'ng-zorro-antd/select';
-import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
-import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AnyPipe } from '../../../../../core/pipes/any.pipe';
 
 @Component({
@@ -23,9 +23,9 @@ import { AnyPipe } from '../../../../../core/pipes/any.pipe';
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule, FormsModule,
-    NzButtonModule, NzIconModule, NzFormModule, NzInputModule,
-    NzInputNumberModule, NzSwitchModule, NzTabsModule,
-    NzSelectModule, NzCheckboxModule, NzSpinModule, AnyPipe
+    MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule,
+    MatSlideToggleModule, MatTabsModule,
+    MatSelectModule, MatCheckboxModule, MatProgressSpinnerModule, MatTooltipModule, AnyPipe
   ],
   templateUrl: './add-test.html',
   styleUrl: './add-test.css',
@@ -34,7 +34,7 @@ import { AnyPipe } from '../../../../../core/pipes/any.pipe';
 export class AddTest implements OnInit {
   private http = inject(HttpClient);
   private fb = inject(FormBuilder);
-  private notification = inject(NzNotificationService);
+  private snackBar = inject(MatSnackBar);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -94,7 +94,7 @@ export class AddTest implements OnInit {
         this.loading.set(false);
       },
       error: () => {
-        this.notification.error('Xatolik', 'Tahrirlash uchun ma\'lumot topilmadi');
+        this.snackBar.open('Tahrirlash uchun ma\'lumot topilmadi', 'Yopish', { duration: 3000 });
         this.loading.set(false);
       }
     });
@@ -155,7 +155,7 @@ export class AddTest implements OnInit {
 
   submitForm() {
     if (this.testForm.invalid) {
-      this.notification.warning('Diqqat', 'Iltimos, barcha majburiy maydonlarni to\'ldiring');
+      this.snackBar.open('Iltimos, barcha majburiy maydonlarni to\'ldiring', 'Yopish', { duration: 3000 });
       return;
     }
 
@@ -165,12 +165,12 @@ export class AddTest implements OnInit {
 
     this.http[method](url, this.testForm.value).subscribe({
       next: () => {
-        this.notification.success('Muvaffaqiyat', 'Muvaffaqiyatli saqlandi');
+        this.snackBar.open('Muvaffaqiyatli saqlandi', 'Yopish', { duration: 3000 });
         this.isSubmitting.set(false);
         this.router.navigate(['/admin/tests']);
       },
       error: () => {
-        this.notification.error('Xatolik', 'Saqlashda xatolik yuz berdi');
+        this.snackBar.open('Saqlashda xatolik yuz berdi', 'Yopish', { duration: 3000 });
         this.isSubmitting.set(false);
       }
     });

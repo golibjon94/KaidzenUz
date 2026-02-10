@@ -10,81 +10,83 @@
     </div>
 
     <!-- Login Card -->
-    <nz-card class="shadow-2xl rounded-2xl overflow-hidden">
-      <form nz-form [formGroup]="loginForm" (ngSubmit)="handleLogin()" class="space-y-6">
-        <!-- Telefon raqam -->
-        <nz-form-item>
-          <nz-form-label [nzSpan]="24" nzRequired class="text-base font-semibold">
-            Telefon raqam
-          </nz-form-label>
-          <nz-form-control [nzSpan]="24" [nzErrorTip]="phoneError">
-            <nz-input-group nzAddOnBefore="+998" class="h-12">
-              <input
-                nz-input
-                formControlName="phone"
-                placeholder="90 123 45 67"
-                type="tel"
-                maxlength="9"
-                class="text-base"
-              />
-            </nz-input-group>
-            <ng-template #phoneError>
-              @if (loginForm.get('phone')?.errors?.['required']) {
-                Telefon raqamni kiriting
-              } @else if (loginForm.get('phone')?.errors?.['pattern']) {
-                9 ta raqam kiriting (masalan: 901234567)
-              }
-            </ng-template>
-          </nz-form-control>
-        </nz-form-item>
+    <mat-card class="shadow-2xl rounded-2xl overflow-hidden">
+      <mat-card-content>
+        <form [formGroup]="loginForm" (ngSubmit)="handleLogin()" class="space-y-6">
+          <!-- Telefon raqam -->
+          <div class="space-y-2">
+            <label class="text-base font-semibold block">
+              Telefon raqam <span class="text-red-500">*</span>
+            </label>
+            <div class="flex items-stretch">
+              <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">
+                +998
+              </span>
+              <mat-form-field appearance="outline" class="flex-1 -ml-px">
+                <input
+                  matInput
+                  formControlName="phone"
+                  placeholder="90 123 45 67"
+                  type="tel"
+                  maxlength="9"
+                  class="text-base"
+                />
+                @if (loginForm.get('phone')?.invalid && loginForm.get('phone')?.touched) {
+                  <mat-error>
+                    @if (loginForm.get('phone')?.errors?.['required']) {
+                      Telefon raqamni kiriting
+                    } @else if (loginForm.get('phone')?.errors?.['pattern']) {
+                      9 ta raqam kiriting (masalan: 901234567)
+                    }
+                  </mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
 
-        <!-- Parol -->
-        <nz-form-item>
-          <nz-form-label [nzSpan]="24" nzRequired class="text-base font-semibold">
-            Parol
-          </nz-form-label>
-          <nz-form-control [nzSpan]="24" nzErrorTip="Parolni kiriting (kamida 6 ta belgi)">
+          <!-- Parol -->
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label class="text-base font-semibold">Parol</mat-label>
             <input
-              nz-input
+              matInput
               formControlName="password"
               placeholder="Parolingizni kiriting"
               type="password"
-              class="h-12 text-base"
+              class="text-base"
             />
-          </nz-form-control>
-        </nz-form-item>
+            @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+              <mat-error>Parolni kiriting (kamida 6 ta belgi)</mat-error>
+            }
+          </mat-form-field>
 
-        <!-- Login tugmasi -->
-        <nz-form-item class="mb-0">
-          <nz-form-control [nzSpan]="24">
-            <button
-              nz-button
-              nzType="primary"
-              nzBlock
-              nzSize="large"
-              [nzLoading]="isLoading()"
-              type="submit"
-              class="h-12 text-base font-semibold"
-            >
-              Kirish
-            </button>
-          </nz-form-control>
-        </nz-form-item>
-
-        <!-- Bosh sahifaga qaytish -->
-        <div class="text-center pt-4 border-t border-gray-100">
+          <!-- Login tugmasi -->
           <button
-            nz-button
-            nzType="link"
-            (click)="goToHome()"
-            type="button"
-            class="text-gray-600 hover:text-blue-600"
+            mat-raised-button
+            color="primary"
+            type="submit"
+            class="w-full h-12 text-base font-semibold"
+            [disabled]="isLoading()"
           >
-            ← Bosh sahifaga qaytish
+            @if (isLoading()) {
+              <mat-spinner diameter="20" class="inline-block mr-2"></mat-spinner>
+            }
+            Kirish
           </button>
-        </div>
-      </form>
-    </nz-card>
+
+          <!-- Bosh sahifaga qaytish -->
+          <div class="text-center pt-4 border-t border-gray-100">
+            <button
+              mat-button
+              (click)="goToHome()"
+              type="button"
+              class="text-gray-600 hover:text-blue-600"
+            >
+              ← Bosh sahifaga qaytish
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
 
     <!-- Xavfsizlik xabari -->
     <div class="mt-6 text-center">

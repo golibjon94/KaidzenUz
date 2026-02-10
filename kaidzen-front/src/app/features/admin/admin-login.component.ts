@@ -2,11 +2,12 @@ import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../core/services/auth.service';
 import { AuthStore } from '../../core/stores/auth.store';
 
@@ -16,10 +17,11 @@ import { AuthStore } from '../../core/stores/auth.store';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    NzButtonModule,
-    NzFormModule,
-    NzInputModule,
-    NzCardModule
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCardModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './admin-login.component.html',
   styles: [`
@@ -35,7 +37,7 @@ export class AdminLoginComponent {
   private authService = inject(AuthService);
   private authStore = inject(AuthStore);
   private router = inject(Router);
-  private notification = inject(NzNotificationService);
+  private snackBar = inject(MatSnackBar);
 
   isLoading = signal(false);
 
@@ -55,16 +57,16 @@ export class AdminLoginComponent {
         next: () => {
           const user = this.authStore.user();
           if (user?.role === 'ADMIN') {
-            this.notification.success('Muvaffaqiyat', 'Admin paneliga xush kelibsiz!');
+            this.snackBar.open('Admin paneliga xush kelibsiz!', 'Yopish', { duration: 3000 });
             this.router.navigate(['/admin/dashboard']);
           } else {
-            this.notification.error('Xatolik', 'Sizda admin huquqlari yo\'q!');
+            this.snackBar.open('Sizda admin huquqlari yo\'q!', 'Yopish', { duration: 3000 });
             this.authService.logout().subscribe();
           }
           this.isLoading.set(false);
         },
         error: () => {
-          this.notification.error('Xatolik', 'Login yoki parol noto\'g\'ri!');
+          this.snackBar.open('Login yoki parol noto\'g\'ri!', 'Yopish', { duration: 3000 });
           this.isLoading.set(false);
         }
       });

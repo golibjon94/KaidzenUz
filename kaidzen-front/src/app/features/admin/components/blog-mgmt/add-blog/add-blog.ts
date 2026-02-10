@@ -3,20 +3,18 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzSelectModule } from 'ng-zorro-antd/select';
-import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { QuillModule } from 'ngx-quill';
 
 import { AdminBlogService } from '../../../services/admin-blog.service';
 import { FileService } from '../../../../../core/services/file.service';
+import { NotifyService } from '../../../../../core/services/notify.service';
 import { BlogStatus } from '../../../../../core/models/enums';
 import { environment } from '../../../../../../environments/environment';
 
@@ -28,14 +26,12 @@ import { environment } from '../../../../../../environments/environment';
     ReactiveFormsModule,
     QuillModule,
 
-    NzCardModule,
-    NzFormModule,
-    NzInputModule,
-    NzSelectModule,
-    NzUploadModule,
-    NzButtonModule,
-    NzIconModule,
-    NzSpinModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './add-blog.html',
   styleUrl: './add-blog.css',
@@ -47,7 +43,7 @@ export class AddBlog implements OnInit {
   private router = inject(Router);
   private blogService = inject(AdminBlogService);
   private fileService = inject(FileService);
-  private notification = inject(NzNotificationService);
+  private notify = inject(NotifyService);
 
   baseUrl = environment.apiUrl.replace('/api', '');
 
@@ -57,7 +53,6 @@ export class AddBlog implements OnInit {
   editingId = signal<string | null>(null);
   isEdit = computed(() => !!this.editingId());
 
-  // UI uchun: yuklangan/bor rasmni ko'rsatish
   imagePreviewUrl = signal<string | null>(null);
 
   blogStatus = BlogStatus;
@@ -123,26 +118,29 @@ export class AddBlog implements OnInit {
         this.loading.set(false);
       },
       error: () => {
-        this.notification.error('Xatolik', 'Maqolani yuklab bo\'lmadi');
+        this.notify.error("Maqolani yuklab bo'lmadi");
         this.loading.set(false);
         this.router.navigate(['/admin/blog']);
       },
     });
   }
 
-  beforeUpload = (file: NzUploadFile): boolean => {
-    this.fileService.uploadFile(file as any).subscribe({
-      next: (res) => {
-        this.form.patchValue({ imageId: res.data.id });
-        this.imagePreviewUrl.set(this.baseUrl + res.data.url);
-        this.notification.success('Muvaffaqiyat', 'Rasm muvaffaqiyatli yuklandi');
-      },
-      error: () => {
-        this.notification.error('Xatolik', 'Rasmni yuklashda xatolik yuz berdi');
-      },
-    });
-    return false;
-  };
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      this.fileService.uploadFile(file).subscribe({
+        next: (res) => {
+          this.form.patchValue({ imageId: res.data.id });
+          this.imagePreviewUrl.set(this.baseUrl + res.data.url);
+          this.notify.success('Rasm muvaffaqiyatli yuklandi');
+        },
+        error: () => {
+          this.notify.error('Rasmni yuklashda xatolik yuz berdi');
+        },
+      });
+    }
+  }
 
   removeImage() {
     this.form.patchValue({ imageId: null });
@@ -157,7 +155,7 @@ export class AddBlog implements OnInit {
           control.updateValueAndValidity({ onlySelf: true });
         }
       });
-      this.notification.warning('Diqqat', 'Iltimos, barcha majburiy maydonlarni to\'ldiring');
+      this.notify.warning("Iltimos, barcha majburiy maydonlarni to'ldiring");
       return;
     }
 
@@ -169,12 +167,12 @@ export class AddBlog implements OnInit {
 
     request.subscribe({
       next: () => {
-        this.notification.success('Muvaffaqiyat', this.isEdit() ? 'Maqola yangilandi' : 'Maqola yaratildi');
+        this.notify.success(this.isEdit() ? 'Maqola yangilandi' : 'Maqola yaratildi');
         this.saving.set(false);
         this.router.navigate(['/admin/blog']);
       },
       error: () => {
-        this.notification.error('Xatolik', 'Saqlashda xatolik yuz berdi');
+        this.notify.error('Saqlashda xatolik yuz berdi');
         this.saving.set(false);
       },
     });

@@ -1,55 +1,114 @@
-<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-  <div class="p-6 border-b border-gray-100 flex items-center justify-between">
-    <h3 class="text-lg font-bold">Blog maqolalari</h3>
-    <button nz-button nzType="primary" (click)="goAdd()">
-      <span nz-icon nzType="plus"></span>
-      <span class="ml-2">Yangi maqola</span>
-    </button>
+<div class="p-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-1">
+    <h3 class="text-lg font-semibold text-gray-800">Blog maqolalari</h3>
+
+    <div class="flex items-center gap-3">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput placeholder="Qidirish...">
+      </mat-form-field>
+
+      <button mat-icon-button matTooltip="Yangilash" (click)="loadPosts()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+
+      <button mat-flat-button color="primary" (click)="goAdd()">
+        <mat-icon>add</mat-icon>
+        Yangi maqola
+      </button>
+    </div>
   </div>
 
-  @if (!loading() && posts().length === 0) {
-    <div class="p-8 text-center">
-      <nz-empty nzNotFoundContent="Hozircha maqolalar yo'q"></nz-empty>
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="flex justify-center py-16">
+      <mat-spinner diameter="40"></mat-spinner>
     </div>
-  } @else {
-    <nz-table #blogTable [nzData]="posts()" [nzLoading]="loading()">
-      <thead>
-        <tr>
-          <th>Rasm</th>
-          <th>Sarlavha</th>
-          <th>Slug</th>
-          <th>Status</th>
-          <th>Yaratilgan</th>
-          <th>Amallar</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (data of blogTable.data; track data.id) {
-          <tr>
-            <td>
-              @if (data.image) {
-                <img [src]="baseUrl + data.image.path" class="w-12 h-12 object-cover rounded" alt="">
-              } @else {
-                <div class="w-12 h-12 bg-gray-100 rounded flex items-center justify-center text-gray-400">
-                  <span nz-icon nzType="picture"></span>
-                </div>
-              }
-            </td>
-            <td>{{ data.title }}</td>
-            <td>{{ data.slug }}</td>
-            <td>
-              <nz-tag [nzColor]="data.status === 'PUBLISHED' ? 'green' : 'orange'">
-                {{ data.status }}
-              </nz-tag>
-            </td>
-            <td>{{ data.createdAt | date:'dd.MM.yyyy' }}</td>
-            <td>
-              <a (click)="goEdit(data.id)" class="text-blue-600 hover:text-blue-800 mr-4">Tahrirlash</a>
-              <a (click)="deletePost(data.id)" class="text-red-600 hover:text-red-800 cursor-pointer">O'chirish</a>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </nz-table>
+  }
+
+  <!-- Empty -->
+  @else if (posts().length === 0) {
+    <div class="text-center py-16">
+      <mat-icon class="!text-5xl text-gray-300 mb-3">article</mat-icon>
+      <p class="text-gray-400 text-sm">Hozircha maqolalar yo'q</p>
+    </div>
+  }
+
+  <!-- Table -->
+  @else {
+    <table mat-table [dataSource]="posts()" class="w-full clean-table">
+
+      <!-- Image -->
+      <ng-container matColumnDef="image">
+        <th mat-header-cell *matHeaderCellDef>Rasm</th>
+        <td mat-cell *matCellDef="let post">
+          @if (post.image) {
+            <img [src]="baseUrl + post.image.path"
+                 class="post-thumb" alt="">
+          } @else {
+            <div class="post-thumb-empty">
+              <mat-icon>image</mat-icon>
+            </div>
+          }
+        </td>
+      </ng-container>
+
+      <!-- Title -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Sarlavha</th>
+        <td mat-cell *matCellDef="let post">
+          <span class="font-medium text-gray-800">{{ post.title }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Slug -->
+      <ng-container matColumnDef="slug">
+        <th mat-header-cell *matHeaderCellDef>Slug</th>
+        <td mat-cell *matCellDef="let post">
+          <span class="slug-text">/{{ post.slug }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let post">
+          <span class="badge" [ngClass]="{
+            'badge-published': post.status === 'PUBLISHED',
+            'badge-draft': post.status !== 'PUBLISHED'
+          }">
+            <span class="badge-dot"></span>
+            {{ post.status === 'PUBLISHED' ? 'Chop etilgan' : 'Qoralama' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Created At -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>Sana</th>
+        <td mat-cell *matCellDef="let post" class="text-gray-500 text-sm">
+          {{ post.createdAt | date:'dd.MM.yyyy' }}
+        </td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Amallar</th>
+        <td mat-cell *matCellDef="let post">
+          <button mat-icon-button color="primary" matTooltip="Tahrirlash"
+                  (click)="goEdit(post.id)">
+            <mat-icon class="!text-xl">edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matTooltip="O'chirish"
+                  (click)="deletePost(post.id)">
+            <mat-icon class="!text-xl">delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
   }
 </div>

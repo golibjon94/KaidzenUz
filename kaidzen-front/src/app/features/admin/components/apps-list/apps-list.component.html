@@ -1,42 +1,67 @@
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
   <div class="p-6 border-b border-gray-100 flex items-center justify-between">
-    <h3 class="text-lg font-bold">Mijozlar arizalari</h3>
+    <h3 class="text-lg font-bold text-gray-800">Mijozlar arizalari</h3>
   </div>
 
-  @if (!loading() && apps().length === 0) {
+  @if (loading()) {
     <div class="p-8 text-center">
-      <nz-empty nzNotFoundContent="Hozircha arizalar yo'q"></nz-empty>
+      <mat-spinner diameter="40" class="mx-auto"></mat-spinner>
+    </div>
+  } @else if (apps().length === 0) {
+    <div class="p-8 text-center">
+      <mat-icon class="text-6xl text-gray-300 mb-4">inbox</mat-icon>
+      <p class="text-gray-500">Hozircha arizalar yo'q</p>
     </div>
   } @else {
-    <nz-table #appsTable [nzData]="apps()" [nzLoading]="loading()">
-      <thead>
-        <tr>
-          <th>F.I.SH</th>
-          <th>Telefon</th>
-          <th>Kompaniya</th>
-          <th>Xabar</th>
-          <th>Status</th>
-          <th>Yuborilgan</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (data of appsTable.data; track data.id) {
-          <tr>
-            <td>{{ data.fullName }}</td>
-            <td>{{ data.phone }}</td>
-            <td>{{ data.companyName || '-' }}</td>
-            <td>{{ data.message | slice:0:30 }}...</td>
-            <td>
-              <nz-select [ngModel]="data.status" (ngModelChange)="updateStatus(data.id, $event)" nzSize="small" class="w-32">
+    <div class="overflow-x-auto">
+      <table mat-table [dataSource]="apps()" class="w-full">
+        <!-- Full Name Column -->
+        <ng-container matColumnDef="fullName">
+          <th mat-header-cell *matHeaderCellDef>F.I.SH</th>
+          <td mat-cell *matCellDef="let element">{{ element.fullName }}</td>
+        </ng-container>
+
+        <!-- Phone Column -->
+        <ng-container matColumnDef="phone">
+          <th mat-header-cell *matHeaderCellDef>Telefon</th>
+          <td mat-cell *matCellDef="let element">{{ element.phone }}</td>
+        </ng-container>
+
+        <!-- Company Name Column -->
+        <ng-container matColumnDef="companyName">
+          <th mat-header-cell *matHeaderCellDef>Kompaniya</th>
+          <td mat-cell *matCellDef="let element">{{ element.companyName || '-' }}</td>
+        </ng-container>
+
+        <!-- Message Column -->
+        <ng-container matColumnDef="message">
+          <th mat-header-cell *matHeaderCellDef>Xabar</th>
+          <td mat-cell *matCellDef="let element" class="max-w-xs truncate">{{ element.message | slice:0:30 }}...</td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-form-field appearance="outline" class="w-32 text-sm">
+              <mat-select [ngModel]="element.status" (ngModelChange)="updateStatus(element.id, $event)">
                 @for (st of statuses; track st) {
-                  <nz-option [nzValue]="st" [nzLabel]="st"></nz-option>
+                  <mat-option [value]="st">{{ st }}</mat-option>
                 }
-              </nz-select>
-            </td>
-            <td>{{ data.createdAt | date:'dd.MM.yyyy HH:mm' }}</td>
-          </tr>
-        }
-      </tbody>
-    </nz-table>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <!-- Created At Column -->
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef>Yuborilgan</th>
+          <td mat-cell *matCellDef="let element">{{ element.createdAt | date:'dd.MM.yyyy HH:mm' }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
   }
 </div>

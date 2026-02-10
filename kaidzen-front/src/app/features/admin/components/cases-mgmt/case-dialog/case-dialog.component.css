@@ -1,0 +1,61 @@
+/* Dialog wrapper */
+.dialog-wrapper {
+  padding: 8px;
+}
+
+/* Header */
+.dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 16px 16px;
+}
+
+.header-icon {
+  font-size: 28px !important;
+  width: 28px !important;
+  height: 28px !important;
+  color: #5c6bc0;
+}
+
+.dialog-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.dialog-subtitle {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin: 2px 0 0;
+}
+
+/* Remove scroll — let content fit naturally */
+mat-dialog-content {
+  overflow: visible !important;
+  max-height: none !important;
+}
+
+/* Form 2-column grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Actions */
+mat-dialog-actions {
+  padding: 8px 16px 12px !important;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
