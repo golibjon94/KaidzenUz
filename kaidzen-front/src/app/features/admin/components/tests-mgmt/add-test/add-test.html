@@ -1,184 +1,282 @@
-<div class="p-6 max-w-5xl mx-auto">
+<div class="p-6">
 
   <!-- Header -->
-  <div class="flex items-center justify-between mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+  <div class="flex items-center justify-between mb-4">
     <div class="flex items-center gap-3">
       <button mat-icon-button (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
       </button>
       <div>
-        <h1 class="text-2xl font-bold text-gray-800 m-0">
+        <h2 class="text-lg font-semibold text-gray-800">
           {{ editMode() ? 'Testni tahrirlash' : 'Yangi test yaratish' }}
-        </h1>
-        <p class="text-gray-500 text-sm">Barcha maydonlarni to'ldiring va saqlang</p>
+        </h2>
+        <p class="text-sm text-gray-400">Savollar va natija logikasini sozlang</p>
       </div>
     </div>
-    <div class="flex gap-2">
-      <button mat-button (click)="goBack()">Bekor qilish</button>
-      <button mat-raised-button color="primary" [disabled]="isSubmitting()" (click)="submitForm()">
+
+    <div class="flex items-center gap-2">
+      <button mat-button (click)="goBack()" [disabled]="isSubmitting()">Bekor qilish</button>
+      <button mat-flat-button color="primary" (click)="submitForm()" [disabled]="isSubmitting()">
         @if (isSubmitting()) {
-          <mat-spinner diameter="20" class="inline-block mr-2"></mat-spinner>
+          <mat-spinner diameter="18" class="inline-block mr-2"></mat-spinner>
         }
+        <mat-icon>save</mat-icon>
         {{ editMode() ? 'Yangilash' : 'Saqlash' }}
       </button>
     </div>
   </div>
 
+  <!-- Loading -->
   @if (loading()) {
-    <div class="text-center py-20">
-      <mat-spinner diameter="50"></mat-spinner>
+    <div class="flex justify-center py-16">
+      <mat-spinner diameter="40"></mat-spinner>
     </div>
   } @else {
     <form [formGroup]="testForm">
-      <mat-tab-group animationDuration="0ms">
+      <mat-tab-group animationDuration="200ms" class="test-tabs">
 
-        <!-- Tab 1: Asosiy sozlamalar -->
-        <mat-tab label="Asosiy sozlamalar">
-          <div class="bg-white rounded-xl p-6 border border-gray-100 mt-4">
-            <div class="grid grid-cols-2 gap-4">
+        <!-- ━━━ TAB 1: Asosiy ma'lumotlar ━━━ -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">settings</mat-icon>
+            Asosiy
+          </ng-template>
+
+          <div class="tab-content">
+            <div class="section-card">
+              <div class="section-title">
+                <mat-icon>info_outline</mat-icon>
+                Test haqida
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="flex-1">
+                  <mat-label>Test sarlavhasi</mat-label>
+                  <input matInput formControlName="title" placeholder="Masalan: Psixologik test">
+                  <mat-icon matPrefix>title</mat-icon>
+                  <mat-error>Sarlavha kiritilishi shart</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="flex-1">
+                  <mat-label>Slug (URL)</mat-label>
+                  <input matInput formControlName="slug" [readonly]="editMode()" placeholder="test-nomi">
+                  <mat-icon matPrefix>link</mat-icon>
+                </mat-form-field>
+              </div>
+
               <mat-form-field appearance="outline" class="w-full">
-                <mat-label>Test sarlavhasi</mat-label>
-                <input matInput formControlName="title" placeholder="Masalan: Psixologik test" />
-                @if (testForm.get('title')?.invalid && testForm.get('title')?.touched) {
-                  <mat-error>Sarlavha bo'sh bo'lmasligi kerak</mat-error>
-                }
+                <mat-label>Tavsif</mat-label>
+                <textarea matInput formControlName="description" rows="3"
+                          placeholder="Test haqida qisqacha ma'lumot..."></textarea>
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="w-full">
-                <mat-label>Slug (URL)</mat-label>
-                <input matInput formControlName="slug" [readonly]="editMode()" />
-              </mat-form-field>
-            </div>
-
-            <mat-form-field appearance="outline" class="w-full">
-              <mat-label>Tavsif</mat-label>
-              <textarea matInput formControlName="description" rows="3"></textarea>
-            </mat-form-field>
-
-            <div class="flex items-center gap-2">
-              <mat-slide-toggle formControlName="isActive">
-                {{ testForm.get('isActive')?.value ? 'Faol' : 'Nofaol' }}
+              <mat-slide-toggle formControlName="isActive" color="primary">
+                {{ testForm.get('isActive')?.value ? 'Faol — foydalanuvchilar ko\'ra oladi' : 'Nofaol — yashirin holat' }}
               </mat-slide-toggle>
             </div>
           </div>
         </mat-tab>
 
-        <!-- Tab 2: Savollar -->
-        <mat-tab [label]="'Savollar (' + questions.length + ')'">
-          <div formArrayName="questions" class="space-y-6 pt-4 max-h-[600px] overflow-y-auto pr-2">
-            @for (q of questions.controls; track q; let i = $index) {
-              <div [formGroupName]="i" class="p-4 border rounded-xl bg-gray-50 relative">
-                <button mat-icon-button color="warn" class="absolute top-2 right-2" (click)="removeQuestion(i)">
-                  <mat-icon>delete</mat-icon>
+        <!-- ━━━ TAB 2: Savollar ━━━ -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">quiz</mat-icon>
+            Savollar ({{ questions.length }})
+          </ng-template>
+
+          <div class="tab-content" formArrayName="questions">
+
+            @if (questions.length === 0) {
+              <div class="text-center py-12">
+                <mat-icon class="!text-5xl text-gray-300 mb-3">help_outline</mat-icon>
+                <p class="text-gray-400 text-sm mb-4">Hozircha savollar yo'q</p>
+                <button mat-flat-button color="primary" (click)="addQuestion()">
+                  <mat-icon>add</mat-icon>
+                  Birinchi savolni qo'shing
                 </button>
+              </div>
+            }
 
-                <div class="flex gap-4 mb-4">
-                  <mat-form-field appearance="outline" class="flex-1">
-                    <mat-label>#{{i + 1}} Savol matni</mat-label>
-                    <input matInput formControlName="text" placeholder="Savolni kiriting..." />
-                  </mat-form-field>
+            @for (q of questions.controls; track q; let qi = $index) {
+              <div [formGroupName]="qi" class="question-card">
 
-                  <mat-form-field appearance="outline" class="w-24">
-                    <mat-label>Tartib</mat-label>
-                    <input matInput type="number" formControlName="order" />
-                  </mat-form-field>
+                <!-- Question header -->
+                <div class="question-header">
+                  <div class="question-number">{{ qi + 1 }}</div>
+                  <div class="flex-1">
+                    <div class="flex items-center gap-3">
+                      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="flex-1">
+                        <mat-label>Savol matni</mat-label>
+                        <input matInput formControlName="text" placeholder="Savolni yozing...">
+                      </mat-form-field>
 
-                  <div class="flex items-center pb-1">
-                    <mat-checkbox formControlName="isStartQuestion">Boshlang'ich savol</mat-checkbox>
+                      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-20">
+                        <mat-label>Tartib</mat-label>
+                        <input matInput type="number" formControlName="order">
+                      </mat-form-field>
+
+                      <mat-checkbox formControlName="isStartQuestion"
+                                    matTooltip="Bu savol testning boshlanish nuqtasi">
+                        Boshlang'ich
+                      </mat-checkbox>
+
+                      <button mat-icon-button color="warn" matTooltip="Savolni o'chirish"
+                              (click)="removeQuestion(qi)">
+                        <mat-icon>delete_outline</mat-icon>
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                <div formArrayName="options" class="ml-6 space-y-2 border-l-2 pl-4 border-blue-200">
-                  @for (opt of (q.get('options') | any).controls; track opt; let optIdx = $index) {
-                    <div [formGroupName]="optIdx" class="p-3 bg-white rounded-lg border border-gray-200 space-y-2">
-                      <div class="flex gap-2 items-center">
-                        <mat-form-field appearance="outline" class="flex-1">
-                          <mat-label>Variant</mat-label>
-                          <input matInput formControlName="text" placeholder="Variant..." />
+                <!-- Options -->
+                <div class="options-area" formArrayName="options">
+                  <div class="options-label">
+                    <mat-icon class="!text-base">list</mat-icon>
+                    Variantlar
+                  </div>
+
+                  @for (opt of (q.get('options') | any).controls; track opt; let oi = $index) {
+                    <div [formGroupName]="oi" class="option-card">
+                      <!-- Row 1: Text + Score + Delete -->
+                      <div class="flex items-center gap-2">
+                        <span class="option-letter">{{ getOptionLetter(oi) }}</span>
+
+                        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="flex-1">
+                          <input matInput formControlName="text" placeholder="Variant matni...">
                         </mat-form-field>
 
-                        <mat-form-field appearance="outline" class="w-24">
+                        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-20">
                           <mat-label>Ball</mat-label>
-                          <input matInput type="number" formControlName="score" placeholder="Ball" matTooltip="Variant tanlansa beriladigan ball" />
+                          <input matInput type="number" formControlName="score">
                         </mat-form-field>
 
-                        <button mat-icon-button color="warn" (click)="removeOption(i, optIdx)">
-                          <mat-icon>remove_circle</mat-icon>
+                        <button mat-icon-button (click)="removeOption(qi, oi)"
+                                class="option-delete" matTooltip="Variantni o'chirish">
+                          <mat-icon>close</mat-icon>
                         </button>
                       </div>
 
-                      <div class="flex gap-2 items-center">
-                        <mat-form-field appearance="outline" class="flex-1">
+                      <!-- Row 2: Advanced (collapsible feel — always shown but compact) -->
+                      <div class="option-advanced">
+                        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="flex-1">
                           <mat-label>Keyingi savol</mat-label>
                           <mat-select formControlName="nextQuestionId">
-                            <mat-option [value]="null">Tanlang</mat-option>
+                            <mat-option [value]="null">— Navbatdagi —</mat-option>
                             @for (ql of getQuestionLabels(); track ql.index) {
-                              @if (ql.index !== i) {
-                                <mat-option [value]="'temp_' + ql.index">{{ ql.text }}</mat-option>
+                              @if (ql.index !== qi) {
+                                <mat-option [value]="'temp_' + ql.index">
+                                  #{{ ql.index + 1 }}: {{ ql.text }}
+                                </mat-option>
                               }
                             }
                           </mat-select>
                         </mat-form-field>
 
-                        <mat-checkbox formControlName="isTerminal">Testni tugatadi</mat-checkbox>
-                      </div>
+                        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="flex-1">
+                          <mat-label>Izoh (ixtiyoriy)</mat-label>
+                          <input matInput formControlName="feedbackText" placeholder="Javob izohi...">
+                        </mat-form-field>
 
-                      <mat-form-field appearance="outline" class="w-full">
-                        <mat-label>Javob izohi/tavsiya (ixtiyoriy)</mat-label>
-                        <textarea matInput formControlName="feedbackText" rows="2"></textarea>
-                      </mat-form-field>
+                        <mat-checkbox formControlName="isTerminal"
+                                      matTooltip="Bu variant tanlansa test tugaydi">
+                          Tugatadi
+                        </mat-checkbox>
+                      </div>
                     </div>
                   }
-                  <button mat-stroked-button (click)="addOption(i)">
-                    <mat-icon>add</mat-icon>
-                    <span class="ml-2">Variant qo'shish</span>
+
+                  <button mat-button class="add-option-btn" (click)="addOption(qi)">
+                    <mat-icon>add_circle_outline</mat-icon>
+                    Variant qo'shish
                   </button>
                 </div>
               </div>
             }
-            <button mat-stroked-button class="w-full" (click)="addQuestion()">
-              <mat-icon>add</mat-icon>
-              <span class="ml-2">Yangi savol qo'shish</span>
-            </button>
+
+            <!-- Add question button -->
+            @if (questions.length > 0) {
+              <button mat-stroked-button color="primary" class="w-full add-question-btn"
+                      (click)="addQuestion()">
+                <mat-icon>add</mat-icon>
+                Yangi savol qo'shish
+              </button>
+            }
           </div>
         </mat-tab>
 
-        <!-- Tab 3: Natija logikasi -->
-        <mat-tab label="Natija logikasi">
-          <div formArrayName="resultLogic" class="space-y-4 pt-4">
-            @for (logic of resultLogic.controls; track logic; let i = $index) {
-              <div [formGroupName]="i" class="p-4 border rounded-lg bg-green-50">
-                <div class="grid grid-cols-2 gap-4 mb-2">
-                  <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Min Ball</mat-label>
-                    <input matInput type="number" formControlName="minScore" />
-                  </mat-form-field>
+        <!-- ━━━ TAB 3: Natija logikasi ━━━ -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">analytics</mat-icon>
+            Natijalar ({{ resultLogic.length }})
+          </ng-template>
 
-                  <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Max Ball</mat-label>
-                    <input matInput type="number" formControlName="maxScore" />
-                  </mat-form-field>
-                </div>
+          <div class="tab-content" formArrayName="resultLogic">
 
-                <mat-form-field appearance="outline" class="w-full mb-2">
-                  <mat-label>Natija nomi</mat-label>
-                  <input matInput formControlName="resultText" placeholder="Natija nomi" />
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="w-full">
-                  <mat-label>Tavsiya</mat-label>
-                  <textarea matInput formControlName="recommendation" placeholder="Tavsiya..."></textarea>
-                </mat-form-field>
-
-                <button mat-button color="warn" (click)="removeResultLogic(i)">O'chirish</button>
+            @if (resultLogic.length === 0) {
+              <div class="text-center py-12">
+                <mat-icon class="!text-5xl text-gray-300 mb-3">analytics</mat-icon>
+                <p class="text-gray-400 text-sm mb-4">Ball oralig'iga qarab natija belgilang</p>
+                <button mat-flat-button color="primary" (click)="addResultLogic()">
+                  <mat-icon>add</mat-icon>
+                  Birinchi natijani qo'shing
+                </button>
               </div>
             }
-            <button mat-stroked-button class="w-full" (click)="addResultLogic()">
-              <mat-icon>track_changes</mat-icon>
-              <span class="ml-2">Natija qo'shish</span>
-            </button>
+
+            @for (logic of resultLogic.controls; track logic; let ri = $index) {
+              <div [formGroupName]="ri" class="result-card">
+                <div class="result-header">
+                  <div class="result-number">{{ ri + 1 }}</div>
+                  <span class="text-sm font-medium text-gray-600">Natija #{{ ri + 1 }}</span>
+                  <div class="flex-1"></div>
+                  <button mat-icon-button color="warn" matTooltip="O'chirish"
+                          (click)="removeResultLogic(ri)">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </div>
+
+                <div class="result-body">
+                  <!-- Score range -->
+                  <div class="score-range">
+                    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-28">
+                      <mat-label>Min ball</mat-label>
+                      <input matInput type="number" formControlName="minScore">
+                    </mat-form-field>
+
+                    <mat-icon class="text-gray-300">arrow_forward</mat-icon>
+
+                    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-28">
+                      <mat-label>Max ball</mat-label>
+                      <input matInput type="number" formControlName="maxScore">
+                    </mat-form-field>
+                  </div>
+
+                  <!-- Result text + recommendation -->
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+                    <mat-label>Natija nomi</mat-label>
+                    <input matInput formControlName="resultText" placeholder="Masalan: Yaxshi natija">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+                    <mat-label>Tavsiya (ixtiyoriy)</mat-label>
+                    <textarea matInput formControlName="recommendation" rows="2"
+                              placeholder="Foydalanuvchiga tavsiya..."></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+            }
+
+            @if (resultLogic.length > 0) {
+              <button mat-stroked-button color="primary" class="w-full add-question-btn"
+                      (click)="addResultLogic()">
+                <mat-icon>add</mat-icon>
+                Natija qo'shish
+              </button>
+            }
           </div>
         </mat-tab>
+
       </mat-tab-group>
     </form>
   }

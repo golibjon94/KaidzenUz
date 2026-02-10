@@ -1,92 +1,102 @@
-<div class="p-6 max-w-7xl mx-auto">
+<div class="p-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-1">
+    <h3 class="text-lg font-semibold text-gray-800">Testlar boshqaruvi</h3>
 
-  <div class="flex items-center justify-between mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-    <div>
-      <h1 class="text-2xl font-bold text-gray-800 m-0">Testlar Boshqaruvi</h1>
-      <p class="text-gray-500 text-sm">Tizimdagi barcha testlarni boshqarish</p>
+    <div class="flex items-center gap-3">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput placeholder="Qidirish...">
+      </mat-form-field>
+
+      <button mat-icon-button matTooltip="Yangilash" (click)="loadTests()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+
+      <button mat-flat-button color="primary" (click)="addTest()">
+        <mat-icon>add</mat-icon>
+        Yangi test
+      </button>
     </div>
-    <button mat-raised-button color="primary" (click)="addTest()" class="rounded-lg flex items-center gap-2">
-      <mat-icon>add</mat-icon>
-      <span>Yangi test yaratish</span>
-    </button>
   </div>
 
-  <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-    @if (loading()) {
-      <div class="flex justify-center items-center py-20">
-        <mat-spinner diameter="50"></mat-spinner>
-      </div>
-    } @else {
-      <table mat-table [dataSource]="tests()" class="w-full">
-        <!-- Test nomi -->
-        <ng-container matColumnDef="title">
-          <th mat-header-cell *matHeaderCellDef class="w-[300px]">Test nomi</th>
-          <td mat-cell *matCellDef="let data">
-            <div class="font-semibold text-gray-800">{{ data.title }}</div>
-            <div class="text-xs text-gray-400 truncate max-w-xs">{{ data.description }}</div>
-          </td>
-        </ng-container>
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="flex justify-center py-16">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  }
 
-        <!-- Slug -->
-        <ng-container matColumnDef="slug">
-          <th mat-header-cell *matHeaderCellDef>Slug</th>
-          <td mat-cell *matCellDef="let data">
-            <code class="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded">{{ data.slug }}</code>
-          </td>
-        </ng-container>
+  <!-- Empty -->
+  @else if (tests().length === 0) {
+    <div class="text-center py-16">
+      <mat-icon class="!text-5xl text-gray-300 mb-3">quiz</mat-icon>
+      <p class="text-gray-400 text-sm">Hozircha testlar yo'q</p>
+    </div>
+  }
 
-        <!-- Savollar -->
-        <ng-container matColumnDef="questions">
-          <th mat-header-cell *matHeaderCellDef>Savollar</th>
-          <td mat-cell *matCellDef="let data">
-            <mat-chip class="bg-blue-100 text-blue-800">{{ data._count?.questions || 0 }} ta savol</mat-chip>
-          </td>
-        </ng-container>
+  <!-- Table -->
+  @else {
+    <table mat-table [dataSource]="tests()" class="w-full clean-table">
 
-        <!-- Holati -->
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef>Holati</th>
-          <td mat-cell *matCellDef="let data">
-            <span class="inline-flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full" [class.bg-green-500]="data.isActive" [class.bg-gray-400]="!data.isActive"></span>
-              <span>{{ data.isActive ? 'Faol' : 'Nofaol' }}</span>
-            </span>
-          </td>
-        </ng-container>
+      <!-- Title -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Test nomi</th>
+        <td mat-cell *matCellDef="let test">
+          <div>
+            <span class="font-medium text-gray-800">{{ test.title }}</span>
+            <p class="text-xs text-gray-400 mt-0.5 line-clamp">{{ test.description }}</p>
+          </div>
+        </td>
+      </ng-container>
 
-        <!-- Amallar -->
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef class="text-right">Amallar</th>
-          <td mat-cell *matCellDef="let data" class="text-right">
-            <div class="flex gap-2 justify-end">
-              <button
-                mat-icon-button
-                (click)="editTest(data.id)"
-                class="text-blue-500"
-                matTooltip="Tahrirlash"
-                aria-label="Tahrirlash"
-              >
-                <mat-icon>edit</mat-icon>
-              </button>
+      <!-- Slug -->
+      <ng-container matColumnDef="slug">
+        <th mat-header-cell *matHeaderCellDef>Slug</th>
+        <td mat-cell *matCellDef="let test">
+          <span class="slug-text">{{ test.slug }}</span>
+        </td>
+      </ng-container>
 
-              <button
-                mat-icon-button
-                color="warn"
-                (click)="confirmDelete(data.id)"
-                matTooltip="O'chirish"
-                aria-label="O'chirish"
-              >
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
-          </td>
-        </ng-container>
+      <!-- Questions count -->
+      <ng-container matColumnDef="questions">
+        <th mat-header-cell *matHeaderCellDef>Savollar</th>
+        <td mat-cell *matCellDef="let test">
+          <span class="badge badge-info">
+            <mat-icon class="!text-sm">help_outline</mat-icon>
+            {{ test._count?.questions || 0 }} ta
+          </span>
+        </td>
+      </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 transition-colors"></tr>
-      </table>
+      <!-- Status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Holati</th>
+        <td mat-cell *matCellDef="let test">
+          <span class="badge" [ngClass]="test.isActive ? 'badge-active' : 'badge-inactive'">
+            <span class="badge-dot"></span>
+            {{ test.isActive ? 'Faol' : 'Nofaol' }}
+          </span>
+        </td>
+      </ng-container>
 
-      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-    }
-  </div>
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Amallar</th>
+        <td mat-cell *matCellDef="let test">
+          <button mat-icon-button color="primary" matTooltip="Tahrirlash"
+                  (click)="editTest(test.id)">
+            <mat-icon class="!text-xl">edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matTooltip="O'chirish"
+                  (click)="confirmDelete(test.id)">
+            <mat-icon class="!text-xl">delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  }
 </div>

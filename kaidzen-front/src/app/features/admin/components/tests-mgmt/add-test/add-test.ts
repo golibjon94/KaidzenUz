@@ -10,22 +10,32 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AnyPipe } from '../../../../../core/pipes/any.pipe';
 
 @Component({
   selector: 'app-add-test',
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule, FormsModule,
-    MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule,
-    MatSlideToggleModule, MatTabsModule,
-    MatSelectModule, MatCheckboxModule, MatProgressSpinnerModule, MatTooltipModule, AnyPipe
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    MatTabsModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
+    AnyPipe,
   ],
   templateUrl: './add-test.html',
   styleUrl: './add-test.css',
@@ -43,17 +53,24 @@ export class AddTest implements OnInit {
   editMode = signal(false);
   currentTestId = signal<string | null>(null);
 
+  private optionLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
   testForm = this.fb.group({
     title: ['', [Validators.required]],
     slug: ['', [Validators.required]],
     description: [''],
     isActive: [true],
     questions: this.fb.array([]),
-    resultLogic: this.fb.array([])
+    resultLogic: this.fb.array([]),
   });
 
-  get questions() { return this.testForm.get('questions') as FormArray; }
-  get resultLogic() { return this.testForm.get('resultLogic') as FormArray; }
+  get questions() {
+    return this.testForm.get('questions') as FormArray;
+  }
+
+  get resultLogic() {
+    return this.testForm.get('resultLogic') as FormArray;
+  }
 
   ngOnInit() {
     this.setupAutoSlug();
@@ -69,9 +86,10 @@ export class AddTest implements OnInit {
   }
 
   private setupAutoSlug() {
-    this.testForm.get('title')?.valueChanges.subscribe(value => {
+    this.testForm.get('title')?.valueChanges.subscribe((value) => {
       if (value && !this.editMode()) {
-        const slug = value.toLowerCase()
+        const slug = value
+          .toLowerCase()
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/(^-|-$)+/g, '');
         this.testForm.patchValue({ slug }, { emitEvent: false });
@@ -94,9 +112,9 @@ export class AddTest implements OnInit {
         this.loading.set(false);
       },
       error: () => {
-        this.snackBar.open('Tahrirlash uchun ma\'lumot topilmadi', 'Yopish', { duration: 3000 });
+        this.snackBar.open("Tahrirlash uchun ma'lumot topilmadi", 'Yopish', { duration: 3000 });
         this.loading.set(false);
-      }
+      },
     });
   }
 
@@ -105,7 +123,7 @@ export class AddTest implements OnInit {
       text: [data?.text || '', Validators.required],
       order: [data?.order || this.questions.length + 1],
       isStartQuestion: [data?.isStartQuestion || false],
-      options: this.fb.array([])
+      options: this.fb.array([]),
     });
     this.questions.push(qGroup);
 
@@ -114,40 +132,57 @@ export class AddTest implements OnInit {
       data.options.forEach((o: any) => this.addOption(qIdx, o));
     } else {
       this.addOption(qIdx);
+      this.addOption(qIdx);
     }
   }
 
   addOption(qIdx: number, data: any = null) {
     const options = this.questions.at(qIdx).get('options') as FormArray;
-    options.push(this.fb.group({
-      text: [data?.text || '', Validators.required],
-      score: [data?.score || 0],
-      order: [data?.order || options.length + 1],
-      nextQuestionId: [data?.nextQuestionId || null],
-      feedbackText: [data?.feedbackText || ''],
-      isTerminal: [data?.isTerminal || false]
-    }));
+    options.push(
+      this.fb.group({
+        text: [data?.text || '', Validators.required],
+        score: [data?.score || 0],
+        order: [data?.order || options.length + 1],
+        nextQuestionId: [data?.nextQuestionId || null],
+        feedbackText: [data?.feedbackText || ''],
+        isTerminal: [data?.isTerminal || false],
+      }),
+    );
+  }
+
+  getOptionLetter(index: number): string {
+    return this.optionLetters[index] || String(index + 1);
   }
 
   getQuestionLabels(): { index: number; text: string }[] {
     return this.questions.controls.map((q: any, idx: number) => ({
       index: idx,
-      text: q.get('text')?.value || `Savol ${idx + 1}`
+      text: q.get('text')?.value || `Savol ${idx + 1}`,
     }));
   }
 
   addResultLogic(data: any = null) {
-    this.resultLogic.push(this.fb.group({
-      minScore: [data?.minScore || 0, [Validators.required, Validators.min(0)]],
-      maxScore: [data?.maxScore || 0, [Validators.required, Validators.min(0)]],
-      resultText: [data?.resultText || '', Validators.required],
-      recommendation: [data?.recommendation || '']
-    }));
+    this.resultLogic.push(
+      this.fb.group({
+        minScore: [data?.minScore || 0, [Validators.required, Validators.min(0)]],
+        maxScore: [data?.maxScore || 0, [Validators.required, Validators.min(0)]],
+        resultText: [data?.resultText || '', Validators.required],
+        recommendation: [data?.recommendation || ''],
+      }),
+    );
   }
 
-  removeQuestion(idx: number) { this.questions.removeAt(idx); }
-  removeOption(qIdx: number, oIdx: number) { (this.questions.at(qIdx).get('options') as FormArray).removeAt(oIdx); }
-  removeResultLogic(idx: number) { this.resultLogic.removeAt(idx); }
+  removeQuestion(idx: number) {
+    this.questions.removeAt(idx);
+  }
+
+  removeOption(qIdx: number, oIdx: number) {
+    (this.questions.at(qIdx).get('options') as FormArray).removeAt(oIdx);
+  }
+
+  removeResultLogic(idx: number) {
+    this.resultLogic.removeAt(idx);
+  }
 
   goBack() {
     this.router.navigate(['/admin/tests']);
@@ -155,12 +190,14 @@ export class AddTest implements OnInit {
 
   submitForm() {
     if (this.testForm.invalid) {
-      this.snackBar.open('Iltimos, barcha majburiy maydonlarni to\'ldiring', 'Yopish', { duration: 3000 });
+      this.snackBar.open("Iltimos, barcha majburiy maydonlarni to'ldiring", 'Yopish', { duration: 3000 });
       return;
     }
 
     this.isSubmitting.set(true);
-    const url = this.editMode() ? `${environment.apiUrl}/tests/${this.currentTestId()}` : `${environment.apiUrl}/tests`;
+    const url = this.editMode()
+      ? `${environment.apiUrl}/tests/${this.currentTestId()}`
+      : `${environment.apiUrl}/tests`;
     const method = this.editMode() ? 'put' : 'post';
 
     this.http[method](url, this.testForm.value).subscribe({
@@ -172,7 +209,7 @@ export class AddTest implements OnInit {
       error: () => {
         this.snackBar.open('Saqlashda xatolik yuz berdi', 'Yopish', { duration: 3000 });
         this.isSubmitting.set(false);
-      }
+      },
     });
   }
 }
