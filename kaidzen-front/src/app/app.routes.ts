@@ -1,9 +1,5 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
-import { AdminLayoutComponent } from './features/admin/admin-layout/admin-layout.component';
-import { ProfileLayoutComponent } from './features/profile/profile-layout/profile-layout.component';
-import { adminGuard } from './core/guards/admin.guard';
-import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   // Home Page (Landing)
@@ -21,7 +17,6 @@ export const routes: Routes = [
         loadComponent: () => import('./features/diagnostics/diagnostics').then(m => m.Diagnostics),
         title: 'Diagnostika - Kaidzen.uz'
       },
-
       {
         path: 'blog',
         loadComponent: () => import('./features/blog/blog-list/blog-list.component').then(m => m.BlogListComponent),
@@ -50,112 +45,16 @@ export const routes: Routes = [
     ]
   },
 
-  // Admin Routes
+  // Admin Routes (lazy-loaded)
   {
     path: 'admin',
-    children: [
-      {
-        path: 'login',
-        loadComponent: () => import('./features/admin/admin-login.component').then(m => m.AdminLoginComponent),
-        title: 'Admin Login - Kaidzen.uz'
-      },
-      {
-        path: '',
-        component: AdminLayoutComponent,
-        canActivate: [adminGuard],
-        children: [
-          {
-            path: '',
-            redirectTo: 'dashboard',
-            pathMatch: 'full'
-          },
-          {
-            path: 'dashboard',
-            loadComponent: () => import('./features/admin/admin-dashboard.component').then(m => m.AdminDashboardComponent),
-            title: 'Admin Dashboard - Kaidzen.uz'
-          },
-          {
-            path: 'users',
-            loadComponent: () => import('./features/admin/components/users-list/users-list.component').then(m => m.UsersListComponent),
-            title: 'Foydalanuvchilar - Kaidzen.uz'
-          },
-          {
-            path: 'tests',
-            loadComponent: () => import('./features/admin/components/tests-mgmt/tests-mgmt.component').then(m => m.TestsMgmtComponent),
-            title: 'Testlar boshqaruvi - Kaidzen.uz'
-          },
-          {
-            path: 'tests/add',
-            loadComponent: () => import('./features/admin/components/tests-mgmt/add-test/add-test').then(m => m.AddTest),
-            title: 'Yangi test yaratish - Kaidzen.uz'
-          },
-          {
-            path: 'tests/edit/:id',
-            loadComponent: () => import('./features/admin/components/tests-mgmt/add-test/add-test').then(m => m.AddTest),
-            title: 'Testni tahrirlash - Kaidzen.uz'
-          },
-          {
-            path: 'blog',
-            loadComponent: () => import('./features/admin/components/blog-mgmt/blog-mgmt.component').then(m => m.BlogMgmtComponent),
-            title: 'Blog boshqaruvi - Kaidzen.uz'
-          },
-          {
-            path: 'blog/add',
-            loadComponent: () => import('./features/admin/components/blog-mgmt/add-blog/add-blog').then(m => m.AddBlog),
-            title: 'Yangi blog yaratish - Kaidzen.uz'
-          },
-          {
-            path: 'blog/edit/:id',
-            loadComponent: () => import('./features/admin/components/blog-mgmt/add-blog/add-blog').then(m => m.AddBlog),
-            title: 'Blogni tahrirlash - Kaidzen.uz'
-          },
-          {
-            path: 'cases',
-            loadComponent: () => import('./features/admin/components/cases-mgmt/cases-mgmt.component').then(m => m.CasesMgmtComponent),
-            title: 'Keyslar boshqaruvi - Kaidzen.uz'
-          },
-          {
-            path: 'applications',
-            loadComponent: () => import('./features/admin/components/apps-list/apps-list.component').then(m => m.AppsListComponent),
-            title: 'Arizalar - Kaidzen.uz'
-          }
-        ]
-      }
-    ]
+    loadChildren: () => import('./features/admin/admin.router').then(m => m.ADMIN_ROUTES)
   },
 
-  // User Profile
+  // User Profile (lazy-loaded)
   {
     path: 'profile',
-    component: ProfileLayoutComponent,
-    canActivate: [authGuard],
-    children: [
-      {
-        path: '',
-        redirectTo: 'overview',
-        pathMatch: 'full'
-      },
-      {
-        path: 'overview',
-        loadComponent: () => import('./features/profile/profile-overview.component').then(m => m.ProfileOverviewComponent),
-        title: 'Mening profilim - Kaidzen.uz'
-      },
-      {
-        path: 'tests',
-        loadComponent: () => import('./features/profile/components/user-tests/user-tests.component').then(m => m.UserTestsComponent),
-        title: 'Mening testlarim - Kaidzen.uz'
-      },
-      {
-        path: 'results',
-        loadComponent: () => import('./features/profile/components/test-results/test-results.component').then(m => m.TestResultsComponent),
-        title: 'Test natijalari - Kaidzen.uz'
-      },
-      {
-        path: 'settings',
-        loadComponent: () => import('./features/profile/components/profile-settings/profile-settings.component').then(m => m.ProfileSettingsComponent),
-        title: 'Sozlamalar - Kaidzen.uz'
-      }
-    ]
+    loadChildren: () => import('./features/profile/user.router').then(m => m.USER_ROUTES)
   },
 
   // Auth Routes
