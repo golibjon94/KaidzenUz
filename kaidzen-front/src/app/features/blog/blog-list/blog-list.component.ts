@@ -1,9 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
 import { BlogService } from '../../../core/services/blog.service';
 import { BlogPost } from '../../../core/models/blog.model';
 import { BlogStatus } from '../../../core/models/enums';
@@ -15,7 +12,7 @@ import { StripHtmlPipe } from '../../../core/pipes/strip-html.pipe';
 @Component({
   selector: 'app-blog-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, NzCardModule, NzButtonModule, NzIconModule, HeaderComponent, FooterComponent, StripHtmlPipe],
+  imports: [CommonModule, RouterLink, HeaderComponent, FooterComponent, StripHtmlPipe],
   templateUrl: './blog-list.component.html',
   styleUrls: ['./blog-list.component.css']
 })

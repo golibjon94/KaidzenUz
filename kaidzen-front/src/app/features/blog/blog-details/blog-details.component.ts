@@ -1,9 +1,8 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { BlogService } from '../../../core/services/blog.service';
 import { BlogPost } from '../../../core/models/blog.model';
 import { environment } from '../../../../environments/environment';
@@ -13,7 +12,7 @@ import {FooterComponent} from '../../home/components/footer/footer.component';
 @Component({
   selector: 'app-blog-details',
   standalone: true,
-  imports: [CommonModule, RouterLink, NzButtonModule, NzIconModule, NzSkeletonModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterLink, MatButtonModule, MatIconModule, HeaderComponent, FooterComponent],
   templateUrl: './blog-details.component.html',
   styleUrls: ['./blog-details.component.css']
 })

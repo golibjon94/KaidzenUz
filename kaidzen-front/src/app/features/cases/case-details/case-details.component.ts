@@ -1,9 +1,8 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { CasesService } from '../../../core/services/cases.service';
 import { BusinessCase } from '../../../core/models/case.model';
 import { HeaderComponent } from '../../home/components/header/header.component';
@@ -12,7 +11,7 @@ import { FooterComponent } from '../../home/components/footer/footer.component';
 @Component({
   selector: 'app-case-details',
   standalone: true,
-  imports: [CommonModule, RouterLink, NzButtonModule, NzIconModule, NzSkeletonModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterLink, MatButtonModule, MatIconModule, HeaderComponent, FooterComponent],
   templateUrl: './case-details.component.html',
   styleUrls: ['./case-details.component.css']
 })
