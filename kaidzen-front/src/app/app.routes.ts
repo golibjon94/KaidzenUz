@@ -100,6 +100,16 @@ export const routes: Routes = [
             title: 'Blog boshqaruvi - Kaidzen.uz'
           },
           {
+            path: 'blog/add',
+            loadComponent: () => import('./features/admin/components/blog-mgmt/add-blog/add-blog').then(m => m.AddBlog),
+            title: 'Yangi blog yaratish - Kaidzen.uz'
+          },
+          {
+            path: 'blog/edit/:id',
+            loadComponent: () => import('./features/admin/components/blog-mgmt/add-blog/add-blog').then(m => m.AddBlog),
+            title: 'Blogni tahrirlash - Kaidzen.uz'
+          },
+          {
             path: 'cases',
             loadComponent: () => import('./features/admin/components/cases-mgmt/cases-mgmt.component').then(m => m.CasesMgmtComponent),
             title: 'Keyslar boshqaruvi - Kaidzen.uz'

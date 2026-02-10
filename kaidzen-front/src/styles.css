@@ -1,6 +1,9 @@
 /* 1. Ng-Zorro stillari (Komponentlar dizayni yuklanadi) */
 @import "ng-zorro-antd/ng-zorro-antd.min.css";
 
+/* 1.1. Quill editor (ngx-quill) theme */
+@import "quill/dist/quill.snow.css";
+
 /* 2. Tailwind (Utility klasslar yuklanadi va Ng-Zorro dizaynini boshqara oladi) */
 @import "tailwindcss";
 

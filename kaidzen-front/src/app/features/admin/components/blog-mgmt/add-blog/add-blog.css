@@ -1,0 +1,13 @@
+
+:host ::ng-deep .ql-toolbar.ql-snow {
+  border-radius: 10px 10px 0 0;
+}
+
+:host ::ng-deep .ql-container.ql-snow {
+  border-radius: 0 0 10px 10px;
+}
+
+:host ::ng-deep .ql-editor {
+  font-size: 15px;
+  line-height: 1.6;
+}

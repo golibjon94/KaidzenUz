@@ -12,6 +12,10 @@ export class AdminBlogService {
     return this.blogService.getPosts();
   }
 
+  getById(id: string) {
+    return this.blogService.getById(id);
+  }
+
   createPost(data: CreatePostDto) {
     return this.blogService.createPost(data);
   }

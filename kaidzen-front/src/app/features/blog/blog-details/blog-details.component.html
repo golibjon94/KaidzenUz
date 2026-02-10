@@ -72,7 +72,7 @@
       @if (post()?.image) {
         <div class="relative mb-12 group">
           <div class="absolute -inset-4 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity duration-500"></div>
-          <img [src]="baseUrl + '/api/file/' + post()?.image?.id"
+          <img [src]="baseUrl + post()?.image?.path"
                class="relative w-full rounded-3xl shadow-2xl object-cover max-h-[600px] transform transition-transform duration-500 group-hover:scale-[1.02]"
                [alt]="post()?.title">
         </div>
@@ -80,8 +80,10 @@
 
       <!-- Article Content -->
       <div class="prose prose-lg max-w-none">
-        <div class="text-gray-700 leading-relaxed text-lg whitespace-pre-wrap bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-gray-100">
-          {{ post()?.content }}
+        <div class="text-gray-700 leading-relaxed text-lg bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-gray-100">
+          <div class="ql-snow">
+            <div class="ql-editor" [innerHTML]="post()?.content"></div>
+          </div>
         </div>
       </div>
 

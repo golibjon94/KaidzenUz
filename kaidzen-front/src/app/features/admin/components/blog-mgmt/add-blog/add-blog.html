@@ -1,0 +1,116 @@
+<div class="space-y-4">
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-xl font-bold">{{ isEdit() ? 'Maqolani tahrirlash' : 'Yangi maqola' }}</h2>
+      <div class="text-sm text-gray-500">
+        Blog kontentini qulay tarzda yozing: sarlavhalar, ro'yxatlar, link va kod blok.
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button nz-button nzType="default" (click)="cancel()" [disabled]="saving()">Ortga</button>
+      <button nz-button nzType="primary" (click)="save()" [nzLoading]="saving()">
+        {{ isEdit() ? 'Yangilash' : 'Saqlash' }}
+      </button>
+    </div>
+  </div>
+
+  <nz-card>
+    <nz-spin [nzSpinning]="loading()">
+      <form nz-form [formGroup]="form" layout="vertical" class="space-y-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <nz-form-item>
+            <nz-form-label nzRequired>Sarlavha</nz-form-label>
+            <nz-form-control nzErrorTip="Sarlavhani kiriting">
+              <input nz-input formControlName="title" placeholder="Maqola sarlavhasi" />
+              <div class="text-xs text-gray-500 mt-1">
+                Sarlavha yozilganda slug avtomatik taklif qilinadi.
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label nzRequired>Slug</nz-form-label>
+            <nz-form-control nzErrorTip="Slugni kiriting">
+              <input nz-input formControlName="slug" placeholder="maqola-manzili" />
+              <div class="text-xs text-gray-500 mt-1">
+                URL ko'rinishi: <span class="font-mono">/blog/&lt;slug&gt;</span>
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <nz-form-item>
+            <nz-form-label>Rasm</nz-form-label>
+            <nz-form-control>
+              <div class="flex items-start gap-3">
+                <nz-upload
+                  nzListType="picture-card"
+                  [nzShowUploadList]="false"
+                  [nzBeforeUpload]="beforeUpload"
+                >
+                  @if (imagePreviewUrl()) {
+                    <img [src]="imagePreviewUrl()!" class="w-full h-full object-cover" alt="" />
+                  } @else {
+                    <div>
+                      <span nz-icon nzType="plus"></span>
+                      <div style="margin-top: 8px">Yuklash</div>
+                    </div>
+                  }
+                </nz-upload>
+
+                <div class="flex-1">
+                  <input type="hidden" formControlName="imageId" />
+
+                  <div class="text-xs text-gray-500">
+                    Tavsiya: 1200×630 (OG image). Yuklangandan keyin <span class="font-mono">imageId</span> saqlanadi.
+                  </div>
+
+                  @if (imagePreviewUrl()) {
+                    <button nz-button nzSize="small" nzType="default" class="mt-2" (click)="removeImage()" [disabled]="saving()">
+                      Rasmni olib tashlash
+                    </button>
+                  }
+                </div>
+              </div>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label nzRequired>Status</nz-form-label>
+            <nz-form-control>
+              <nz-select formControlName="status">
+                <nz-option [nzValue]="blogStatus.DRAFT" nzLabel="Qoralama (Draft)"></nz-option>
+                <nz-option [nzValue]="blogStatus.PUBLISHED" nzLabel="Chop etilgan (Published)"></nz-option>
+                <nz-option [nzValue]="blogStatus.ARCHIVED" nzLabel="Arxivlangan (Archived)"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <nz-form-item>
+          <nz-form-label nzRequired>Kontent</nz-form-label>
+          <nz-form-control nzErrorTip="Kontentni kiriting">
+            <quill-editor
+              formControlName="content"
+              [modules]="quillModules"
+              [styles]="{ height: '360px' }"
+              placeholder="Maqolani yozishni boshlang..."
+            ></quill-editor>
+            <div class="text-xs text-gray-500 mt-2">
+              Maslahat: Sarlavha (H1-H3), ro'yxat (•), link va code-block’dan foydalaning.
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button nz-button nzType="default" (click)="cancel()" [disabled]="saving()">Bekor qilish</button>
+          <button nz-button nzType="primary" (click)="save()" [nzLoading]="saving()">
+            {{ isEdit() ? 'Yangilash' : 'Saqlash' }}
+          </button>
+        </div>
+      </form>
+    </nz-spin>
+  </nz-card>
+</div>

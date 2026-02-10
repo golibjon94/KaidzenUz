@@ -1,7 +1,7 @@
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
   <div class="p-6 border-b border-gray-100 flex items-center justify-between">
     <h3 class="text-lg font-bold">Blog maqolalari</h3>
-    <button nz-button nzType="primary" (click)="showModal()">
+    <button nz-button nzType="primary" (click)="goAdd()">
       <span nz-icon nzType="plus"></span> Yangi maqola
     </button>
   </div>
@@ -27,7 +27,7 @@
           <tr>
             <td>
               @if (data.image) {
-                <img [src]="baseUrl + data.image" class="w-12 h-12 object-cover rounded" alt="">
+                <img [src]="baseUrl + data.image.path" class="w-12 h-12 object-cover rounded" alt="">
               } @else {
                 <div class="w-12 h-12 bg-gray-100 rounded flex items-center justify-center text-gray-400">
                   <span nz-icon nzType="picture"></span>
@@ -43,7 +43,7 @@
             </td>
             <td>{{ data.createdAt | date:'dd.MM.yyyy' }}</td>
             <td>
-              <a (click)="showModal(data)" class="text-blue-600 hover:text-blue-800 mr-4">Tahrirlash</a>
+              <a (click)="goEdit(data.id)" class="text-blue-600 hover:text-blue-800 mr-4">Tahrirlash</a>
               <a (click)="deletePost(data.id)" class="text-red-600 hover:text-red-800 cursor-pointer">O'chirish</a>
             </td>
           </tr>
@@ -52,74 +52,3 @@
     </nz-table>
   }
 </div>
-
-<!-- Blog Modal -->
-<nz-modal
-  [(nzVisible)]="isModalVisible"
-  [nzTitle]="editingPost() ? 'Maqolani tahrirlash' : 'Yangi maqola'"
-  (nzOnCancel)="handleCancel()"
-  (nzOnOk)="submitForm()"
-  [nzOkLoading]="isSubmitting()"
-  nzWidth="700px"
->
-  <ng-container *nzModalContent>
-    <form nz-form [formGroup]="blogForm" layout="vertical">
-      <div class="grid grid-cols-2 gap-4">
-        <nz-form-item>
-          <nz-form-label nzRequired>Sarlavha</nz-form-label>
-          <nz-form-control nzErrorTip="Sarlavhani kiriting">
-            <input nz-input formControlName="title" placeholder="Maqola sarlavhasi" />
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label nzRequired>Slug</nz-form-label>
-          <nz-form-control nzErrorTip="Slugni kiriting">
-            <input nz-input formControlName="slug" placeholder="maqola-manzili" />
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <nz-form-item>
-        <nz-form-label nzRequired>Kontent</nz-form-label>
-        <nz-form-control nzErrorTip="Kontentni kiriting">
-          <textarea nz-input formControlName="content" rows="6" placeholder="Maqola matni..."></textarea>
-        </nz-form-control>
-      </nz-form-item>
-
-      <div class="grid grid-cols-2 gap-4">
-        <nz-form-item>
-          <nz-form-label>Rasm</nz-form-label>
-          <nz-form-control>
-            <nz-upload
-              nzListType="picture-card"
-              [nzShowUploadList]="false"
-              [nzBeforeUpload]="beforeUpload"
-            >
-              @if (blogForm.get('image')?.value) {
-                <img [src]="baseUrl + blogForm.get('image')?.value" style="width: 100%" />
-              } @else {
-                <div>
-                  <span nz-icon nzType="plus"></span>
-                  <div style="margin-top: 8px">Yuklash</div>
-                </div>
-              }
-            </nz-upload>
-            <input type="hidden" formControlName="image">
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label nzRequired>Status</nz-form-label>
-          <nz-form-control>
-            <nz-select formControlName="status">
-              <nz-option nzValue="DRAFT" nzLabel="Qoralama (Draft)"></nz-option>
-              <nz-option nzValue="PUBLISHED" nzLabel="Chop etilgan (Published)"></nz-option>
-              <nz-option nzValue="ARCHIVED" nzLabel="Arxivlangan (Archived)"></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-    </form>
-  </ng-container>
-</nz-modal>

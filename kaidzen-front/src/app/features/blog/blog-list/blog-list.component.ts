@@ -10,11 +10,12 @@ import { BlogStatus } from '../../../core/models/enums';
 import { environment } from '../../../../environments/environment';
 import {HeaderComponent} from '../../home/components/header/header.component';
 import {FooterComponent} from '../../home/components/footer/footer.component';
+import { StripHtmlPipe } from '../../../core/pipes/strip-html.pipe';
 
 @Component({
   selector: 'app-blog-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, NzCardModule, NzButtonModule, NzIconModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterLink, NzCardModule, NzButtonModule, NzIconModule, HeaderComponent, FooterComponent, StripHtmlPipe],
   templateUrl: './blog-list.component.html',
   styleUrls: ['./blog-list.component.css']
 })
