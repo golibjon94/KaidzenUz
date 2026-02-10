@@ -12,6 +12,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '../../../../core/services/auth.service';
 import { AuthStore } from '../../../../core/stores/auth.store';
 import { NotifyService } from '../../../../core/services/notify.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-header',
@@ -94,17 +95,37 @@ export class HeaderComponent {
   }
 
   logout() {
-    if (confirm("Haqiqatan ham tizimdan chiqmoqchimisiz?")) {
+    Swal.fire({
+      title: 'Tizimdan chiqish',
+      text: 'Haqiqatan ham tizimdan chiqmoqchimisiz?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Chiqish',
+      cancelButtonText: 'Bekor qilish',
+      reverseButtons: true,
+    }).then((result) => {
+      if (!result.isConfirmed) return;
+
+      Swal.fire({
+        title: 'Chiqilmoqda... ',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
       this.authService.logout().subscribe({
         next: () => {
+          Swal.close();
           this.notify.success('Tizimdan chiqdingiz');
           this.router.navigate(['/']);
         },
         error: () => {
+          Swal.close();
           this.notify.error('Chiqishda xatolik yuz berdi');
         },
       });
-    }
+    });
   }
 
   goToRegister() {

@@ -12,6 +12,7 @@ import { AdminBlogService } from '../../services/admin-blog.service';
 import { BlogPost } from '../../../../core/models/blog.model';
 import { environment } from '../../../../../environments/environment';
 import { NotifyService } from '../../../../core/services/notify.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-blog-mgmt',
@@ -68,16 +69,36 @@ export class BlogMgmtComponent implements OnInit {
   }
 
   deletePost(id: string) {
-    if (confirm("O'chirishni tasdiqlaysizmi? Ushbu maqolani qayta tiklab bo'lmaydi.")) {
+    Swal.fire({
+      title: "Maqolani o'chirish",
+      text: "O'chirishni tasdiqlaysizmi? Ushbu amalni qaytarib bo'lmaydi.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: "Ha, o'chirish",
+      cancelButtonText: 'Bekor qilish',
+      reverseButtons: true,
+    }).then((result) => {
+      if (!result.isConfirmed) return;
+
+      Swal.fire({
+        title: 'O\'chirilmoqda... ',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
       this.blogService.deletePost(id).subscribe({
         next: () => {
+          Swal.close();
           this.notify.success("Maqola muvaffaqiyatli o'chirildi");
           this.loadPosts();
         },
         error: () => {
+          Swal.close();
           this.notify.error("Maqolani o'chirishda xatolik yuz berdi");
         },
       });
-    }
+    });
   }
 }

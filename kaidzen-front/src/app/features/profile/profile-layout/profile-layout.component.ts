@@ -7,7 +7,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { AuthService } from '../../../core/services/auth.service';
 import { AuthStore } from '../../../core/stores/auth.store';
 import { NotifyService } from '../../../core/services/notify.service';
-import { ConfirmDialogComponent } from '../../../core/components/confirm-dialog/confirm-dialog.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-profile-layout',
@@ -32,24 +32,35 @@ export class ProfileLayoutComponent {
   private router = inject(Router);
 
   logout() {
-    const ref = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Tizimdan chiqish',
-        message: 'Haqiqatan ham tizimdan chiqmoqchimisiz?',
-        okText: 'Chiqish',
-        cancelText: 'Bekor qilish',
-      },
-      width: '520px',
-    });
+    Swal.fire({
+      title: 'Tizimdan chiqish',
+      text: 'Haqiqatan ham tizimdan chiqmoqchimisiz?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Chiqish',
+      cancelButtonText: 'Bekor qilish',
+      reverseButtons: true,
+    }).then((result) => {
+      if (!result.isConfirmed) return;
 
-    ref.afterClosed().subscribe((confirmed) => {
-      if (!confirmed) return;
+      Swal.fire({
+        title: 'Chiqilmoqda... ',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
       this.authService.logout().subscribe({
         next: () => {
+          Swal.close();
           this.notify.success('Tizimdan chiqdingiz');
           this.router.navigate(['/']);
         },
-        error: () => this.notify.error('Xatolik yuz berdi'),
+        error: () => {
+          Swal.close();
+          this.notify.error('Xatolik yuz berdi');
+        },
       });
     });
   }

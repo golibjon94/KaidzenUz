@@ -5,6 +5,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../../core/services/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-layout',
@@ -32,8 +33,34 @@ export class AdminLayoutComponent {
   }
 
   logout() {
-    this.authService.logout().subscribe(() => {
-      this.router.navigate(['/admin/login']);
+    Swal.fire({
+      title: 'Tizimdan chiqish',
+      text: 'Admin paneldan chiqmoqchimisiz?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Chiqish',
+      cancelButtonText: 'Bekor qilish',
+      reverseButtons: true,
+    }).then((result) => {
+      if (!result.isConfirmed) return;
+
+      Swal.fire({
+        title: 'Chiqilmoqda... ',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
+      this.authService.logout().subscribe({
+        next: () => {
+          Swal.close();
+          this.router.navigate(['/admin/login']);
+        },
+        error: () => {
+          Swal.close();
+        },
+      });
     });
   }
 }
