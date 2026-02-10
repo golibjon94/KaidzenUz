@@ -7,8 +7,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../core/services/auth.service';
+import { NotifyService } from '../../core/services/notify.service';
 
 @Component({
   selector: 'app-register',
@@ -30,7 +30,7 @@ export class RegisterComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private snackBar = inject(MatSnackBar);
+  private notify = inject(NotifyService);
 
   isLoading = signal(false);
   hidePassword = true;
@@ -51,12 +51,12 @@ export class RegisterComponent {
       };
       this.authService.signup(registerData).subscribe({
         next: () => {
-          this.snackBar.open("Ro'yxatdan o'tish muvaffaqiyatli!", 'OK', { duration: 3000 });
+          this.notify.success("Ro'yxatdan o'tish muvaffaqiyatli!");
           this.isLoading.set(false);
           this.router.navigate(['/profile']);
         },
         error: () => {
-          this.snackBar.open("Ro'yxatdan o'tishda xatolik!", 'OK', { duration: 3000 });
+          this.notify.error("Ro'yxatdan o'tishda xatolik!");
           this.isLoading.set(false);
         },
       });

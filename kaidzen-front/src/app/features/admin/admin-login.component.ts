@@ -7,9 +7,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../core/services/auth.service';
 import { AuthStore } from '../../core/stores/auth.store';
+import { NotifyService } from '../../core/services/notify.service';
 
 @Component({
   selector: 'app-admin-login',
@@ -30,7 +30,7 @@ export class AdminLoginComponent {
   private authService = inject(AuthService);
   private authStore = inject(AuthStore);
   private router = inject(Router);
-  private snackBar = inject(MatSnackBar);
+  private notify = inject(NotifyService);
 
   isLoading = signal(false);
   hidePassword = true;
@@ -51,16 +51,16 @@ export class AdminLoginComponent {
         next: () => {
           const user = this.authStore.user();
           if (user?.role === 'ADMIN') {
-            this.snackBar.open('Admin paneliga xush kelibsiz!', 'Yopish', { duration: 3000 });
+            this.notify.success('Admin paneliga xush kelibsiz!');
             this.router.navigate(['/admin/dashboard']);
           } else {
-            this.snackBar.open("Sizda admin huquqlari yo'q!", 'Yopish', { duration: 3000 });
+            this.notify.error("Sizda admin huquqlari yo'q!");
             this.authService.logout().subscribe();
           }
           this.isLoading.set(false);
         },
         error: () => {
-          this.snackBar.open("Login yoki parol noto'g'ri!", 'Yopish', { duration: 3000 });
+          this.notify.error("Login yoki parol noto'g'ri!");
           this.isLoading.set(false);
         },
       });

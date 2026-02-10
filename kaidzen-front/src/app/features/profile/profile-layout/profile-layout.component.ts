@@ -4,11 +4,11 @@ import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/rou
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import {NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { AuthService } from '../../../core/services/auth.service';
 import { AuthStore } from '../../../core/stores/auth.store';
+import { NotifyService } from '../../../core/services/notify.service';
 
 @Component({
   selector: 'app-profile-layout',
@@ -24,7 +24,7 @@ export class ProfileLayoutComponent {
   public authStore = inject(AuthStore);
   private authService = inject(AuthService);
   private modal = inject(NzModalService);
-  private notification = inject(NzNotificationService);
+  private notify = inject(NotifyService);
   private router = inject(Router);
 
   logout() {
@@ -36,10 +36,10 @@ export class ProfileLayoutComponent {
       nzOnOk: () => {
         this.authService.logout().subscribe({
           next: () => {
-            this.notification.success('Muvaffaqiyat', 'Tizimdan chiqdingiz');
+            this.notify.success('Tizimdan chiqdingiz');
             this.router.navigate(['/']);
           },
-          error: () => this.notification.error('Xatolik', 'Xatolik yuz berdi')
+          error: () => this.notify.error('Xatolik yuz berdi')
         });
       },
       nzCancelText: 'Bekor qilish'

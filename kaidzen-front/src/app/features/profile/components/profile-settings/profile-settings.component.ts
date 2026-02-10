@@ -4,9 +4,9 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { AuthStore } from '../../../../core/stores/auth.store';
 import { UsersService } from '../../../../core/services/users.service';
+import { NotifyService } from '../../../../core/services/notify.service';
 
 @Component({
   selector: 'app-profile-settings',
@@ -19,7 +19,7 @@ export class ProfileSettingsComponent {
   private fb = inject(FormBuilder);
   private authStore = inject(AuthStore);
   private usersService = inject(UsersService);
-  private notification = inject(NzNotificationService);
+  private notify = inject(NotifyService);
 
   user = this.authStore.user;
   loading = signal(false);
@@ -35,11 +35,11 @@ export class ProfileSettingsComponent {
       this.usersService.updateProfile(this.form.value).subscribe({
         next: (user) => {
           this.authStore.setUser(user);
-          this.notification.success('Muvaffaqiyat', 'Profil muvaffaqiyatli yangilandi');
+          this.notify.success('Profil muvaffaqiyatli yangilandi');
           this.loading.set(false);
         },
         error: () => {
-          this.notification.error('Xatolik', 'Xatolik yuz berdi');
+          this.notify.error('Xatolik yuz berdi');
           this.loading.set(false);
         }
       });

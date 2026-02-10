@@ -15,8 +15,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AnyPipe } from '../../../../../core/pipes/any.pipe';
+import { NotifyService } from '../../../../../core/services/notify.service';
 
 @Component({
   selector: 'app-add-test',
@@ -44,7 +44,7 @@ import { AnyPipe } from '../../../../../core/pipes/any.pipe';
 export class AddTest implements OnInit {
   private http = inject(HttpClient);
   private fb = inject(FormBuilder);
-  private snackBar = inject(MatSnackBar);
+  private notify = inject(NotifyService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -112,7 +112,7 @@ export class AddTest implements OnInit {
         this.loading.set(false);
       },
       error: () => {
-        this.snackBar.open("Tahrirlash uchun ma'lumot topilmadi", 'Yopish', { duration: 3000 });
+        this.notify.error("Tahrirlash uchun ma'lumot topilmadi");
         this.loading.set(false);
       },
     });
@@ -190,7 +190,7 @@ export class AddTest implements OnInit {
 
   submitForm() {
     if (this.testForm.invalid) {
-      this.snackBar.open("Iltimos, barcha majburiy maydonlarni to'ldiring", 'Yopish', { duration: 3000 });
+      this.notify.warning("Iltimos, barcha majburiy maydonlarni to'ldiring");
       return;
     }
 
@@ -202,12 +202,12 @@ export class AddTest implements OnInit {
 
     this.http[method](url, this.testForm.value).subscribe({
       next: () => {
-        this.snackBar.open('Muvaffaqiyatli saqlandi', 'Yopish', { duration: 3000 });
+        this.notify.success('Muvaffaqiyatli saqlandi');
         this.isSubmitting.set(false);
         this.router.navigate(['/admin/tests']);
       },
       error: () => {
-        this.snackBar.open('Saqlashda xatolik yuz berdi', 'Yopish', { duration: 3000 });
+        this.notify.error('Saqlashda xatolik yuz berdi');
         this.isSubmitting.set(false);
       },
     });

@@ -11,7 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { NotifyService } from '../../../../core/services/notify.service';
 
 interface Test {
   id: string;
@@ -42,7 +42,7 @@ interface Test {
 })
 export class TestsMgmtComponent implements OnInit {
   private http = inject(HttpClient);
-  private snackBar = inject(MatSnackBar);
+  private notify = inject(NotifyService);
   private router = inject(Router);
 
   tests = signal<Test[]>([]);
@@ -61,7 +61,7 @@ export class TestsMgmtComponent implements OnInit {
         this.loading.set(false);
       },
       error: () => {
-        this.snackBar.open("Ma'lumotlarni yuklashda xatolik yuz berdi", 'Yopish', { duration: 3000 });
+        this.notify.error("Ma'lumotlarni yuklashda xatolik yuz berdi");
         this.loading.set(false);
       },
     });
@@ -84,10 +84,10 @@ export class TestsMgmtComponent implements OnInit {
   deleteTest(id: string) {
     this.http.delete(`${environment.apiUrl}/tests/${id}`).subscribe({
       next: () => {
-        this.snackBar.open("Test o'chirildi", 'Yopish', { duration: 3000 });
+        this.notify.success("Test o'chirildi");
         this.loadTests();
       },
-      error: () => this.snackBar.open("O'chirishda xatolik", 'Yopish', { duration: 3000 }),
+      error: () => this.notify.error("O'chirishda xatolik"),
     });
   }
 }

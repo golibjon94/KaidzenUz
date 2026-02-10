@@ -8,10 +8,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { AuthService } from '../../../../core/services/auth.service';
 import { AuthStore } from '../../../../core/stores/auth.store';
+import { NotifyService } from '../../../../core/services/notify.service';
 
 @Component({
   selector: 'app-header',
@@ -33,8 +33,8 @@ export class HeaderComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private snackBar = inject(MatSnackBar);
   public authStore = inject(AuthStore);
+  public notify = inject(NotifyService);
 
   isLoginModalVisible = signal(false);
   isLoading = signal(false);
@@ -66,20 +66,20 @@ export class HeaderComponent {
         next: () => {
           this.authService.getMe().subscribe({
             next: () => {
-              this.snackBar.open('Tizimga muvaffaqiyatli kirdingiz!', 'OK', { duration: 3000 });
+              this.notify.success('Tizimga muvaffaqiyatli kirdingiz!');
               this.isLoginModalVisible.set(false);
               this.loginForm.reset();
               this.isLoading.set(false);
               this.router.navigate(['/profile']);
             },
             error: () => {
-              this.snackBar.open("Profil yuklashda xatolik!", 'OK', { duration: 3000 });
+              this.notify.error('Profil yuklashda xatolik!');
               this.isLoading.set(false);
             },
           });
         },
         error: () => {
-          this.snackBar.open("Login yoki parol noto'g'ri!", 'OK', { duration: 3000 });
+          this.notify.error("Login yoki parol noto'g'ri!");
           this.isLoading.set(false);
         },
       });
@@ -97,11 +97,11 @@ export class HeaderComponent {
     if (confirm("Haqiqatan ham tizimdan chiqmoqchimisiz?")) {
       this.authService.logout().subscribe({
         next: () => {
-          this.snackBar.open('Tizimdan chiqdingiz', 'OK', { duration: 3000 });
+          this.notify.success('Tizimdan chiqdingiz');
           this.router.navigate(['/']);
         },
         error: () => {
-          this.snackBar.open('Chiqishda xatolik yuz berdi', 'OK', { duration: 3000 });
+          this.notify.error('Chiqishda xatolik yuz berdi');
         },
       });
     }
