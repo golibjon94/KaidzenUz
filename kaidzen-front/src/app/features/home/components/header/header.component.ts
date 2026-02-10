@@ -2,17 +2,14 @@ import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
-// Ng-Zorro Notification Servisi
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-
-// Shaxsiy Servislar va Store
 import { AuthService } from '../../../../core/services/auth.service';
 import { AuthStore } from '../../../../core/stores/auth.store';
 
@@ -20,14 +17,14 @@ import { AuthStore } from '../../../../core/stores/auth.store';
   selector: 'app-header',
   standalone: true,
   imports: [
-    NzButtonModule,
-    NzModalModule,
-    NzFormModule,
-    NzInputModule,
     ReactiveFormsModule,
-    NzIconModule,
-    NzTooltipModule,
-    RouterLink
+    RouterLink,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -36,17 +33,16 @@ export class HeaderComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private notification = inject(NzNotificationService);
-  private modal = inject(NzModalService);
+  private snackBar = inject(MatSnackBar);
   public authStore = inject(AuthStore);
 
   isLoginModalVisible = signal(false);
   isLoading = signal(false);
+  hidePassword = true;
 
-  // Login formasi
   loginForm: FormGroup = this.fb.group({
     phone: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+    password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
   showLoginModal() {
@@ -63,42 +59,32 @@ export class HeaderComponent {
       this.isLoading.set(true);
       const loginData = {
         ...this.loginForm.value,
-        phone: `+998${this.loginForm.value.phone}`
+        phone: `+998${this.loginForm.value.phone}`,
       };
 
       this.authService.login(loginData).subscribe({
         next: () => {
           this.authService.getMe().subscribe({
             next: () => {
-              this.notification.success(
-                'Muvaffaqiyat',
-                'Tizimga muvaffaqiyatli kirdingiz!'
-              );
+              this.snackBar.open('Tizimga muvaffaqiyatli kirdingiz!', 'OK', { duration: 3000 });
               this.isLoginModalVisible.set(false);
               this.loginForm.reset();
               this.isLoading.set(false);
               this.router.navigate(['/profile']);
             },
             error: () => {
-              this.notification.error(
-                'Xatolik',
-                'Profil ma\'lumotlarini yuklashda xatolik yuz berdi!'
-              );
+              this.snackBar.open("Profil yuklashda xatolik!", 'OK', { duration: 3000 });
               this.isLoading.set(false);
-            }
+            },
           });
         },
         error: () => {
-          this.notification.error(
-            'Kirish rad etildi',
-            'Login yoki parol noto\'g\'ri!'
-          );
+          this.snackBar.open("Login yoki parol noto'g'ri!", 'OK', { duration: 3000 });
           this.isLoading.set(false);
-        }
+        },
       });
     } else {
-      // Formani validatsiyadan o'tkazish
-      Object.values(this.loginForm.controls).forEach(control => {
+      Object.values(this.loginForm.controls).forEach((control) => {
         if (control.invalid) {
           control.markAsDirty();
           control.updateValueAndValidity({ onlySelf: true });
@@ -108,33 +94,19 @@ export class HeaderComponent {
   }
 
   logout() {
-    this.modal.confirm({
-      nzTitle: 'Tizimdan chiqish',
-      nzContent: 'Haqiqatan ham tizimdan chiqmoqchimisiz?',
-      nzOkText: 'Chiqish',
-      nzOkDanger: true,
-      nzOnOk: () => {
-        this.authService.logout().subscribe({
-          next: () => {
-            this.notification.success(
-              'Tizimdan chiqish',
-              'Siz hisobingizdan muvaffaqiyatli chiqdingiz'
-            );
-            this.router.navigate(['/']);
-          },
-          error: () => {
-            this.notification.error(
-              'Xatolik',
-              'Tizimdan chiqishda muammo yuz berdi'
-            );
-          }
-        });
-      },
-      nzCancelText: 'Bekor qilish'
-    });
+    if (confirm("Haqiqatan ham tizimdan chiqmoqchimisiz?")) {
+      this.authService.logout().subscribe({
+        next: () => {
+          this.snackBar.open('Tizimdan chiqdingiz', 'OK', { duration: 3000 });
+          this.router.navigate(['/']);
+        },
+        error: () => {
+          this.snackBar.open('Chiqishda xatolik yuz berdi', 'OK', { duration: 3000 });
+        },
+      });
+    }
   }
 
-  // Navigatsiya metodlari
   goToRegister() {
     this.isLoginModalVisible.set(false);
     this.router.navigate(['/auth/register']);

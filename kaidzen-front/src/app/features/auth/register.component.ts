@@ -1,11 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
@@ -14,27 +16,30 @@ import { AuthService } from '../../core/services/auth.service';
   imports: [
     ReactiveFormsModule,
     RouterLink,
-    NzButtonModule,
-    NzFormModule,
-    NzInputModule,
-    NzCardModule
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styles: [`:host { display: block; }`],
 })
 export class RegisterComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private notification = inject(NzNotificationService);
+  private snackBar = inject(MatSnackBar);
 
   isLoading = signal(false);
+  hidePassword = true;
 
   registerForm: FormGroup = this.fb.group({
     fullName: ['', [Validators.required, Validators.minLength(3)]],
     phone: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
     password: ['', [Validators.required, Validators.minLength(6)]],
-    address: ['']
+    address: [''],
   });
 
   handleRegister() {
@@ -42,21 +47,21 @@ export class RegisterComponent {
       this.isLoading.set(true);
       const registerData = {
         ...this.registerForm.value,
-        phone: `+998${this.registerForm.value.phone}`
+        phone: `+998${this.registerForm.value.phone}`,
       };
       this.authService.signup(registerData).subscribe({
         next: () => {
-          this.notification.success('Muvaffaqiyat', 'Ro\'yxatdan o\'tish muvaffaqiyatli amalga oshirildi!');
+          this.snackBar.open("Ro'yxatdan o'tish muvaffaqiyatli!", 'OK', { duration: 3000 });
           this.isLoading.set(false);
           this.router.navigate(['/profile']);
         },
         error: () => {
-          this.notification.error('Xatolik', 'Ro\'yxatdan o\'tishda xatolik yuz berdi!');
+          this.snackBar.open("Ro'yxatdan o'tishda xatolik!", 'OK', { duration: 3000 });
           this.isLoading.set(false);
-        }
+        },
       });
     } else {
-      Object.values(this.registerForm.controls).forEach(control => {
+      Object.values(this.registerForm.controls).forEach((control) => {
         if (control.invalid) {
           control.markAsDirty();
           control.updateValueAndValidity({ onlySelf: true });
