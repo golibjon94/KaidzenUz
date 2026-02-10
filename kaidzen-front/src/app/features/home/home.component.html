@@ -30,10 +30,10 @@
       </p>
 
       <div class="flex flex-wrap gap-4">
-        <button nz-button nzType="primary" nzSize="large"
+        <button mat-flat-button color="primary"
                 class="relative h-14 px-8 rounded-full text-lg font-semibold overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/50 hover:-translate-y-1 active:scale-95"
                 (click)="goToTests()"
-                nz-tooltip [nzTooltipTitle]="!authStore.isAuthenticated() ? 'Testdan o\'tish uchun tizimga kiring' : ''">
+                [matTooltip]="!authStore.isAuthenticated() ? 'Testdan o\'tish uchun tizimga kiring' : ''">
           <span class="relative z-10 flex items-center gap-2">
             <span>Diagnostikadan o'ting</span>
             <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -43,7 +43,7 @@
           <span class="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 transition-transform duration-300 group-hover:scale-105"></span>
         </button>
 
-        <button nz-button nzType="default" nzSize="large"
+        <button mat-stroked-button
                 class="h-14 px-8 rounded-full text-lg font-semibold border-2 border-gray-300 hover:border-blue-500 hover:text-blue-600 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 active:scale-95 group"
                 (click)="scrollToServices()">
           <span class="flex items-center gap-2">
@@ -154,7 +154,7 @@
 
           <div class="relative z-10">
             <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6 transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 shadow-lg group-hover:shadow-blue-500/50">
-              <span nz-icon [nzType]="service.icon" class="text-3xl text-white"></span>
+              <mat-icon class="!text-3xl text-white">{{ service.icon }}</mat-icon>
             </div>
 
             <h3 class="text-2xl font-bold mb-4 text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
@@ -212,17 +212,16 @@
             </h3>
             <p class="text-gray-600 mb-6 line-clamp-3">{{ test.description }}</p>
 
-            <button nz-button nzType="primary" nzBlock
-                    class="rounded-xl h-12 font-semibold relative overflow-hidden group/btn transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/50"
+            <button mat-flat-button color="primary"
+                    class="rounded-xl h-12 font-semibold relative overflow-hidden group/btn transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/50 w-full"
                     (click)="goToTests()"
-                    nz-tooltip [nzTooltipTitle]="!authStore.isAuthenticated() ? 'Testdan o\'tish uchun tizimga kiring' : ''">
+                    [matTooltip]="!authStore.isAuthenticated() ? 'Testdan o\'tish uchun tizimga kiring' : ''">
               <span class="relative z-10 flex items-center justify-center gap-2">
                 <span>Testni boshlash</span>
                 <svg class="w-5 h-5 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                 </svg>
               </span>
-              <span class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 transition-transform duration-300 group-hover/btn:scale-105"></span>
             </button>
           </div>
         </div>
@@ -242,8 +241,8 @@
         </h2>
         <p class="text-gray-600 text-lg">Biznesingiz uchun foydali maslahatlar va yangiliklar.</p>
       </div>
-      <a nz-button nzType="link"
-         class="text-blue-600 font-semibold text-lg flex items-center gap-2 hover:gap-3 transition-all duration-300 group"
+      <a mat-button
+         class="!text-blue-600 !font-semibold !text-lg flex items-center gap-2 hover:gap-3 transition-all duration-300 group"
          routerLink="/blog">
         <span>Barchasini ko'rish</span>
         <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -302,8 +301,8 @@
         </h2>
         <p class="text-gray-600 text-lg">Muvaffaqiyatli amalga oshirilgan loyihalarimizdan namunalar.</p>
       </div>
-      <a nz-button nzType="link"
-         class="text-blue-600 font-semibold text-lg flex items-center gap-2 hover:gap-3 transition-all duration-300 group"
+      <a mat-button
+         class="!text-blue-600 !font-semibold !text-lg flex items-center gap-2 hover:gap-3 transition-all duration-300 group"
          routerLink="/cases">
         <span>Barchasini ko'rish</span>
         <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -323,7 +322,7 @@
           <div class="relative z-10">
             <div class="flex items-center gap-4 mb-6">
               <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white shadow-lg transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
-                <span nz-icon nzType="project" nzTheme="outline" class="text-2xl"></span>
+                <mat-icon class="!text-2xl">work</mat-icon>
               </div>
               <h3 class="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300 flex-1">
                 {{ item.title }}

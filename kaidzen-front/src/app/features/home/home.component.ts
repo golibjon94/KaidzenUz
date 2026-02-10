@@ -2,11 +2,7 @@ import { Component, ChangeDetectionStrategy, inject, OnInit, signal } from '@ang
 import { Title, Meta } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzTagModule } from 'ng-zorro-antd/tag';
-import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
+
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HomeService } from './services/home.service';
@@ -17,11 +13,16 @@ import { environment } from '../../../environments/environment';
 import { catchError, of } from 'rxjs';
 import { AuthStore } from '../../core/stores/auth.store';
 import { ViewChild } from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatCardModule} from '@angular/material/card';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatChipsModule} from '@angular/material/chips';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, NzButtonModule, NzIconModule, NzCardModule, NzTagModule, NzTooltipModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterLink, MatButtonModule, MatIconModule, MatCardModule, MatChipsModule, MatTooltipModule, HeaderComponent, FooterComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,13 +38,19 @@ export class HomeComponent implements OnInit {
   @ViewChild(HeaderComponent) headerComponent!: HeaderComponent;
 
   baseUrl = environment.apiUrl.replace('/api', '');
-
   services = [
-    { title: 'Biznes Diagnostika', icon: 'pie-chart', desc: 'Sotuv, marketing va operatsion jarayonlarning chuqur tahlili.' },
-    { title: 'Konsalting', icon: 'solution', desc: 'Ekspertlarimiz tomonidan biznesni rivojlantirish bo\'yicha strategik maslahatlar.' },
-    { title: 'Xodimlar auditi', icon: 'team', desc: 'Jamoangiz samaradorligini oshirish va kadrlar tahlili.' }
+    {
+      title: 'Biznes Diagnostika',
+      icon: 'pie_chart',
+      desc: 'Sotuv, marketing va operatsion jarayonlarning chuqur tahlili.'
+    },
+    {
+      title: 'Konsalting',
+      icon: 'lightbulb',
+      desc: 'Ekspertlarimiz tomonidan biznesni rivojlantirish bo\'yicha strategik maslahatlar.'
+    },
+    {title: 'Xodimlar auditi', icon: 'groups', desc: 'Jamoangiz samaradorligini oshirish va kadrlar tahlili.'}
   ];
-
   latestPosts = signal<BlogPost[]>([]);
   cases = signal<BusinessCase[]>([]);
   tests = signal<Test[]>([]);
