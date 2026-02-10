@@ -1,0 +1,41 @@
+::ng-deep .status-select {
+  width: 180px;
+}
+
+::ng-deep .status-select .mat-mdc-form-field-flex {
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+}
+
+::ng-deep .status-select .mat-mdc-text-field-wrapper {
+  padding: 0;
+}
+
+::ng-deep .status-select .mat-mdc-form-field-infix {
+  padding: 0.5rem 0.75rem;
+  min-height: auto;
+}
+
+::ng-deep .status-select .mat-mdc-select-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+::ng-deep .status-select .mdc-notched-outline__leading,
+::ng-deep .status-select .mdc-notched-outline__notch,
+::ng-deep .status-select .mdc-notched-outline__trailing {
+  border-color: #e5e7eb !important;
+}
+
+::ng-deep .status-select:hover .mdc-notched-outline__leading,
+::ng-deep .status-select:hover .mdc-notched-outline__notch,
+::ng-deep .status-select:hover .mdc-notched-outline__trailing {
+  border-color: #6366f1 !important;
+}
+
+::ng-deep .status-select.mat-focused .mdc-notched-outline__leading,
+::ng-deep .status-select.mat-focused .mdc-notched-outline__notch,
+::ng-deep .status-select.mat-focused .mdc-notched-outline__trailing {
+  border-color: #6366f1 !important;
+  border-width: 2px !important;
+}

@@ -11,10 +11,12 @@
 
   <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
     <div class="animate-fade-in-left">
+
       <div class="inline-flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full mb-6 border border-blue-100 shadow-sm">
         <span class="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></span>
         <span class="text-blue-700 font-medium text-sm">Professional Biznes Yechimlar</span>
       </div>
+        <app-apply-button></app-apply-button>
 
       <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
         Biznesingizni
@@ -30,6 +32,7 @@
       </p>
 
       <div class="flex flex-wrap gap-4">
+
         <button mat-flat-button color="primary"
                 class="relative h-14 px-8 rounded-full text-lg font-semibold overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/50 hover:-translate-y-1 active:scale-95"
                 (click)="goToTests()"

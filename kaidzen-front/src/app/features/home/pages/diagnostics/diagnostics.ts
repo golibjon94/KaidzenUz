@@ -1,8 +1,8 @@
 import {Component, inject, signal} from '@angular/core';
-import {CasesService} from '../../core/services/cases.service';
-import {BusinessCase} from '../../core/models/case.model';
-import {FooterComponent} from '../home/components/footer/footer.component';
-import {HeaderComponent} from '../home/components/header/header.component';
+import {CasesService} from '../../../../core/services/cases.service';
+import {BusinessCase} from '../../../../core/models/case.model';
+import {FooterComponent} from '../../components/footer/footer.component';
+import {HeaderComponent} from '../../components/header/header.component';
 
 @Component({
   selector: 'app-diagnostics',

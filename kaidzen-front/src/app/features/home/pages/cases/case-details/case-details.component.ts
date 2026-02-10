@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { CasesService } from '../../../core/services/cases.service';
-import { BusinessCase } from '../../../core/models/case.model';
-import { HeaderComponent } from '../../home/components/header/header.component';
-import { FooterComponent } from '../../home/components/footer/footer.component';
+import { CasesService } from '../../../../../core/services/cases.service';
+import { BusinessCase } from '../../../../../core/models/case.model';
+import { HeaderComponent } from '../../../components/header/header.component';
+import { FooterComponent } from '../../../components/footer/footer.component';
 
 @Component({
   selector: 'app-case-details',

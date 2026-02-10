@@ -14,32 +14,32 @@ export const routes: Routes = [
       },
       {
         path: 'diagnostics',
-        loadComponent: () => import('./features/diagnostics/diagnostics').then(m => m.Diagnostics),
+        loadComponent: () => import('./features/home/pages/diagnostics/diagnostics').then(m => m.Diagnostics),
         title: 'Diagnostika - Kaidzen.uz'
       },
       {
         path: 'blog',
-        loadComponent: () => import('./features/blog/blog-list/blog-list.component').then(m => m.BlogListComponent),
+        loadComponent: () => import('./features/home/pages/blog/blog-list/blog-list.component').then(m => m.BlogListComponent),
         title: 'Blog - Kaidzen.uz'
       },
       {
         path: 'blog/:id',
-        loadComponent: () => import('./features/blog/blog-details/blog-details.component').then(m => m.BlogDetailsComponent),
+        loadComponent: () => import('./features/home/pages/blog/blog-details/blog-details.component').then(m => m.BlogDetailsComponent),
         title: 'Blog - Kaidzen.uz'
       },
       {
         path: 'cases',
-        loadComponent: () => import('./features/cases/case-list/case-list.component').then(m => m.CaseListComponent),
+        loadComponent: () => import('./features/home/pages/cases/case-list/case-list.component').then(m => m.CaseListComponent),
         title: 'Muvaffaqiyatli Keyslar - Kaidzen.uz'
       },
       {
         path: 'cases/:id',
-        loadComponent: () => import('./features/cases/case-details/case-details.component').then(m => m.CaseDetailsComponent),
+        loadComponent: () => import('./features/home/pages/cases/case-details/case-details.component').then(m => m.CaseDetailsComponent),
         title: 'Keys - Kaidzen.uz'
       },
       {
         path: 'about',
-        loadComponent: () => import('./features/about/about').then(m => m.About),
+        loadComponent: () => import('./features/home/pages/about/about').then(m => m.About),
         title: 'Biz haqimizda - Kaidzen.uz'
       }
     ]
@@ -63,7 +63,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'register',
-        loadComponent: () => import('./features/auth/register.component').then(m => m.RegisterComponent),
+        loadComponent: () => import('./features/home/pages/auth/register.component').then(m => m.RegisterComponent),
         title: 'Ro\'yxatdan o\'tish - Kaidzen.uz'
       }
     ]

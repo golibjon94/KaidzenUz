@@ -65,4 +65,34 @@ export class AppsListComponent implements OnInit {
       }
     });
   }
+
+  getStatusLabel(status: ApplicationStatus): string {
+    const labels: Record<ApplicationStatus, string> = {
+      [ApplicationStatus.PENDING]: 'Yangi',
+      [ApplicationStatus.CONTACTED]: 'Jarayonda',
+      [ApplicationStatus.COMPLETED]: 'Yakunlandi',
+      [ApplicationStatus.REJECTED]: 'Bekor qilindi'
+    };
+    return labels[status] || status;
+  }
+
+  getStatusClass(status: ApplicationStatus): string {
+    const classes: Record<ApplicationStatus, string> = {
+      [ApplicationStatus.PENDING]: 'text-blue-600 font-semibold',
+      [ApplicationStatus.CONTACTED]: 'text-orange-600 font-semibold',
+      [ApplicationStatus.COMPLETED]: 'text-green-600 font-semibold',
+      [ApplicationStatus.REJECTED]: 'text-red-600 font-semibold'
+    };
+    return classes[status] || 'text-gray-600';
+  }
+
+  getStatusBadgeClass(status: ApplicationStatus): string {
+    const classes: Record<ApplicationStatus, string> = {
+      [ApplicationStatus.PENDING]: 'bg-blue-100 text-blue-700 border border-blue-200',
+      [ApplicationStatus.CONTACTED]: 'bg-orange-100 text-orange-700 border border-orange-200',
+      [ApplicationStatus.COMPLETED]: 'bg-green-100 text-green-700 border border-green-200',
+      [ApplicationStatus.REJECTED]: 'bg-red-100 text-red-700 border border-red-200'
+    };
+    return classes[status] || 'bg-gray-100 text-gray-700';
+  }
 }

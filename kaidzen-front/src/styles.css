@@ -187,6 +187,68 @@
   font-size: 0.875rem;
 }
 
+/* Custom Dialog Styles */
+.custom-dialog-container .mat-mdc-dialog-container {
+  border-radius: 16px;
+  padding: 24px;
+  overflow: hidden;
+}
+
+.custom-dialog-container .mat-mdc-dialog-surface {
+  border-radius: 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+.custom-dialog-container .mat-mdc-dialog-surface::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-dialog-container .mat-mdc-dialog-surface::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.custom-dialog-container .mat-mdc-dialog-surface::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.custom-dialog-container .mat-mdc-dialog-surface::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Remove default dialog padding to control it ourselves */
+.custom-dialog-container .mdc-dialog__content {
+  padding: 0;
+}
+
+/* ============================================
+   Custom Dialog Styles — add to global styles.scss
+   ============================================ */
+
+.custom-dialog-container {
+  .mat-mdc-dialog-container {
+    border-radius: 20px !important;
+    overflow: hidden;
+  }
+
+  .mat-mdc-dialog-surface {
+    border-radius: 20px !important;
+    box-shadow:
+      0 24px 48px rgba(0, 0, 0, 0.12),
+      0 8px 16px rgba(0, 0, 0, 0.08) !important;
+  }
+}
+
+/* Backdrop blur */
+.cdk-overlay-dark-backdrop {
+  background: rgba(15, 23, 42, 0.4) !important;
+  backdrop-filter: blur(4px);
+}
+
 @layer components {
   .nav-item {
     @apply flex items-center gap-4 p-4 rounded-2xl text-gray-500 hover:text-blue-600 hover:bg-blue-50/50 transition-all duration-300 font-semibold;
@@ -195,3 +257,5 @@
     @apply bg-blue-600 text-white shadow-lg shadow-blue-200;
   }
 }
+
+

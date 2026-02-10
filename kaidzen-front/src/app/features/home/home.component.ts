@@ -18,11 +18,12 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatCardModule} from '@angular/material/card';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatChipsModule} from '@angular/material/chips';
+import { ApplyButtonComponent } from '../../core/components/apply-button/apply-button.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatButtonModule, MatIconModule, MatCardModule, MatChipsModule, MatTooltipModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterLink, MatButtonModule, MatIconModule, MatCardModule, MatChipsModule, MatTooltipModule, HeaderComponent, FooterComponent, ApplyButtonComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

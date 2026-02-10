@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { BlogService } from '../../../core/services/blog.service';
-import { BlogPost } from '../../../core/models/blog.model';
-import { environment } from '../../../../environments/environment';
-import {HeaderComponent} from '../../home/components/header/header.component';
-import {FooterComponent} from '../../home/components/footer/footer.component';
+import { BlogService } from '../../../../../core/services/blog.service';
+import { BlogPost } from '../../../../../core/models/blog.model';
+import { environment } from '../../../../../../environments/environment';
+import {HeaderComponent} from '../../../components/header/header.component';
+import {FooterComponent} from '../../../components/footer/footer.component';
 
 @Component({
   selector: 'app-blog-details',
