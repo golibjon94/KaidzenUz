@@ -1,13 +1,10 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { NzTableModule } from 'ng-zorro-antd/table';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzModalModule } from 'ng-zorro-antd/modal';
-import { NzEmptyModule } from 'ng-zorro-antd/empty';
-import { NzTagModule } from 'ng-zorro-antd/tag';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TestsService } from '../../../../core/services/tests.service';
 import { TestResult } from '../../../../core/models/test.model';
+import { TestResultDetailsDialogComponent } from './test-result-details-dialog.component';
 
 @Component({
   selector: 'app-test-results',
@@ -15,26 +12,19 @@ import { TestResult } from '../../../../core/models/test.model';
   imports: [
     CommonModule,
     DatePipe,
-    NzTableModule,
-    NzButtonModule,
-    NzIconModule,
-    NzModalModule,
-    NzEmptyModule,
-    NzTagModule
+    MatButtonModule,
+    MatDialogModule,
   ],
   templateUrl: './test-results.component.html',
   styleUrl: './test-results.component.css',
 })
 export class TestResultsComponent implements OnInit {
   private testsService = inject(TestsService);
+  private dialog = inject(MatDialog);
 
   results = signal<TestResult[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
-
-  // Modal state
-  isVisible = signal(false);
-  selectedResult = signal<TestResult | null>(null);
 
   ngOnInit() {
     this.loadResults();
@@ -60,12 +50,11 @@ export class TestResultsComponent implements OnInit {
   }
 
   showDetails(result: TestResult) {
-    this.selectedResult.set(result);
-    this.isVisible.set(true);
-  }
-
-  handleCancel() {
-    this.isVisible.set(false);
-    this.selectedResult.set(null);
+    this.dialog.open(TestResultDetailsDialogComponent, {
+      data: result,
+      width: '800px',
+      maxWidth: '92vw',
+      panelClass: 'test-result-details-dialog',
+    });
   }
 }

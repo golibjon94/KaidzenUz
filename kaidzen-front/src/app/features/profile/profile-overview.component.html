@@ -4,7 +4,9 @@
   <div class="flex flex-col md:flex-row items-center gap-8 mb-10 pb-10 border-b border-gray-100">
     <div class="relative group">
       <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
-      <nz-avatar [nzSize]="120" nzIcon="user" class="relative bg-gradient-to-br from-blue-600 to-purple-700 shadow-2xl border-4 border-white ring-4 ring-blue-100"></nz-avatar>
+      <div class="relative w-[120px] h-[120px] bg-gradient-to-br from-blue-600 to-purple-700 shadow-2xl border-4 border-white ring-4 ring-blue-100 rounded-3xl flex items-center justify-center">
+        <mat-icon class="text-white" fontIcon="person"></mat-icon>
+      </div>
     </div>
 
     <div class="flex-1 text-center md:text-left">
@@ -17,14 +19,10 @@
         </svg>
         {{ user()?.phone }}
       </p>
-      <div class="flex gap-2 justify-center md:justify-start">
-        <nz-tag nzColor="blue" class="rounded-full px-4 py-1 font-semibold shadow-md">
-          {{ user()?.role }}
-        </nz-tag>
-        <nz-tag nzColor="green" class="rounded-full px-4 py-1 font-semibold shadow-md">
-          Faol
-        </nz-tag>
-      </div>
+      <mat-chip-set class="flex gap-2 justify-center md:justify-start" aria-label="Foydalanuvchi teglari">
+        <mat-chip class="rounded-full px-4 py-1 font-semibold shadow-md bg-blue-600 text-white">{{ user()?.role }}</mat-chip>
+        <mat-chip class="rounded-full px-4 py-1 font-semibold shadow-md bg-green-600 text-white">Faol</mat-chip>
+      </mat-chip-set>
     </div>
   </div>
 
@@ -127,7 +125,7 @@
       </p>
 
       <div class="flex flex-wrap gap-4 justify-center">
-        <button nz-button nzType="primary" (click)="goToTests()"
+        <button mat-raised-button color="primary" (click)="goToTests()"
                 class="h-12 px-8 rounded-full font-semibold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 active:scale-95">
           <span class="flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,7 +135,7 @@
           </span>
         </button>
 
-        <button nz-button nzType="default" (click)="goToResults()"
+        <button mat-stroked-button (click)="goToResults()"
                 class="h-12 px-8 rounded-full font-semibold border-2 hover:border-blue-500 hover:text-blue-600 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 active:scale-95">
           <span class="flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

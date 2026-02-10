@@ -16,7 +16,9 @@
       @if (authStore.isAuthenticated()) {
         <div class="flex items-center gap-4 bg-gradient-to-r from-blue-50 to-purple-50 pl-5 pr-2 py-2 rounded-full border border-blue-100 shadow-sm hover:shadow-md transition-all duration-300">
           <span class="text-sm font-semibold text-gray-700">{{ authStore.user()?.fullName }}</span>
-          <nz-avatar [nzSize]="36" nzIcon="user" class="bg-gradient-to-br from-blue-600 to-blue-700 shadow-md border-2 border-white"></nz-avatar>
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-600 to-blue-700 shadow-md border-2 border-white flex items-center justify-center">
+            <mat-icon class="text-white" fontIcon="person"></mat-icon>
+          </div>
         </div>
       }
     </div>
@@ -35,14 +37,16 @@
         <div class="flex flex-col items-center text-center relative z-10">
           <div class="relative mb-5">
             <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full blur-xl opacity-30 animate-pulse"></div>
-            <nz-avatar [nzSize]="110" nzIcon="user" class="relative bg-gradient-to-b from-blue-500 to-blue-700 shadow-2xl border-4 border-white ring-4 ring-blue-100"></nz-avatar>
+            <div class="relative w-[110px] h-[110px] rounded-full bg-gradient-to-b from-blue-500 to-blue-700 shadow-2xl border-4 border-white ring-4 ring-blue-100 flex items-center justify-center">
+              <mat-icon class="text-white" fontIcon="person"></mat-icon>
+            </div>
             <div class="absolute -bottom-1 -right-1 bg-green-500 w-6 h-6 rounded-full border-4 border-white shadow-lg animate-pulse"></div>
           </div>
 
           <h3 class="text-2xl font-extrabold text-gray-900 mb-2">{{ authStore.user()?.fullName }}</h3>
-          <nz-tag nzColor="blue" class="rounded-full px-4 py-1 font-bold uppercase text-xs shadow-md">
+          <mat-chip class="rounded-full px-4 py-1 font-bold uppercase text-xs shadow-md bg-blue-600 text-white">
             Foydalanuvchi
-          </nz-tag>
+          </mat-chip>
 
           <div class="mt-4 space-y-2 w-full">
             <div class="flex items-center justify-center gap-2 text-gray-600">

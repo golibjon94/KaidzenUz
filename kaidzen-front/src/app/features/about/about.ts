@@ -1,17 +1,44 @@
 import { Component } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {NzIconModule} from 'ng-zorro-antd/icon';
-import {NzButtonModule} from 'ng-zorro-antd/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import {HeaderComponent} from '../home/components/header/header.component';
 import {FooterComponent} from '../home/components/footer/footer.component';
 
 @Component({
   selector: 'app-about',
-  imports: [CommonModule, NzIconModule, NzButtonModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, MatIconModule, MatButtonModule, HeaderComponent, FooterComponent],
   templateUrl: './about.html',
   styleUrl: './about.css',
 })
 export class About {
+  getMatIcon(icon: string): string {
+    switch (icon) {
+      case 'trophy':
+        return 'emoji_events';
+      case 'project':
+        return 'work';
+      case 'team':
+        return 'groups';
+      case 'smile':
+        return 'sentiment_satisfied';
+
+      case 'star':
+        return 'star';
+      case 'safety':
+        return 'security';
+      case 'bulb':
+        return 'lightbulb';
+      case 'check-circle':
+        return 'check_circle';
+
+      case 'arrow-right':
+        return 'arrow_forward';
+      default:
+        return 'info';
+    }
+  }
+
   stats = [
     { value: '10+', label: 'Yillik tajriba', icon: 'trophy' },
     { value: '500+', label: 'Muvaffaqiyatli loyihalar', icon: 'project' },

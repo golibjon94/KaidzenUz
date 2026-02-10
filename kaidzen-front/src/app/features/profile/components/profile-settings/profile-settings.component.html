@@ -1,23 +1,29 @@
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
   <h3 class="text-lg font-bold mb-6">Profilni tahrirlash</h3>
 
-  <form [formGroup]="form" nz-form nzLayout="vertical" (ngSubmit)="submit()">
-    <nz-form-item>
-      <nz-form-label nzRequired>F.I.SH</nz-form-label>
-      <nz-form-control nzErrorTip="Ismingizni kiriting">
-        <input nz-input formControlName="fullName" placeholder="To'liq ismingiz" />
-      </nz-form-control>
-    </nz-form-item>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-5">
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>F.I.SH</mat-label>
+      <input matInput formControlName="fullName" placeholder="To'liq ismingiz" />
+      @if (form.controls.fullName.touched && form.controls.fullName.invalid) {
+        <mat-error>Ismingizni kiriting</mat-error>
+      }
+    </mat-form-field>
 
-    <nz-form-item>
-      <nz-form-label>Manzil</nz-form-label>
-      <nz-form-control>
-        <input nz-input formControlName="address" placeholder="Manzilingiz" />
-      </nz-form-control>
-    </nz-form-item>
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Manzil</mat-label>
+      <input matInput formControlName="address" placeholder="Manzilingiz" />
+    </mat-form-field>
 
     <div class="flex justify-end">
-      <button nz-button nzType="primary" [nzLoading]="loading()">Saqlash</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="loading()">
+        <span class="inline-flex items-center gap-3">
+          @if (loading()) {
+            <mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner>
+          }
+          Saqlash
+        </span>
+      </button>
     </div>
   </form>
 </div>

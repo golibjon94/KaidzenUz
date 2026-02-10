@@ -1,18 +1,11 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzRadioModule } from 'ng-zorro-antd/radio';
-import { NzResultModule } from 'ng-zorro-antd/result';
-import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
-import { NzProgressModule } from 'ng-zorro-antd/progress';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { NzEmptyModule } from 'ng-zorro-antd/empty';
-import { NzTagModule } from 'ng-zorro-antd/tag';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { TestsService } from '../../../../core/services/tests.service';
 import { Test, TestResult, SubmitTestDto } from '../../../../core/models/test.model';
+import { ConfirmDialogComponent } from '../../../../core/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-user-tests',
@@ -20,23 +13,15 @@ import { Test, TestResult, SubmitTestDto } from '../../../../core/models/test.mo
   imports: [
     CommonModule,
     FormsModule,
-    NzCardModule,
-    NzButtonModule,
-    NzIconModule,
-    NzRadioModule,
-    NzResultModule,
-    NzSkeletonModule,
-    NzProgressModule,
-    NzModalModule,
-    NzEmptyModule,
-    NzTagModule
+    MatButtonModule,
+    MatDialogModule,
   ],
   templateUrl: './user-tests.component.html',
   styleUrl: './user-tests.component.css',
 })
 export class UserTestsComponent implements OnInit {
   private testsService = inject(TestsService);
-  private modal = inject(NzModalService);
+  private dialog = inject(MatDialog);
 
   tests = signal<Test[]>([]);
   selectedTest = signal<Test | null>(null);
@@ -225,12 +210,20 @@ export class UserTestsComponent implements OnInit {
   }
 
   confirmSubmit() {
-    this.modal.confirm({
-      nzTitle: 'Testni yakunlash',
-      nzContent: 'Haqiqatan ham testni yakunlamoqchimisiz? Javoblarni qayta o\'zgartirib bo\'lmaydi.',
-      nzOkText: 'Ha, yakunlash',
-      nzCancelText: 'Bekor qilish',
-      nzOnOk: () => this.submitTest()
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Testni yakunlash',
+        message: 'Haqiqatan ham testni yakunlamoqchimisiz? Javoblarni qayta o\'zgartirib bo\'lmaydi.',
+        okText: 'Ha, yakunlash',
+        cancelText: 'Bekor qilish',
+      },
+      width: '560px',
+    });
+
+    ref.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.submitTest();
+      }
     });
   }
 

@@ -1,101 +1,123 @@
 import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
-import { RouterOutlet, RouterLink } from '@angular/router';
-import { NzLayoutModule } from 'ng-zorro-antd/layout';
-import { NzMenuModule } from 'ng-zorro-antd/menu';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzAvatarModule } from 'ng-zorro-antd/avatar';
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { CommonModule } from '@angular/common';
+
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
   imports: [
+    CommonModule,
     RouterOutlet,
     RouterLink,
-    NzLayoutModule,
-    NzMenuModule,
-    NzIconModule,
-    NzButtonModule,
-    NzAvatarModule,
-    NzDropDownModule
+    RouterLinkActive,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatListModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatDividerModule,
   ],
   template: `
-    <nz-layout class="min-h-screen">
-      <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null" class="bg-white border-r">
-        <div class="h-16 flex items-center justify-center border-b overflow-hidden">
+    <mat-sidenav-container class="min-h-screen bg-gray-50">
+      <mat-sidenav
+        class="bg-white border-r"
+        [mode]="'side'"
+        [opened]="!isCollapsed()"
+        [fixedInViewport]="true"
+        [fixedTopGap]="0"
+      >
+        <div class="h-16 flex items-center justify-center border-b overflow-hidden px-4">
           <div class="flex items-center gap-2">
             <div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center shrink-0">
               <span class="text-white font-bold text-lg">K</span>
             </div>
-            @if (!isCollapsed()) {
-              <span class="text-lg font-bold text-gray-800">Admin Panel</span>
-            }
+            <span class="text-lg font-bold text-gray-800">Admin Panel</span>
           </div>
         </div>
-        <ul nz-menu nzMode="inline" class="border-none mt-2">
-          <li nz-menu-item nzSelected routerLink="/admin/dashboard">
-            <span nz-icon nzType="dashboard"></span>
-            <span>Dashboard</span>
-          </li>
-          <li nz-menu-item routerLink="/admin/users">
-            <span nz-icon nzType="team"></span>
-            <span>Foydalanuvchilar</span>
-          </li>
-          <li nz-menu-item routerLink="/admin/diagnostics">
-            <span nz-icon nzType="solution"></span>
-            <span>Diagnostikalar</span>
-          </li>
-          <li nz-menu-item routerLink="/admin/consultants">
-            <span nz-icon nzType="solution"></span>
-            <span>Konsultantlar</span>
-          </li>
-          <li nz-submenu nzTitle="Sozlamalar" nzIcon="setting">
-            <ul>
-              <li nz-menu-item>Profil</li>
-              <li nz-menu-item>Tizim</li>
-            </ul>
-          </li>
-        </ul>
-      </nz-sider>
-      <nz-layout>
-        <nz-header class="bg-white border-b px-6 flex items-center justify-between">
-          <span
-            class="text-xl cursor-pointer hover:text-blue-600 transition-colors"
-            nz-icon
-            [nzType]="isCollapsed() ? 'menu-unfold' : 'menu-fold'"
-            (click)="isCollapsed.set(!isCollapsed())"
-          ></span>
 
-          <div class="flex items-center gap-4">
-            <div nz-dropdown [nzDropdownMenu]="userMenu" class="cursor-pointer flex items-center gap-2">
-              <nz-avatar nzIcon="user" class="bg-blue-600"></nz-avatar>
+        <mat-nav-list>
+          <a mat-list-item routerLink="/admin/dashboard" routerLinkActive="active">
+            <mat-icon class="mr-3" fontIcon="dashboard"></mat-icon>
+            <span>Dashboard</span>
+          </a>
+          <a mat-list-item routerLink="/admin/users" routerLinkActive="active">
+            <mat-icon class="mr-3" fontIcon="group"></mat-icon>
+            <span>Foydalanuvchilar</span>
+          </a>
+          <a mat-list-item routerLink="/admin/diagnostics" routerLinkActive="active">
+            <mat-icon class="mr-3" fontIcon="assignment"></mat-icon>
+            <span>Diagnostikalar</span>
+          </a>
+          <a mat-list-item routerLink="/admin/consultants" routerLinkActive="active">
+            <mat-icon class="mr-3" fontIcon="support_agent"></mat-icon>
+            <span>Konsultantlar</span>
+          </a>
+
+          <mat-divider class="my-2"></mat-divider>
+
+          <div class="px-4 pt-2 pb-1 text-xs font-semibold text-gray-500 uppercase">Sozlamalar</div>
+          <a mat-list-item routerLink="/admin/profile" routerLinkActive="active">
+            <mat-icon class="mr-3" fontIcon="person"></mat-icon>
+            <span>Profil</span>
+          </a>
+          <a mat-list-item routerLink="/admin/settings" routerLinkActive="active">
+            <mat-icon class="mr-3" fontIcon="settings"></mat-icon>
+            <span>Tizim</span>
+          </a>
+        </mat-nav-list>
+      </mat-sidenav>
+
+      <mat-sidenav-content>
+        <mat-toolbar class="bg-white border-b px-6 flex items-center justify-between" color="">
+          <button mat-icon-button type="button" (click)="isCollapsed.set(!isCollapsed())">
+            <mat-icon [fontIcon]="isCollapsed() ? 'menu' : 'menu_open'"></mat-icon>
+          </button>
+
+          <div class="flex items-center gap-3">
+            <button
+              mat-button
+              type="button"
+              [matMenuTriggerFor]="userMenu"
+              class="flex items-center gap-2"
+            >
+              <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white">
+                <mat-icon fontIcon="person"></mat-icon>
+              </span>
               <span class="font-medium">Administrator</span>
-              <span nz-icon nzType="down" class="text-xs text-gray-400"></span>
-            </div>
-            <nz-dropdown-menu #userMenu="nzDropdownMenu">
-              <ul nz-menu>
-                <li nz-menu-item routerLink="/admin/profile">Profil</li>
-                <li nz-menu-divider></li>
-                <li nz-menu-item class="text-red-500">Chiqish</li>
-              </ul>
-            </nz-dropdown-menu>
+              <mat-icon class="text-gray-400" fontIcon="arrow_drop_down"></mat-icon>
+            </button>
+            <mat-menu #userMenu="matMenu">
+              <button mat-menu-item routerLink="/admin/profile">
+                <mat-icon fontIcon="person"></mat-icon>
+                <span>Profil</span>
+              </button>
+              <mat-divider></mat-divider>
+              <button mat-menu-item class="text-red-500">
+                <mat-icon fontIcon="logout"></mat-icon>
+                <span>Chiqish</span>
+              </button>
+            </mat-menu>
           </div>
-        </nz-header>
-        <nz-content class="p-6 bg-gray-50">
+        </mat-toolbar>
+
+        <div class="p-6 bg-gray-50">
           <div class="bg-white min-h-[calc(100vh-148px)] rounded-lg p-6 shadow-sm border">
             <router-outlet></router-outlet>
           </div>
-        </nz-content>
-      </nz-layout>
-    </nz-layout>
+        </div>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
   `,
-  styles: [`
-    :host ::ng-deep .ant-layout-header {
-      background: #fff;
-      padding: 0 24px;
-    }
-  `],
+  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminLayoutComponent {
