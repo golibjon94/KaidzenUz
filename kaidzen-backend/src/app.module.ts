@@ -12,6 +12,8 @@ import { BlogModule } from './blog/blog.module';
 import { CasesModule } from './cases/cases.module';
 import { ApplicationsModule } from './applications/applications.module';
 import { FileModule } from './file/file.module';
+import { DiagnosticsModule } from './diagnostics/diagnostics.module';
+import { SalesNetworksModule } from './sales-networks/sales-networks.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
 
@@ -33,6 +35,8 @@ import { RolesGuard } from './auth/guards/roles.guard';
     CasesModule,
     ApplicationsModule,
     FileModule,
+    DiagnosticsModule,
+    SalesNetworksModule,
   ],
   controllers: [],
   providers: [

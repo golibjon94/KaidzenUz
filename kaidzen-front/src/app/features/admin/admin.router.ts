@@ -63,6 +63,16 @@ export const ADMIN_ROUTES: Routes = [
         path: 'applications',
         loadComponent: () => import('./components/apps-list/apps-list.component').then(m => m.AppsListComponent),
         title: 'Arizalar - Kaidzen.uz'
+      },
+      {
+        path: 'diagnostics',
+        loadComponent: () => import('./components/diagnostics/diagnostics').then(m => m.Diagnostics),
+        title: 'Diagnostikalar - Kaidzen.uz'
+      },
+      {
+        path: 'sales-networks',
+        loadComponent: () => import('./components/sales-networks/sales-networks').then(m => m.SalesNetworks),
+        title: 'Savdo tarmoqlari - Kaidzen.uz'
       }
     ]
   }

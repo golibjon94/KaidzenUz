@@ -84,12 +84,12 @@ model Application {
 // ============================================
 
 model Test {
-  id               String  @id @default(uuid())
-  title            String
-  slug             String  @unique
-  description      String?
-  isActive         Boolean @default(true) @map("is_active")
-  startQuestionId  String? @map("start_question_id")
+  id              String  @id @default(uuid())
+  title           String
+  slug            String  @unique
+  description     String?
+  isActive        Boolean @default(true) @map("is_active")
+  startQuestionId String? @map("start_question_id")
 
   questions   Question[]
   resultLogic ResultLogic[]
@@ -217,4 +217,28 @@ model BusinessCase {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("business_cases")
+}
+
+// ============================================
+// ADMIN LOOKUPS (simple CRUD)
+// ============================================
+
+model Diagnostic {
+  id   String @id @default(uuid())
+  name String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("diagnostics")
+}
+
+model SalesNetwork {
+  id   String @id @default(uuid())
+  name String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("sales_networks")
 }

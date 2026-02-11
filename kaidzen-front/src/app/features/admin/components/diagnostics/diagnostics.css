@@ -1,0 +1,43 @@
+.admin-crud {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-crud__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.admin-crud__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.admin-crud__subtitle {
+  margin: 4px 0 0;
+  color: #757575;
+}
+
+.admin-crud__toolbar {
+  max-width: 520px;
+}
+
+.admin-crud__table {
+  position: relative;
+}
+
+.admin-crud__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-crud__loading {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+}
