@@ -1,3 +1,68 @@
+/* Clean table */
+.clean-table {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.clean-table .mat-mdc-header-row {
+  background: #f8fafc;
+}
+
+.clean-table .mat-mdc-header-cell {
+  color: #475569;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  padding: 16px !important;
+}
+
+.clean-table .mat-mdc-cell {
+  padding: 12px 16px !important;
+  color: #1e293b;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.clean-table .mat-mdc-row:hover {
+  background: #f1f5f9;
+}
+
+/* Cell styles */
+.cell-mono {
+  font-variant-numeric: tabular-nums;
+  font-family: monospace;
+  font-size: 0.875rem;
+  color: #1e293b;
+}
+
+/* Phone cell with copy button */
+.phone-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.copy-btn {
+  width: 28px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+}
+
+.copy-btn:hover {
+  opacity: 1;
+}
+
+/* Status cell */
+.status-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 ::ng-deep .status-select {
   width: 180px;
 }
@@ -38,4 +103,39 @@
 ::ng-deep .status-select.mat-focused .mdc-notched-outline__trailing {
   border-color: #6366f1 !important;
   border-width: 2px !important;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.badge-pending {
+  background: #f5f5f5;
+  color: #9e9e9e;
+}
+
+.badge-pending .badge-dot {
+  background: #bdbdbd;
+}
+
+.badge-contacted {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge-contacted .badge-dot {
+  background: #4caf50;
 }

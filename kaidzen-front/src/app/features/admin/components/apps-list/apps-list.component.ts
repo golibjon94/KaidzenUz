@@ -1,11 +1,15 @@
-import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy, ViewChild, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatTableModule } from '@angular/material/table';
+import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AdminAppsService } from '../../services/admin-apps.service';
 import { Application } from '../../../../core/models/application.model';
 import { ApplicationStatus } from '../../../../core/models/enums';
@@ -17,11 +21,15 @@ import { NotifyService } from '../../../../core/services/notify.service';
   imports: [
     CommonModule,
     FormsModule,
+    ClipboardModule,
     MatTableModule,
+    MatPaginatorModule,
     MatSelectModule,
     MatFormFieldModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
   ],
   templateUrl: './apps-list.component.html',
   styleUrl: './apps-list.component.css',
@@ -30,11 +38,32 @@ import { NotifyService } from '../../../../core/services/notify.service';
 export class AppsListComponent implements OnInit {
   private appsService = inject(AdminAppsService);
   private notify = inject(NotifyService);
+  private clipboard = inject(Clipboard);
 
   apps = signal<Application[]>([]);
+  dataSource = new MatTableDataSource<Application>([]);
   loading = signal(true);
-  statuses = Object.values(ApplicationStatus);
-  displayedColumns: string[] = ['fullName', 'phone', 'companyName', 'message', 'status', 'createdAt'];
+
+  statuses: ApplicationStatus[] = [ApplicationStatus.PENDING, ApplicationStatus.CONTACTED];
+
+  displayedColumns: string[] = ['position', 'fullName', 'phone', 'status'];
+
+  @ViewChild(MatPaginator) set paginator(content: MatPaginator | undefined) {
+    if (content) {
+      this.dataSource.paginator = content;
+      this._paginator = content;
+    }
+  }
+  private _paginator?: MatPaginator;
+  get paginator(): MatPaginator | undefined {
+    return this._paginator;
+  }
+
+  constructor() {
+    effect(() => {
+      this.dataSource.data = this.apps();
+    });
+  }
 
   ngOnInit() {
     this.loadApps();
@@ -54,6 +83,11 @@ export class AppsListComponent implements OnInit {
     });
   }
 
+  copyPhone(phone: string) {
+    this.clipboard.copy(phone);
+    this.notify.success('Telefon raqami nusxalandi');
+  }
+
   updateStatus(id: string, status: any) {
     this.appsService.updateStatus(id, status as ApplicationStatus).subscribe({
       next: () => {
@@ -67,32 +101,18 @@ export class AppsListComponent implements OnInit {
   }
 
   getStatusLabel(status: ApplicationStatus): string {
-    const labels: Record<ApplicationStatus, string> = {
-      [ApplicationStatus.PENDING]: 'Yangi',
-      [ApplicationStatus.CONTACTED]: 'Jarayonda',
-      [ApplicationStatus.COMPLETED]: 'Yakunlandi',
-      [ApplicationStatus.REJECTED]: 'Bekor qilindi'
+    const labels: Partial<Record<ApplicationStatus, string>> = {
+      [ApplicationStatus.PENDING]: 'Gaplashilmagan',
+      [ApplicationStatus.CONTACTED]: 'Gaplashilgan',
     };
     return labels[status] || status;
   }
 
-  getStatusClass(status: ApplicationStatus): string {
-    const classes: Record<ApplicationStatus, string> = {
-      [ApplicationStatus.PENDING]: 'text-blue-600 font-semibold',
-      [ApplicationStatus.CONTACTED]: 'text-orange-600 font-semibold',
-      [ApplicationStatus.COMPLETED]: 'text-green-600 font-semibold',
-      [ApplicationStatus.REJECTED]: 'text-red-600 font-semibold'
-    };
-    return classes[status] || 'text-gray-600';
-  }
-
   getStatusBadgeClass(status: ApplicationStatus): string {
-    const classes: Record<ApplicationStatus, string> = {
-      [ApplicationStatus.PENDING]: 'bg-blue-100 text-blue-700 border border-blue-200',
-      [ApplicationStatus.CONTACTED]: 'bg-orange-100 text-orange-700 border border-orange-200',
-      [ApplicationStatus.COMPLETED]: 'bg-green-100 text-green-700 border border-green-200',
-      [ApplicationStatus.REJECTED]: 'bg-red-100 text-red-700 border border-red-200'
+    const classes: Partial<Record<ApplicationStatus, string>> = {
+      [ApplicationStatus.PENDING]: 'badge-pending',
+      [ApplicationStatus.CONTACTED]: 'badge-contacted',
     };
-    return classes[status] || 'bg-gray-100 text-gray-700';
+    return classes[status] || 'badge-pending';
   }
 }
