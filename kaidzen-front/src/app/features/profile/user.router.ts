@@ -12,22 +12,22 @@ export const USER_ROUTES: Routes = [
       {
         path: 'overview',
         loadComponent: () => import('./profile-overview.component').then(m => m.ProfileOverviewComponent),
-        title: 'Mening profilim - Kaidzen.uz'
+        title: 'Mening profilim - Sarash.uz'
       },
       {
         path: 'tests',
         loadComponent: () => import('./components/user-tests/user-tests.component').then(m => m.UserTestsComponent),
-        title: 'Mening testlarim - Kaidzen.uz'
+        title: 'Mening testlarim - Sarash.uz'
       },
       {
         path: 'results',
         loadComponent: () => import('./components/test-results/test-results.component').then(m => m.TestResultsComponent),
-        title: 'Test natijalari - Kaidzen.uz'
+        title: 'Test natijalari - Sarash.uz'
       },
       {
         path: 'settings',
         loadComponent: () => import('./components/profile-settings/profile-settings.component').then(m => m.ProfileSettingsComponent),
-        title: 'Sozlamalar - Kaidzen.uz'
+        title: 'Sozlamalar - Sarash.uz'
       }
     ]
   }

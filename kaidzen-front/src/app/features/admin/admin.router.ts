@@ -6,7 +6,7 @@ export const ADMIN_ROUTES: Routes = [
   {
     path: 'login',
     loadComponent: () => import('./admin-login.component').then(m => m.AdminLoginComponent),
-    title: 'Admin Login - Kaidzen.uz'
+    title: 'Admin Login - Sarash.uz'
   },
   {
     path: '',
@@ -17,62 +17,62 @@ export const ADMIN_ROUTES: Routes = [
       {
         path: 'dashboard',
         loadComponent: () => import('./admin-dashboard.component').then(m => m.AdminDashboardComponent),
-        title: 'Admin Dashboard - Kaidzen.uz'
+        title: 'Admin Dashboard - Sarash.uz'
       },
       {
         path: 'users',
         loadComponent: () => import('./components/users-list/users-list.component').then(m => m.UsersListComponent),
-        title: 'Foydalanuvchilar - Kaidzen.uz'
+        title: 'Foydalanuvchilar - Sarash.uz'
       },
       {
         path: 'tests',
         loadComponent: () => import('./components/tests-mgmt/tests-mgmt.component').then(m => m.TestsMgmtComponent),
-        title: 'Testlar boshqaruvi - Kaidzen.uz'
+        title: 'Testlar boshqaruvi - Sarash.uz'
       },
       {
         path: 'tests/add',
         loadComponent: () => import('./components/tests-mgmt/add-test/add-test').then(m => m.AddTest),
-        title: 'Yangi test yaratish - Kaidzen.uz'
+        title: 'Yangi test yaratish - Sarash.uz'
       },
       {
         path: 'tests/edit/:id',
         loadComponent: () => import('./components/tests-mgmt/add-test/add-test').then(m => m.AddTest),
-        title: 'Testni tahrirlash - Kaidzen.uz'
+        title: 'Testni tahrirlash - Sarash.uz'
       },
       {
         path: 'blog',
         loadComponent: () => import('./components/blog-mgmt/blog-mgmt.component').then(m => m.BlogMgmtComponent),
-        title: 'Blog boshqaruvi - Kaidzen.uz'
+        title: 'Blog boshqaruvi - Sarash.uz'
       },
       {
         path: 'blog/add',
         loadComponent: () => import('./components/blog-mgmt/add-blog/add-blog').then(m => m.AddBlog),
-        title: 'Yangi blog yaratish - Kaidzen.uz'
+        title: 'Yangi blog yaratish - Sarash.uz'
       },
       {
         path: 'blog/edit/:id',
         loadComponent: () => import('./components/blog-mgmt/add-blog/add-blog').then(m => m.AddBlog),
-        title: 'Blogni tahrirlash - Kaidzen.uz'
+        title: 'Blogni tahrirlash - Sarash.uz'
       },
       {
         path: 'cases',
         loadComponent: () => import('./components/cases-mgmt/cases-mgmt.component').then(m => m.CasesMgmtComponent),
-        title: 'Keyslar boshqaruvi - Kaidzen.uz'
+        title: 'Keyslar boshqaruvi - Sarash.uz'
       },
       {
         path: 'applications',
         loadComponent: () => import('./components/apps-list/apps-list.component').then(m => m.AppsListComponent),
-        title: 'Arizalar - Kaidzen.uz'
+        title: 'Arizalar - Sarash.uz'
       },
       {
         path: 'diagnostics',
         loadComponent: () => import('./components/diagnostics/diagnostics').then(m => m.Diagnostics),
-        title: 'Diagnostikalar - Kaidzen.uz'
+        title: 'Diagnostikalar - Sarash.uz'
       },
       {
         path: 'sales-networks',
         loadComponent: () => import('./components/sales-networks/sales-networks').then(m => m.SalesNetworks),
-        title: 'Savdo tarmoqlari - Kaidzen.uz'
+        title: 'Savdo tarmoqlari - Sarash.uz'
       }
     ]
   }

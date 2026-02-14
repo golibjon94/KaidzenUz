@@ -57,7 +57,7 @@ export class HomeComponent implements OnInit {
   tests = signal<Test[]>([]);
 
   ngOnInit() {
-    this.titleService.setTitle('Kaidzen.uz - Professional Biznes Diagnostika va Konsalting');
+    this.titleService.setTitle('Sarash.uz - Professional Biznes Diagnostika va Konsalting');
     this.metaService.updateTag({ name: 'description', content: 'Biznesingizni yangi bosqichga olib chiqish uchun professional diagnostika va konsalting xizmatlari.' });
 
     this.loadData();

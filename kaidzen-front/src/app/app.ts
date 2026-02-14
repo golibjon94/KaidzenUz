@@ -14,7 +14,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   styleUrl: './app.css'
 })
 export class App implements OnInit {
-  protected readonly title = signal('kaidzen-front');
+  protected readonly title = signal('Sarash-front');
   loading = signal(false);
   private authService = inject(AuthService);
   private authStore = inject(AuthStore);

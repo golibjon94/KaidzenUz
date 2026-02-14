@@ -40,34 +40,34 @@ export class About {
   }
 
   stats = [
-    { value: '10+', label: 'Yillik tajriba', icon: 'trophy' },
-    { value: '500+', label: 'Muvaffaqiyatli loyihalar', icon: 'project' },
-    { value: '50+', label: 'Professional ekspertlar', icon: 'team' },
+    { value: '5+', label: 'Yillik tajriba', icon: 'trophy' },
+    { value: '100+', label: 'Muvaffaqiyatli loyihalar', icon: 'project' },
+    { value: '20+', label: 'Professional ekspertlar', icon: 'team' },
     { value: '98%', label: 'Mijozlar mamnunligi', icon: 'smile' }
   ];
 
   values = [
     {
-      title: 'Professionallik',
-      description: 'Har bir loyihaga yuqori malakali mutaxassislar bilan yondashuvni ta\'minlaymiz',
+      title: 'Chuqur diagnostika',
+      description: 'Har bir loyihani kompaniyaning real holatini, boshqaruv tizimini, operatsion jarayonlarini va moliyaviy ko\'rsatkichlarini kompleks baholashdan boshlaymiz',
       icon: 'star',
       color: 'blue'
     },
     {
-      title: 'Ishonchlilik',
-      description: 'Mijozlarimiz bilan uzoq muddatli va ishonchli munosabatlar o\'rnatamiz',
+      title: 'Tizimli yechimlar',
+      description: 'Muammolarning ildiz sabablarini aniqlab, tizimli va o\'lchanadigan yechimlarni ishlab chiqamiz',
       icon: 'safety',
       color: 'green'
     },
     {
-      title: 'Innovatsiya',
-      description: 'Zamonaviy texnologiyalar va yangicha yondashuvlardan foydalanamiz',
+      title: 'Amaliy transformatsiya',
+      description: 'Bizning yondashuvimiz — nazariy maslahat emas, balki amaliy transformatsiya',
       icon: 'bulb',
       color: 'purple'
     },
     {
-      title: 'Natija',
-      description: 'Mijozlarimizning maqsadlariga erishishga yo\'naltirilgan strategiyalar ishlab chiqamiz',
+      title: 'Barqaror natija',
+      description: 'Kompaniyani tartibsiz boshqaruvdan tizimli boshqaruvga olib chiqish, yashirin imkoniyatlarni ochish va barqaror natijaga erishish',
       icon: 'check-circle',
       color: 'orange'
     }
@@ -118,29 +118,29 @@ export class About {
 
   timeline = [
     {
-      year: '2015',
+      year: '2020',
       title: 'Kompaniya tashkil etildi',
-      description: 'Kichik jamoamiz bilan biznes konsalting xizmatlarini taqdim eta boshladik'
-    },
-    {
-      year: '2017',
-      title: '100+ muvaffaqiyatli loyiha',
-      description: 'Turli sohalarda 100 dan ortiq kompaniyalarga xizmat ko\'rsatdik'
-    },
-    {
-      year: '2019',
-      title: 'Xalqaro sertifikatlar',
-      description: 'Xalqaro standartlar bo\'yicha sertifikatlashdan o\'tdik'
+      description: 'SARASH LEAN ADVISORY LLC biznes jarayonlarini tizimlashtirish va samaradorlikni oshirish maqsadida tashkil etildi'
     },
     {
       year: '2021',
-      title: 'Raqamli platformani ishga tushirish',
-      description: 'Online diagnostika va konsalting xizmatlarini boshladik'
+      title: 'Birinchi yirik loyihalar',
+      description: 'Ishlab chiqarish va savdo sohalarida operatsion diagnostika loyihalarini muvaffaqiyatli amalga oshirdik'
+    },
+    {
+      year: '2022',
+      title: 'Xizmatlar kengayishi',
+      description: 'Xizmat ko\'rsatish va ofis boshqaruvi sohalariga ham konsalting xizmatlarini kengaytirdik'
+    },
+    {
+      year: '2023',
+      title: 'Lean metodologiyasi',
+      description: 'Lean yondashuvini chuqur joriy etib, mijozlarga amaliy transformatsiya xizmatlarini taqdim eta boshladik'
     },
     {
       year: '2024',
-      title: 'Mintaqaviy kengayish',
-      description: 'Markaziy Osiyo bo\'ylab xizmatlarimizni kengaytirdik'
+      title: 'Strategik hamkorlik',
+      description: '100 dan ortiq kompaniyalarga strategik hamkor sifatida xizmat ko\'rsatib, barqaror natijalarni qayd etdik'
     }
   ];
 }
