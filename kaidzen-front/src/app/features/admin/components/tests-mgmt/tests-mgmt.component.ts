@@ -51,7 +51,7 @@ export class TestsMgmtComponent implements OnInit {
   tests = signal<Test[]>([]);
   dataSource = new MatTableDataSource<Test>([]);
   loading = signal(false);
-  displayedColumns: string[] = ['position', 'title', 'slug', 'questions', 'status', 'actions'];
+  displayedColumns: string[] = ['position', 'title', 'createdAt', 'questions', 'status', 'actions'];
 
   @ViewChild(MatPaginator) set paginator(content: MatPaginator | undefined) {
     if (content) {

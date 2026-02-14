@@ -183,6 +183,18 @@
           </button>
         }
       </div>
+      @if (questions.length > 0) {
+        <div class="flex items-end justify-end gap-2">
+          <button mat-button (click)="goBack()" [disabled]="isSubmitting()">Bekor qilish</button>
+          <button mat-flat-button color="primary" (click)="submitForm()" [disabled]="isSubmitting()">
+            @if (isSubmitting()) {
+              <mat-spinner diameter="18" class="inline-block mr-2"></mat-spinner>
+            }
+            <mat-icon>save</mat-icon>
+            {{ editMode() ? 'Yangilash' : 'Saqlash' }}
+          </button>
+        </div>
+      }
     </form>
   }
 </div>
