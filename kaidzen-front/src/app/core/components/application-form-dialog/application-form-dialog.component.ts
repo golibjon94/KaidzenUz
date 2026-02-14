@@ -66,20 +66,25 @@ import { NotifyService } from '../../services/notify.service';
         </mat-form-field>
 
         <!-- Phone -->
-        <mat-form-field appearance="outline" class="form-field-full">
-          <mat-label>Telefon raqam</mat-label>
-          <mat-icon matPrefix class="field-icon">phone_outlined</mat-icon>
-          <input
-            matInput
-            formControlName="phone"
-            required
-            placeholder="+998 90 123 45 67"
-          />
+        <div class="phone-row">
+          <div class="phone-prefix">
+            <mat-icon class="field-icon">phone_outlined</mat-icon>
+            <span class="prefix-text">+998</span>
+          </div>
+          <mat-form-field appearance="outline" class="form-field-phone">
+            <mat-label>Telefon raqam</mat-label>
+            <input
+              matInput
+              formControlName="phone"
+              required
+              placeholder="90 123 45 67"
+            />
           @if (form.get('phone')?.hasError('required') &&
           form.get('phone')?.touched) {
             <mat-error>Telefon raqam kiritish majburiy</mat-error>
           }
         </mat-form-field>
+        </div>
 
         <!-- Company Name -->
         <mat-form-field appearance="outline" class="form-field-full">
@@ -245,6 +250,43 @@ import { NotifyService } from '../../services/notify.service';
 
       .form-field-full {
         width: 100%;
+      }
+
+      .phone-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .phone-prefix {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        height: 56px;
+        padding: 0 12px;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        background: #f5f5f5;
+        color: #757575;
+        font-size: 0.9rem;
+        font-weight: 600;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .phone-prefix .field-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: #9e9e9e;
+      }
+
+      .prefix-text {
+        color: #616161;
+      }
+
+      .form-field-phone {
+        flex: 1;
       }
 
       /* Icon inside fields */
@@ -426,7 +468,8 @@ export class ApplicationFormDialogComponent {
   onSubmit() {
     if (this.form.invalid || this.loading) return;
     this.loading = true;
-    this.service.submitApplication(this.form.value as any).subscribe({
+    const formValue = { ...this.form.value, phone: `+998${this.form.value.phone}` };
+    this.service.submitApplication(formValue as any).subscribe({
       next: () => {
         this.notify.success(
           "Arizangiz muvaffaqiyatli yuborildi. Tez orada bog'lanamiz"
