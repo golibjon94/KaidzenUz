@@ -10,13 +10,17 @@
   <mat-dialog-content>
     <form [formGroup]="caseForm" class="form-grid">
 
-      <!-- Title - full width -->
+      <!-- Sales Network - full width -->
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Sarlavha</mat-label>
-        <input matInput formControlName="title" placeholder="Keys sarlavhasi">
-        <mat-icon matPrefix>title</mat-icon>
-        <mat-error *ngIf="caseForm.get('title')?.hasError('required')">
-          Sarlavhani kiriting
+        <mat-label>Savdo tarmog'i</mat-label>
+        <mat-select formControlName="salesNetworkId">
+          <mat-option *ngFor="let sn of salesNetworks()" [value]="sn.id">
+            {{ sn.name }}
+          </mat-option>
+        </mat-select>
+        <mat-icon matPrefix>store</mat-icon>
+        <mat-error *ngIf="caseForm.get('salesNetworkId')?.hasError('required')">
+          Savdo tarmog'ini tanlang
         </mat-error>
       </mat-form-field>
 
@@ -40,24 +44,36 @@
         </mat-error>
       </mat-form-field>
 
-      <!-- Result -->
-      <mat-form-field appearance="outline">
+      <!-- Result (FULL WIDTH) -->
+      <mat-form-field appearance="outline" class="full-width">
         <mat-label>Natija</mat-label>
-        <textarea matInput formControlName="result" rows="4"
-                  placeholder="Qanday natija olindi?"></textarea>
+        <textarea
+          matInput
+          formControlName="result"
+          rows="4"
+          placeholder="Qanday natija olindi?"
+        ></textarea>
         <mat-error *ngIf="caseForm.get('result')?.hasError('required')">
           Natijani kiriting
         </mat-error>
       </mat-form-field>
 
-      <!-- Date - native input -->
-      <mat-form-field appearance="outline">
-        <mat-label>Sana</mat-label>
-        <input matInput formControlName="date" type="date">
-        <mat-error *ngIf="caseForm.get('date')?.hasError('required')">
-          Sanani kiriting
-        </mat-error>
-      </mat-form-field>
+      <!-- Dates row (bottom, side-by-side) -->
+      <div class="date-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Dan</mat-label>
+          <input matInput [matDatepicker]="pickerFrom" formControlName="dateFrom"/>
+          <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFrom></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Gacha</mat-label>
+          <input matInput [matDatepicker]="pickerTo" formControlName="dateTo"/>
+          <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+          <mat-datepicker #pickerTo></mat-datepicker>
+        </mat-form-field>
+      </div>
     </form>
   </mat-dialog-content>
 

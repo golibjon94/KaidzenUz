@@ -188,12 +188,15 @@ model BlogPost {
 // ============================================
 
 model BusinessCase {
-  id       String   @id @default(uuid())
-  title    String
-  problem  String   @db.Text
-  solution String   @db.Text
-  result   String   @db.Text
-  date     DateTime
+  id             String    @id @default(uuid())
+  salesNetworkId String    @map("sales_network_id")
+  problem        String    @db.Text
+  solution       String    @db.Text
+  result         String    @db.Text
+  dateFrom       DateTime? @map("date_from")
+  dateTo         DateTime? @map("date_to")
+
+  salesNetwork SalesNetwork @relation(fields: [salesNetworkId], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -218,6 +221,8 @@ model Diagnostic {
 model SalesNetwork {
   id   String @id @default(uuid())
   name String
+
+  businessCases BusinessCase[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

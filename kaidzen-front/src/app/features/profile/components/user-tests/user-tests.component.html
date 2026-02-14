@@ -104,23 +104,10 @@
               </button>
               <div class="flex-1">
                 <h2 class="text-2xl font-bold text-gray-900 mb-1">{{ selectedTest()!.title }}</h2>
-                <p class="text-gray-500">Savollar soni: {{ selectedTest()?.questions?.length || 0 }}</p>
-              </div>
-              <div class="text-right">
-                <p class="text-sm text-gray-500 mb-1">Savol</p>
-                <p class="text-2xl font-bold text-blue-600">
-                  {{ currentQuestionIndex() + 1 }} / {{ selectedTest()?.questions?.length || 0 }}
-                </p>
               </div>
             </div>
 
-            <div class="relative">
-              <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
-                <div class="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full transition-all duration-500 shadow-lg"
-                     [style.width.%]="progress()"></div>
-              </div>
-              <p class="text-sm text-gray-600 text-center mt-2 font-medium">{{ progress() }}% yakunlandi</p>
-            </div>
+<!-- -->
           </div>
 
           <!-- Question Card -->

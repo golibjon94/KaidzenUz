@@ -1,18 +1,20 @@
 export interface CreateCaseDto {
-  title: string;
+  salesNetworkId: string;
   problem: string;
   solution: string;
   result: string;
-  date: string;
+  dateFrom?: string;
+  dateTo?: string;
 }
-
 export interface BusinessCase {
   id: string;
-  title: string;
+  salesNetworkId: string;
+  salesNetwork?: { id: string; name: string };
   problem: string;
   solution: string;
   result: string;
-  date: Date;
+  dateFrom?: Date;
+  dateTo?: Date;
   createdAt: Date;
   updatedAt: Date;
 }

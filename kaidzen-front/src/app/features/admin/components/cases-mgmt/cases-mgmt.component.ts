@@ -45,7 +45,7 @@ export class CasesMgmtComponent implements OnInit {
   cases = signal<BusinessCase[]>([]);
   dataSource = new MatTableDataSource<BusinessCase>([]);
   loading = signal(true);
-  displayedColumns: string[] = ['position', 'title', 'problem', 'solution', 'date', 'actions'];
+  displayedColumns: string[] = ['position', 'salesNetwork', 'problem', 'solution', 'date', 'actions'];
 
   @ViewChild(MatPaginator) set paginator(content: MatPaginator | undefined) {
     if (content) {

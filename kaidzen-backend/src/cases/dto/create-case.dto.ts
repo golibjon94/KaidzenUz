@@ -1,29 +1,28 @@
-import { IsNotEmpty, IsString, IsDateString } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsDateString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-
 export class CreateCaseDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  title: string;
-
+  salesNetworkId: string;
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   problem: string;
-
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   solution: string;
-
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   result: string;
-
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsDateString()
-  @IsNotEmpty()
-  date: string;
+  @IsOptional()
+  dateFrom?: string;
+  @ApiProperty({ required: false })
+  @IsDateString()
+  @IsOptional()
+  dateTo?: string;
 }
