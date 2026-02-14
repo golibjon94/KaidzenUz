@@ -4,10 +4,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import {HeaderComponent} from '../../components/header/header.component';
 import {FooterComponent} from '../../components/footer/footer.component';
+import {ApplyButtonComponent} from '../../../../core/components/apply-button/apply-button.component';
 
 @Component({
   selector: 'app-about',
-  imports: [CommonModule, MatIconModule, MatButtonModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, MatIconModule, MatButtonModule, HeaderComponent, FooterComponent, ApplyButtonComponent],
   templateUrl: './about.html',
   styleUrl: './about.css',
 })
