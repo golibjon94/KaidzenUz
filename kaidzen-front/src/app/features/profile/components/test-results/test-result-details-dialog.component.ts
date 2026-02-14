@@ -23,31 +23,18 @@ import { TestResult } from '../../../../core/models/test.model';
             <button mat-stroked-button class="!text-white !border-white/40" (click)="close()">Yopish</button>
           </div>
 
-          <div class="mt-6 flex items-center justify-between bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
-            <div>
-              <p class="text-sm text-blue-100 mb-1">Topshirilgan sana</p>
-              <p class="font-bold">{{ data.createdAt | date:'dd MMMM yyyy, HH:mm' }}</p>
-            </div>
-            <div class="text-right">
-              <p class="text-sm text-blue-100 mb-1">To'plangan ball</p>
-              <p class="text-3xl font-extrabold">{{ data.score }}</p>
-            </div>
+          <div class="mt-6 bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
+            <p class="text-sm text-blue-100 mb-1">Topshirilgan sana</p>
+            <p class="font-bold">{{ data.createdAt | date:'dd MMMM yyyy, HH:mm' }}</p>
           </div>
         </div>
       </div>
 
       <div class="px-8 pb-8 space-y-6">
         <div>
-          <h4 class="text-xl font-bold text-gray-900 mb-3">Xulosa</h4>
+          <h4 class="text-xl font-bold text-gray-900 mb-3">Natija</h4>
           <div class="bg-gradient-to-br from-blue-50 to-blue-100/50 p-6 rounded-2xl border-2 border-blue-200">
-            <p class="text-gray-700 leading-relaxed">{{ data.resultText }}</p>
-          </div>
-        </div>
-
-        <div>
-          <h4 class="text-xl font-bold text-gray-900 mb-3">Tavsiyalar</h4>
-          <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-2xl border-2 border-green-200">
-            <p class="text-gray-700 leading-relaxed italic">{{ data.recommendation }}</p>
+            <p class="text-gray-700 leading-relaxed whitespace-pre-line">{{ data.result }}</p>
           </div>
         </div>
 

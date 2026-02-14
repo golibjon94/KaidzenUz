@@ -30,7 +30,6 @@ async function main() {
     create: {
       title: 'Business Health Check',
       slug: 'business-health-check',
-      description: 'A comprehensive diagnostic for your business.',
       questions: {
         create: [
           {
@@ -38,27 +37,11 @@ async function main() {
             order: 1,
             options: {
               create: [
-                { text: 'Yes, fully documented', score: 10, order: 1 },
-                { text: 'Yes, but not documented', score: 5, order: 2 },
-                { text: 'No', score: 0, order: 3 },
+                { text: 'Yes, fully documented', order: 1, feedbackText: 'Great! You have a clear strategy.' },
+                { text: 'Yes, but not documented', order: 2, feedbackText: 'Good, but consider documenting it.' },
+                { text: 'No', order: 3, feedbackText: 'You need to develop a business strategy.' },
               ],
             },
-          },
-        ],
-      },
-      resultLogic: {
-        create: [
-          {
-            minScore: 0,
-            maxScore: 5,
-            resultText: 'Your business needs urgent attention.',
-            recommendation: 'Schedule a consulting session immediately.',
-          },
-          {
-            minScore: 6,
-            maxScore: 10,
-            resultText: 'Your business is doing okay, but could be better.',
-            recommendation: 'Focus on documenting your processes.',
           },
         ],
       },

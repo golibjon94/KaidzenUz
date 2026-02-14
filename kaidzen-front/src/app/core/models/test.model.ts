@@ -10,7 +10,6 @@ export interface Option {
   id: string;
   questionId: string;
   text: string;
-  score: number;
   order: number;
   nextQuestionId?: string | null;
   feedbackText?: string | null;
@@ -27,24 +26,14 @@ export interface Question {
   options: Option[];
 }
 
-export interface ResultLogic {
-  id: string;
-  testId: string;
-  minScore: number;
-  maxScore: number;
-  resultText: string;
-  recommendation: string;
-}
 
 export interface Test {
   id: string;
   title: string;
   slug: string;
-  description?: string;
   isActive: boolean;
   startQuestionId?: string | null;
   questions: Question[];
-  resultLogic?: ResultLogic[];
   createdAt: Date;
   updatedAt: Date;
   _count?: {
@@ -56,9 +45,7 @@ export interface TestResult {
   id: string;
   userId: string;
   testId: string;
-  score: number;
-  resultText: string;
-  recommendation: string;
+  result: string;
   answers: any;
   createdAt: Date;
   test?: Test;

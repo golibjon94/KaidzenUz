@@ -87,12 +87,10 @@ model Test {
   id              String  @id @default(uuid())
   title           String
   slug            String  @unique
-  description     String?
   isActive        Boolean @default(true) @map("is_active")
   startQuestionId String? @map("start_question_id")
 
   questions   Question[]
-  resultLogic ResultLogic[]
   testResults TestResult[]
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -120,7 +118,6 @@ model Option {
   id             String  @id @default(uuid())
   questionId     String  @map("question_id")
   text           String
-  score          Int
   order          Int
   nextQuestionId String? @map("next_question_id")
   feedbackText   String? @map("feedback_text") @db.Text
@@ -132,27 +129,12 @@ model Option {
   @@map("options")
 }
 
-model ResultLogic {
-  id             String @id @default(uuid())
-  testId         String @map("test_id")
-  minScore       Int    @map("min_score")
-  maxScore       Int    @map("max_score")
-  resultText     String @map("result_text") @db.Text
-  recommendation String @db.Text
-
-  test Test @relation(fields: [testId], references: [id], onDelete: Cascade)
-
-  @@map("result_logic")
-}
-
 model TestResult {
-  id             String @id @default(uuid())
-  userId         String @map("user_id")
-  testId         String @map("test_id")
-  score          Int
-  resultText     String @map("result_text") @db.Text
-  recommendation String @db.Text
-  answers        Json
+  id      String @id @default(uuid())
+  userId  String @map("user_id")
+  testId  String @map("test_id")
+  result  String @db.Text
+  answers Json
 
   createdAt DateTime @default(now()) @map("created_at")
 

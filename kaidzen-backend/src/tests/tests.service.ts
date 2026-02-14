@@ -15,7 +15,6 @@ export class TestsService {
         data: {
           title: dto.title,
           slug: dto.slug,
-          description: dto.description,
           isActive: dto.isActive ?? true,
           questions: {
             create: dto.questions.map((q) => ({
@@ -25,21 +24,12 @@ export class TestsService {
               options: {
                 create: q.options.map((o) => ({
                   text: o.text,
-                  score: o.score,
                   order: o.order,
                   nextQuestionId: null, // Will be updated in step 2
                   feedbackText: o.feedbackText,
                   isTerminal: o.isTerminal ?? false,
                 })),
               },
-            })),
-          },
-          resultLogic: {
-            create: dto.resultLogic.map((l) => ({
-              minScore: l.minScore,
-              maxScore: l.maxScore,
-              resultText: l.resultText,
-              recommendation: l.recommendation,
             })),
           },
         },
@@ -102,7 +92,6 @@ export class TestsService {
               },
             },
           },
-          resultLogic: true,
         },
       });
     });
@@ -115,7 +104,6 @@ export class TestsService {
         id: true,
         title: true,
         slug: true,
-        description: true,
         createdAt: true,
         _count: {
           select: { questions: true }
@@ -131,7 +119,6 @@ export class TestsService {
         id: true,
         title: true,
         slug: true,
-        description: true,
         isActive: true,
         createdAt: true,
         _count: {
@@ -169,9 +156,6 @@ export class TestsService {
             options: { orderBy: { order: 'asc' } },
           },
         },
-        resultLogic: {
-          orderBy: { minScore: 'asc' }
-        }
       },
     });
 
@@ -189,10 +173,9 @@ export class TestsService {
       const existingTest = await prisma.test.findUnique({ where: { id } });
       if (!existingTest) throw new NotFoundException('Test not found');
 
-      // Delete existing questions and logic
+      // Delete existing questions
       await prisma.option.deleteMany({ where: { question: { testId: id } } });
       await prisma.question.deleteMany({ where: { testId: id } });
-      await prisma.resultLogic.deleteMany({ where: { testId: id } });
 
       // Step 1: Update test and create questions with options (nextQuestionId = null temporarily)
       const test = await prisma.test.update({
@@ -200,7 +183,6 @@ export class TestsService {
         data: {
           title: dto.title,
           slug: dto.slug,
-          description: dto.description,
           isActive: dto.isActive,
           questions: {
             create: dto.questions?.map((q) => ({
@@ -210,21 +192,12 @@ export class TestsService {
               options: {
                 create: q.options.map((o) => ({
                   text: o.text,
-                  score: o.score,
                   order: o.order,
                   nextQuestionId: null, // Will be updated in step 2
                   feedbackText: o.feedbackText,
                   isTerminal: o.isTerminal ?? false,
                 })),
               },
-            })),
-          },
-          resultLogic: {
-            create: dto.resultLogic?.map((l) => ({
-              minScore: l.minScore,
-              maxScore: l.maxScore,
-              resultText: l.resultText,
-              recommendation: l.recommendation,
             })),
           },
         },
@@ -289,7 +262,6 @@ export class TestsService {
               },
             },
           },
-          resultLogic: true,
         },
       });
     });
@@ -325,48 +297,30 @@ export class TestsService {
             },
           },
         },
-        resultLogic: true,
       },
     });
 
     if (!test) throw new NotFoundException('Test not found');
 
-    let totalScore = 0;
     const feedbackList: string[] = [];
 
     dto.answers.forEach((ans) => {
       const question = test.questions.find((q) => q.id === ans.questionId);
       if (question) {
         const option = question.options.find((o) => o.id === ans.optionId);
-        if (option) {
-          totalScore += option.score;
-
-          if (option.feedbackText) {
-            feedbackList.push(option.feedbackText);
-          }
+        if (option && option.feedbackText) {
+          feedbackList.push(option.feedbackText);
         }
       }
     });
 
-    const result = test.resultLogic.find(
-      (logic) => totalScore >= logic.minScore && totalScore <= logic.maxScore,
-    );
-
-    const finalResultText = result?.resultText || 'Natija topilmadi';
-    const finalRecommendation = [
-      result?.recommendation || '',
-      ...feedbackList,
-    ]
-      .filter(Boolean)
-      .join('\n\n');
+    const finalResult = feedbackList.filter(Boolean).join('\n\n') || 'Natija topilmadi';
 
     return this.prisma.testResult.create({
       data: {
         userId,
         testId: test.id,
-        score: totalScore,
-        resultText: finalResultText,
-        recommendation: finalRecommendation || 'Tavsiya yo\'q',
+        result: finalResult,
         answers: dto.answers as any,
       },
     });

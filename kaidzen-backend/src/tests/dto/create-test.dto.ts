@@ -10,10 +10,6 @@ export class CreateOptionDto {
 
   @ApiProperty()
   @IsInt()
-  score: number;
-
-  @ApiProperty()
-  @IsInt()
   order: number;
 
   @ApiProperty({ required: false })
@@ -54,28 +50,6 @@ export class CreateQuestionDto {
   options: CreateOptionDto[];
 }
 
-export class CreateResultLogicDto {
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  minScore: number;
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  maxScore: number;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  resultText: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  recommendation: string;
-}
-
 export class CreateTestDto {
   @ApiProperty()
   @IsString()
@@ -86,11 +60,6 @@ export class CreateTestDto {
   @IsString()
   @IsNotEmpty()
   slug: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsOptional()
-  description?: string;
 
   @ApiProperty()
   @IsBoolean()
@@ -107,10 +76,4 @@ export class CreateTestDto {
   @ValidateNested({ each: true })
   @Type(() => CreateQuestionDto)
   questions: CreateQuestionDto[];
-
-  @ApiProperty({ type: [CreateResultLogicDto] })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CreateResultLogicDto)
-  resultLogic: CreateResultLogicDto[];
 }

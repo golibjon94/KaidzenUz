@@ -244,6 +244,10 @@ export class UserTestsComponent implements OnInit {
       next: (result) => {
         this.result.set(result);
         this.submitting.set(false);
+        // Automatically return to test list after 3 seconds
+        setTimeout(() => {
+          this.backToList();
+        }, 3000);
       },
       error: () => {
         this.error.set('Testni topshirishda xatolik');

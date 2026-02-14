@@ -17,6 +17,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AnyPipe } from '../../../../../core/pipes/any.pipe';
 import { NotifyService } from '../../../../../core/services/notify.service';
+import { DiagnosticsService } from '../../../../../core/services/diagnostics.service';
+import { Diagnostic } from '../../../../../core/models/diagnostic.model';
 
 @Component({
   selector: 'app-add-test',
@@ -47,33 +49,31 @@ export class AddTest implements OnInit {
   private notify = inject(NotifyService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private diagnosticsService = inject(DiagnosticsService);
 
   loading = signal(false);
   isSubmitting = signal(false);
   editMode = signal(false);
   currentTestId = signal<string | null>(null);
+  diagnostics = signal<Diagnostic[]>([]);
+  selectedDiagnosticId = signal<string | null>(null);
 
   private optionLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   testForm = this.fb.group({
     title: ['', [Validators.required]],
     slug: ['', [Validators.required]],
-    description: [''],
     isActive: [true],
     questions: this.fb.array([]),
-    resultLogic: this.fb.array([]),
   });
 
   get questions() {
     return this.testForm.get('questions') as FormArray;
   }
 
-  get resultLogic() {
-    return this.testForm.get('resultLogic') as FormArray;
-  }
-
   ngOnInit() {
     this.setupAutoSlug();
+    this.loadDiagnostics();
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -82,6 +82,25 @@ export class AddTest implements OnInit {
       this.loadTest(id);
     } else {
       this.addQuestion();
+    }
+  }
+
+  private loadDiagnostics() {
+    this.diagnosticsService.getAll().subscribe({
+      next: (res: any) => {
+        this.diagnostics.set(res.data || res);
+      },
+      error: () => {
+        this.notify.error('Diagnostikalarni yuklashda xatolik');
+      },
+    });
+  }
+
+  onDiagnosticChange(diagnosticId: string) {
+    this.selectedDiagnosticId.set(diagnosticId);
+    const diagnostic = this.diagnostics().find(d => d.id === diagnosticId);
+    if (diagnostic) {
+      this.testForm.patchValue({ title: diagnostic.name });
     }
   }
 
@@ -103,11 +122,9 @@ export class AddTest implements OnInit {
       next: (res) => {
         const test = res.data || res;
         this.questions.clear();
-        this.resultLogic.clear();
         this.testForm.patchValue(test);
 
         test.questions?.forEach((q: any) => this.addQuestion(q));
-        test.resultLogic?.forEach((l: any) => this.addResultLogic(l));
 
         this.loading.set(false);
       },
@@ -141,7 +158,6 @@ export class AddTest implements OnInit {
     options.push(
       this.fb.group({
         text: [data?.text || '', Validators.required],
-        score: [data?.score || 0],
         order: [data?.order || options.length + 1],
         nextQuestionId: [data?.nextQuestionId || null],
         feedbackText: [data?.feedbackText || ''],
@@ -161,27 +177,12 @@ export class AddTest implements OnInit {
     }));
   }
 
-  addResultLogic(data: any = null) {
-    this.resultLogic.push(
-      this.fb.group({
-        minScore: [data?.minScore || 0, [Validators.required, Validators.min(0)]],
-        maxScore: [data?.maxScore || 0, [Validators.required, Validators.min(0)]],
-        resultText: [data?.resultText || '', Validators.required],
-        recommendation: [data?.recommendation || ''],
-      }),
-    );
-  }
-
   removeQuestion(idx: number) {
     this.questions.removeAt(idx);
   }
 
   removeOption(qIdx: number, oIdx: number) {
     (this.questions.at(qIdx).get('options') as FormArray).removeAt(oIdx);
-  }
-
-  removeResultLogic(idx: number) {
-    this.resultLogic.removeAt(idx);
   }
 
   goBack() {
