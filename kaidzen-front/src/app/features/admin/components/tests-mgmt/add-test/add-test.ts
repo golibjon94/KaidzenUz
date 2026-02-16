@@ -207,8 +207,9 @@ export class AddTest implements OnInit {
         this.isSubmitting.set(false);
         this.router.navigate(['/admin/tests']);
       },
-      error: () => {
-        this.notify.error('Saqlashda xatolik yuz berdi');
+      error: (err) => {
+        const msg = err?.error?.message || 'Saqlashda xatolik yuz berdi';
+        this.notify.error(msg);
         this.isSubmitting.set(false);
       },
     });

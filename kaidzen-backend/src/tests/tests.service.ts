@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { SubmitTestDto } from './dto/submit-test.dto';
 import { CreateTestDto } from './dto/create-test.dto';
@@ -9,6 +9,13 @@ export class TestsService {
   constructor(private prisma: PrismaService) {}
 
   async create(dto: CreateTestDto) {
+    const existing = await this.prisma.test.findUnique({
+      where: { slug: dto.slug },
+    });
+    if (existing) {
+      throw new ConflictException(`"${dto.slug}" slug bilan test allaqachon mavjud`);
+    }
+
     return this.prisma.$transaction(async (prisma) => {
       // Step 1: Create test with questions and options (nextQuestionId = null temporarily)
       const test = await prisma.test.create({
