@@ -1,8 +1,6 @@
-<!-- DIAGNOSTIKA LIST -->
 <app-header></app-header>
 
 <div class="bg-linear-to-br from-gray-50 via-white to-gray-50 min-h-screen">
-  <!-- Hero Section -->
   <section id="tests" class="py-24 bg-white relative overflow-hidden">
     <div class="absolute inset-0 bg-linear-to-br from-blue-50/50 via-transparent to-purple-50/50"></div>
 
@@ -16,11 +14,53 @@
           Biznesingiz holatini bepul diagnostik testlar orqali tekshirib ko'ring.
         </p>
       </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @if (loading()) {
+          <div class="col-span-full text-center py-10">Yuklanmoqda...</div>
+        } @else {
+          @for (test of tests(); track test.id; let i = $index) {
+            <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500 group cursor-pointer transform hover:-translate-y-2"
+                 [style.animation-delay]="i * 150 + 'ms'">
+              
+              <div class="relative h-48 bg-linear-to-br from-blue-500 via-purple-500 to-pink-500 overflow-hidden">
+                <div class="absolute inset-0 bg-black/10"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
+                    <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-6">
+                <h3 class="text-xl font-bold mb-3 text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
+                  {{ test.title }}
+                </h3>
+
+                <button mat-flat-button color="primary"
+                        class="rounded-xl h-12 font-semibold relative overflow-hidden group/btn transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/50 w-full"
+                        (click)="goToTests()"
+                        [matTooltip]="!authStore.isAuthenticated() ? 'Testdan o\'tish uchun tizimga kiring' : ''">
+                  <span class="relative z-10 flex items-center justify-center gap-2">
+                    <span>Testni boshlash</span>
+                    <svg class="w-5 h-5 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          } @empty {
+            <div class="col-span-full text-center py-10 text-gray-500">
+              Hozircha testlar mavjud emas.
+            </div>
+          }
+        }
+      </div>
     </div>
   </section>
-
-
-
 </div>
 
 <app-footer></app-footer>
