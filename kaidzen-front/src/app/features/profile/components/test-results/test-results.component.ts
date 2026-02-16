@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { TestsService } from '../../../../core/services/tests.service';
 import { TestResult } from '../../../../core/models/test.model';
 import { TestResultDetailsDialogComponent } from './test-result-details-dialog.component';
@@ -21,12 +22,19 @@ import { TestResultDetailsDialogComponent } from './test-result-details-dialog.c
 export class TestResultsComponent implements OnInit {
   private testsService = inject(TestsService);
   private dialog = inject(MatDialog);
+  private router = inject(Router);
 
   results = signal<TestResult[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
+  private openResultId: string | null = null;
+  private openLatest = false;
 
   ngOnInit() {
+    const state = this.router.getCurrentNavigation()?.extras.state
+      ?? (typeof globalThis !== 'undefined' && 'history' in globalThis ? globalThis.history?.state : null);
+    this.openResultId = state?.openResultId ?? null;
+    this.openLatest = state?.openLatest === true;
     this.loadResults();
   }
 
@@ -40,6 +48,7 @@ export class TestResultsComponent implements OnInit {
 
         this.results.set(actualData);
         this.loading.set(false);
+        this.tryOpenLatestResult();
       },
       error: () => {
         this.error.set('Natijalarni yuklashda xatolik');
@@ -47,6 +56,23 @@ export class TestResultsComponent implements OnInit {
         this.results.set([]); // Xato bo'lsa jadval bo'sh qolsin, xato bermasin
       },
     });
+  }
+
+  private tryOpenLatestResult() {
+    if (!this.openLatest) return;
+    const results = this.results();
+    if (results.length === 0) return;
+
+    const target = this.openResultId
+      ? results.find(result => result.id === this.openResultId)
+      : results[0];
+
+    if (target) {
+      this.showDetails(target);
+    }
+
+    this.openLatest = false;
+    this.openResultId = null;
   }
 
   showDetails(result: TestResult) {

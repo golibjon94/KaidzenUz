@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TestsService } from '../../../../core/services/tests.service';
 import { Test, TestResult, SubmitTestDto } from '../../../../core/models/test.model';
 import { ConfirmDialogComponent } from '../../../../core/components/confirm-dialog/confirm-dialog.component';
@@ -22,6 +23,8 @@ import { ConfirmDialogComponent } from '../../../../core/components/confirm-dial
 export class UserTestsComponent implements OnInit {
   private testsService = inject(TestsService);
   private dialog = inject(MatDialog);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   tests = signal<Test[]>([]);
   selectedTest = signal<Test | null>(null);
@@ -244,10 +247,13 @@ export class UserTestsComponent implements OnInit {
       next: (result) => {
         this.result.set(result);
         this.submitting.set(false);
-        // Automatically return to test list after 3 seconds
-        setTimeout(() => {
-          this.backToList();
-        }, 3000);
+        this.router.navigate(['../results'], {
+          relativeTo: this.route,
+          state: {
+            openResultId: result.id,
+            openLatest: true,
+          },
+        });
       },
       error: () => {
         this.error.set('Testni topshirishda xatolik');
