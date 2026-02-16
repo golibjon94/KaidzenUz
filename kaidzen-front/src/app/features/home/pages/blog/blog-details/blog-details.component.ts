@@ -1,8 +1,9 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, SecurityContext, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import { BlogService } from '../../../../../core/services/blog.service';
 import { BlogPost } from '../../../../../core/models/blog.model';
 import { environment } from '../../../../../../environments/environment';
@@ -19,10 +20,16 @@ import {FooterComponent} from '../../../components/footer/footer.component';
 export class BlogDetailsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private blogService = inject(BlogService);
+  private sanitizer = inject(DomSanitizer);
 
   post = signal<BlogPost | null>(null);
   loading = signal(true);
   baseUrl = environment.apiUrl.replace('/api', '');
+  safeContent = computed(() => {
+    const content = this.post()?.content ?? '';
+    const sanitized = this.sanitizer.sanitize(SecurityContext.HTML, content) ?? '';
+    return this.sanitizer.bypassSecurityTrustHtml(sanitized);
+  });
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
