@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, IsOptional, IsEnum, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { BlogStatus } from '@prisma/client';
+import { BlogStatus } from '../../common/enums';
 
 export class CreatePostDto {
   @ApiProperty()

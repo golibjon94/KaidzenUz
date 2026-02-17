@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
-import { ApplicationStatus } from '@prisma/client';
+import { ApplicationStatus } from '../common/enums';
 
 @Injectable()
 export class ApplicationsService {

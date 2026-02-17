@@ -1,4 +1,5 @@
-import { PrismaClient, Role, BlogStatus } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { Role, BlogStatus } from '../src/common/enums';
 import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
 

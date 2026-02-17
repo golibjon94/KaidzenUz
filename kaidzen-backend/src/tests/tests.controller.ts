@@ -7,7 +7,7 @@ import { UpdateTestDto } from './dto/update-test.dto';
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { Public } from '../common/decorators/public.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
-import { Role } from '@prisma/client';
+import { Role } from '../common/enums';
 
 @ApiTags('Diagnostics / Tests')
 @Controller('tests')

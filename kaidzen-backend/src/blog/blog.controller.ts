@@ -11,7 +11,7 @@ import {
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { BlogService } from './blog.service';
 import { CreatePostDto } from './dto/create-post.dto';
-import { BlogStatus, Role } from '@prisma/client';
+import { BlogStatus, Role } from '../common/enums';
 import { Public } from '../common/decorators/public.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 

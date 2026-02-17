@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Role } from '@prisma/client';
+import { Role } from '../common/enums';
 import { Roles } from '../common/decorators/roles.decorator';
 import { CreateSalesNetworkDto } from './dto/create-sales-network.dto';
 import { UpdateSalesNetworkDto } from './dto/update-sales-network.dto';

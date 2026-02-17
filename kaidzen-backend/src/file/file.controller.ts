@@ -17,7 +17,7 @@ import { extname, join } from 'path';
 import { existsSync } from 'fs';
 import type { Response } from 'express';
 import { FileService } from './file.service';
-import { Role } from '@prisma/client';
+import { Role } from '../common/enums';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Public } from '../common/decorators/public.decorator';
 

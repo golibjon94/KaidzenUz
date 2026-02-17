@@ -3,31 +3,13 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 // ============================================
-// ENUMS
+// ENUMS (SQLite does not support enums, using String fields instead)
 // ============================================
-
-enum Role {
-  USER
-  ADMIN
-}
-
-enum ApplicationStatus {
-  PENDING
-  CONTACTED
-  COMPLETED
-  REJECTED
-}
-
-enum BlogStatus {
-  DRAFT
-  PUBLISHED
-  ARCHIVED
-}
 
 // ============================================
 // USER MANAGEMENT
@@ -39,7 +21,7 @@ model User {
   phone    String  @unique
   password String
   address  String?
-  role     Role    @default(USER)
+  role     String  @default("USER")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -67,12 +49,12 @@ model RefreshToken {
 // ============================================
 
 model Application {
-  id          String            @id @default(uuid())
-  fullName    String            @map("full_name")
+  id          String  @id @default(uuid())
+  fullName    String  @map("full_name")
   phone       String
-  companyName String?           @map("company_name")
+  companyName String? @map("company_name")
   message     String?
-  status      ApplicationStatus @default(PENDING)
+  status      String  @default("PENDING")
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -120,7 +102,7 @@ model Option {
   text           String
   order          Int
   nextQuestionId String? @map("next_question_id")
-  feedbackText   String? @map("feedback_text") @db.Text
+  feedbackText   String? @map("feedback_text")
   isTerminal     Boolean @default(false) @map("is_terminal")
 
   question     Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
@@ -133,7 +115,7 @@ model TestResult {
   id      String @id @default(uuid())
   userId  String @map("user_id")
   testId  String @map("test_id")
-  result  String @db.Text
+  result  String
   answers Json
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -168,12 +150,12 @@ model File {
 // ============================================
 
 model BlogPost {
-  id      String     @id @default(uuid())
+  id      String  @id @default(uuid())
   title   String
-  slug    String     @unique
-  imageId String?    @map("image_id")
-  content String     @db.Text
-  status  BlogStatus @default(DRAFT)
+  slug    String  @unique
+  imageId String? @map("image_id")
+  content String
+  status  String  @default("DRAFT")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -190,9 +172,9 @@ model BlogPost {
 model BusinessCase {
   id             String    @id @default(uuid())
   salesNetworkId String    @map("sales_network_id")
-  problem        String    @db.Text
-  solution       String    @db.Text
-  result         String    @db.Text
+  problem        String
+  solution       String
+  result         String
   dateFrom       DateTime? @map("date_from")
   dateTo         DateTime? @map("date_to")
 
