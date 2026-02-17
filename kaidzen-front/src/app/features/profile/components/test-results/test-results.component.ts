@@ -83,4 +83,21 @@ export class TestResultsComponent implements OnInit {
       panelClass: 'test-result-details-dialog',
     });
   }
+
+  downloadPdf(event: Event, resultId: string) {
+    event.stopPropagation();
+    this.testsService.downloadResultPdf(resultId).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `test-result-${resultId}.pdf`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: () => {
+        this.error.set('PDF yuklashda xatolik yuz berdi');
+      },
+    });
+  }
 }

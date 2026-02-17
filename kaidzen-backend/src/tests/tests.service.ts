@@ -1,4 +1,8 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { InjectBrowser } from 'nest-puppeteer';
+import type { Browser } from 'puppeteer';
+import * as fs from 'fs';
+import * as path from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { SubmitTestDto } from './dto/submit-test.dto';
 import { CreateTestDto } from './dto/create-test.dto';
@@ -6,7 +10,10 @@ import { UpdateTestDto } from './dto/update-test.dto';
 
 @Injectable()
 export class TestsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @InjectBrowser() private readonly browser: Browser,
+  ) {}
 
   async create(dto: CreateTestDto) {
     const existing = await this.prisma.test.findUnique({
@@ -381,5 +388,84 @@ export class TestsService {
       include: { test: { select: { title: true, slug: true } } },
       orderBy: { createdAt: 'desc' },
     });
+  }
+
+  async generateResultPdf(resultId: string, userId: string): Promise<Buffer> {
+    const result = await this.prisma.testResult.findUnique({
+      where: { id: resultId },
+      include: {
+        user: { select: { fullName: true, phone: true } },
+        test: { select: { title: true } },
+      },
+    });
+
+    if (!result) throw new NotFoundException('Natija topilmadi');
+    if (result.userId !== userId) throw new NotFoundException('Natija topilmadi');
+
+    // HTML shablonni o'qish
+    const templatePath = path.join(process.cwd(), 'files', 'result.html');
+    let html = fs.readFileSync(templatePath, 'utf-8');
+
+    // Dinamik content yaratish
+    const feedbacks = result.result.split('\n\n').filter(Boolean);
+    const date = new Date(result.createdAt).toLocaleDateString('uz-UZ', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+
+    let tableRows = '';
+    feedbacks.forEach((feedback, index) => {
+      tableRows += `
+        <tr>
+          <td>${index + 1}</td>
+          <td colspan="4" style="white-space: pre-line;">${feedback}</td>
+        </tr>`;
+    });
+
+    const dynamicContent = `
+      <h2 class="result-title">${result.test.title} — Natija</h2>
+      <div class="result-info">
+        <p>Foydalanuvchi: <span>${result.user.fullName}</span></p>
+        <p>Telefon: <span>${result.user.phone}</span></p>
+        <p>Sana: <span>${date}</span></p>
+        <p>Test: <span>${result.test.title}</span></p>
+      </div>
+      <table class="result-table">
+        <thead>
+          <tr>
+            <th>&#8470;</th>
+            <th colspan="4">Natija</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${tableRows}
+        </tbody>
+      </table>
+      <div class="result-summary">
+        <strong>Umumiy xulosa:</strong><br>
+        <span style="white-space: pre-line;">${result.result}</span>
+      </div>
+    `;
+
+    // Namuna contentni dinamik content bilan almashtirish
+    html = html.replace(
+      /<!-- ===== NAMUNA: Test natijalari ===== -->[\s\S]*?<!-- ===== NAMUNA TUGADI ===== -->/,
+      dynamicContent,
+    );
+
+    // Puppeteer orqali PDF yaratish
+    const page = await this.browser.newPage();
+    try {
+      await page.setContent(html, { waitUntil: 'networkidle0' });
+      const pdfBuffer = await page.pdf({
+        format: 'A4',
+        printBackground: true,
+        margin: { top: '0', bottom: '0', left: '0', right: '0' },
+      });
+      return Buffer.from(pdfBuffer);
+    } finally {
+      await page.close();
+    }
   }
 }

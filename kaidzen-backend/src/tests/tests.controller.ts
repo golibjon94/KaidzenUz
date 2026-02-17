@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, Res } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import type { Response } from 'express';
 import { TestsService } from './tests.service';
 import { SubmitTestDto } from './dto/submit-test.dto';
 import { CreateTestDto } from './dto/create-test.dto';
@@ -96,5 +97,21 @@ export class TestsController {
   @ApiOperation({ summary: 'Get current user test results' })
   getMyResults(@GetUser('id') userId: string) {
     return this.testsService.getUserResults(userId);
+  }
+
+  @ApiBearerAuth()
+  @Get('my/results/:id/pdf')
+  @ApiOperation({ summary: 'Download test result as PDF' })
+  async downloadResultPdf(
+    @Param('id') id: string,
+    @GetUser('id') userId: string,
+    @Res() res: Response,
+  ) {
+    const pdfBuffer = await this.testsService.generateResultPdf(id, userId);
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="test-result-${id}.pdf"`,
+    });
+    res.send(pdfBuffer);
   }
 }

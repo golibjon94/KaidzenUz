@@ -30,4 +30,10 @@ export class TestsService {
   getMyResults() {
     return this.http.get<TestResult[]>(`${this.apiUrl}/my/results`);
   }
+
+  downloadResultPdf(resultId: string) {
+    return this.http.get(`${this.apiUrl}/my/results/${resultId}/pdf`, {
+      responseType: 'blob',
+    });
+  }
 }
