@@ -1,0 +1,45 @@
+sardarashurov@gmail.com
+GQ2rO7^jHBCJf6LK
+
+
+
+1-rasm: Umumiy ma'lumotlar
+Админ панель: https://vps.eskiz.uz
+
+IP: 77.83.206.168
+
+Логин: sardarashurov@gmail.com
+
+Домен: vps7431.eskiz.uz
+
+Пароль: dxkhLPqb$IGg!6?I
+
+Тарифный план: VPS 1
+
+NS сервера:
+
+ns1.eskiz.uz
+
+ns2.eskiz.uz
+
+ns3.eskiz.uz
+
+ns4.eskiz.uz
+
+2-rasm: Operatsion tizimlar bo'yicha kirish ma'lumotlari
+Данные доступа, если у Вас установлен Linux (SSH):
+Порт: 22
+
+Логин: root
+
+Пароль: dxkhLPqb$IGg!6?I
+
+Данные доступа, если у Вас установлен Windows 10-11:
+Логин: admin
+
+Пароль: dxkhLPqb$IGg!6?I
+
+Данные доступа, если у Вас установлен Windows Server 2016-2022:
+Логин: Administrator
+
+Пароль: dxkhLPqb$IGg!6?I
