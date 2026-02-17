@@ -1,4 +1,3 @@
--- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "full_name" TEXT NOT NULL,
