@@ -187,6 +187,22 @@ model BusinessCase {
 }
 
 // ============================================
+// OTP VERIFICATION
+// ============================================
+
+model Otp {
+  id        String   @id @default(uuid())
+  phone     String
+  code      String
+  expiresAt DateTime @map("expires_at")
+  used      Boolean  @default(false)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("otps")
+}
+
+// ============================================
 // ADMIN LOOKUPS (simple CRUD)
 // ============================================
 

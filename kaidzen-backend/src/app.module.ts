@@ -14,6 +14,7 @@ import { ApplicationsModule } from './applications/applications.module';
 import { FileModule } from './file/file.module';
 import { DiagnosticsModule } from './diagnostics/diagnostics.module';
 import { SalesNetworksModule } from './sales-networks/sales-networks.module';
+import { SmsModule } from './sms/sms.module';
 import { PuppeteerModule } from 'nest-puppeteer';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
@@ -38,6 +39,7 @@ import { RolesGuard } from './auth/guards/roles.guard';
     FileModule,
     DiagnosticsModule,
     SalesNetworksModule,
+    SmsModule,
     PuppeteerModule.forRoot({ isGlobal: true }),
   ],
   controllers: [],

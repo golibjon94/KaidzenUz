@@ -1,6 +1,5 @@
 <div class="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-12">
   <div class="w-full max-w-md">
-
     <!-- Logo -->
     <div class="text-center mb-8">
       <a routerLink="/">
@@ -15,69 +14,154 @@
       <p class="text-gray-500 text-sm mt-1">Yangi akkaunt yaratish va diagnostikadan boshlang</p>
     </div>
 
+    <!-- Step indicator -->
+    <div class="flex items-center justify-center gap-2 mb-6">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+             [class]="currentStep() >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'">1</div>
+        <span class="text-sm" [class]="currentStep() >= 1 ? 'text-blue-600 font-medium' : 'text-gray-400'">Telefon</span>
+      </div>
+      <div class="w-8 h-px bg-gray-300"></div>
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+             [class]="currentStep() >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'">2</div>
+        <span class="text-sm" [class]="currentStep() >= 2 ? 'text-blue-600 font-medium' : 'text-gray-400'">Ma'lumotlar</span>
+      </div>
+    </div>
+
     <!-- Card -->
     <mat-card>
       <mat-card-content>
-        <form [formGroup]="registerForm" (ngSubmit)="handleRegister()" class="flex flex-col pt-4">
 
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>To'liq ism</mat-label>
-            <mat-icon matPrefix>person_outline</mat-icon>
-            <input matInput formControlName="fullName" placeholder="Ism Familiya">
-            <mat-error>Kamida 3 ta belgi kiriting</mat-error>
-          </mat-form-field>
+        <!-- ========== STEP 1: Phone + OTP ========== -->
+        @if (currentStep() === 1) {
+          <form [formGroup]="phoneForm" class="flex flex-col pt-4">
 
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Telefon raqam</mat-label>
-            <span matTextPrefix>+998&nbsp;</span>
-            <input matInput formControlName="phone"
-                   placeholder="90 123 45 67" type="tel" maxlength="9">
-            <mat-error>9 ta raqam kiriting</mat-error>
-          </mat-form-field>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Telefon raqam</mat-label>
+              <span matTextPrefix>+998&nbsp;</span>
+              <input matInput formControlName="phone"
+                     placeholder="90 123 45 67" type="tel" maxlength="9"
+                     [readonly]="otpSent()">
+              <mat-error>9 ta raqam kiriting</mat-error>
+            </mat-form-field>
 
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Parol</mat-label>
-            <mat-icon matPrefix>lock_outline</mat-icon>
-            <input matInput formControlName="password"
-                   [type]="hidePassword ? 'password' : 'text'"
-                   placeholder="Kamida 6 ta belgi">
-            <button mat-icon-button matSuffix type="button"
-                    (click)="hidePassword = !hidePassword" tabindex="-1">
-              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-            </button>
-            <mat-error>Kamida 6 ta belgi</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Manzil (ixtiyoriy)</mat-label>
-            <mat-icon matPrefix>location_on</mat-icon>
-            <input matInput formControlName="address" placeholder="Shahar, tuman...">
-          </mat-form-field>
-
-          <!-- Terms -->
-          <p class="text-xs text-gray-500 mb-4">
-            Ro'yxatdan o'tish orqali siz bizning
-            <a href="#" class="text-blue-600 font-medium">Foydalanish shartlari</a>
-            va
-            <a href="#" class="text-blue-600 font-medium">Maxfiylik siyosati</a>
-            bilan roziligingizni bildirasiz.
-          </p>
-
-          <!-- Submit -->
-          <button mat-flat-button color="primary" type="submit"
-                  class="w-full !h-12 !text-base" [disabled]="isLoading()">
-            @if (isLoading()) {
-              <mat-spinner diameter="20" class="inline-block mr-2"></mat-spinner>
+            @if (!otpSent()) {
+              <!-- Send OTP button -->
+              <button mat-flat-button color="primary" type="button"
+                      class="w-full !h-12 !text-base" [disabled]="isLoading()"
+                      (click)="sendOtp()">
+                @if (isLoading()) {
+                  <mat-spinner diameter="20" class="inline-block mr-2"></mat-spinner>
+                }
+                SMS kod yuborish
+              </button>
             }
-            Ro'yxatdan o'tish
-          </button>
 
-          <!-- Login link -->
-          <div class="text-center text-sm text-gray-500 mt-4">
-            Akkauntingiz bormi?
-            <a routerLink="/" class="text-blue-600 font-semibold ml-1">Kirish</a>
-          </div>
-        </form>
+            @if (otpSent()) {
+              <!-- Test rejimda OTP kodni ko'rsatish -->
+              @if (testOtpCode()) {
+                <div class="flex items-center gap-2 mb-3 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                  <mat-icon class="text-amber-600">info</mat-icon>
+                  <span class="text-sm text-amber-700 font-medium">Test rejim — tasdiqlash kodi: <strong>{{ testOtpCode() }}</strong></span>
+                </div>
+              }
+
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>SMS kod</mat-label>
+                <mat-icon matPrefix>sms</mat-icon>
+                <input matInput formControlName="otpCode"
+                       placeholder="6 xonali kod" maxlength="6" type="tel">
+                <mat-error>6 xonali kod kiriting</mat-error>
+              </mat-form-field>
+
+              <!-- Verify button -->
+              <button mat-flat-button color="primary" type="button"
+                      class="w-full !h-12 !text-base" [disabled]="isLoading()"
+                      (click)="verifyOtp()">
+                @if (isLoading()) {
+                  <mat-spinner diameter="20" class="inline-block mr-2"></mat-spinner>
+                }
+                Tasdiqlash
+              </button>
+
+              <!-- Resend with countdown -->
+              <div class="text-center mt-3">
+                @if (countdown() > 0) {
+                  <span class="text-sm text-gray-400">Qayta yuborish: {{ countdown() }}s</span>
+                } @else {
+                  <button mat-button color="primary" type="button" (click)="sendOtp()"
+                          [disabled]="isLoading()">
+                    Qayta yuborish
+                  </button>
+                }
+              </div>
+            }
+          </form>
+        }
+
+        <!-- ========== STEP 2: Profile Details ========== -->
+        @if (currentStep() === 2) {
+          <form [formGroup]="profileForm" (ngSubmit)="handleRegister()" class="flex flex-col pt-4">
+
+            <!-- Show verified phone (read-only) -->
+            <div class="flex items-center gap-2 mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
+              <mat-icon class="text-green-600">check_circle</mat-icon>
+              <span class="text-sm text-green-700 font-medium">+998{{ phoneForm.value.phone }} — tasdiqlangan</span>
+            </div>
+
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>To'liq ism</mat-label>
+              <mat-icon matPrefix>person_outline</mat-icon>
+              <input matInput formControlName="fullName" placeholder="Ism Familiya">
+              <mat-error>Kamida 3 ta belgi kiriting</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Parol</mat-label>
+              <mat-icon matPrefix>lock_outline</mat-icon>
+              <input matInput formControlName="password"
+                     [type]="hidePassword ? 'password' : 'text'"
+                     placeholder="Kamida 6 ta belgi">
+              <button mat-icon-button matSuffix type="button"
+                      (click)="hidePassword = !hidePassword" tabindex="-1">
+                <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              <mat-error>Kamida 6 ta belgi</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Manzil (ixtiyoriy)</mat-label>
+              <mat-icon matPrefix>location_on</mat-icon>
+              <input matInput formControlName="address" placeholder="Shahar, tuman...">
+            </mat-form-field>
+
+            <!-- Terms -->
+            <p class="text-xs text-gray-500 mb-4">
+              Ro'yxatdan o'tish orqali siz bizning
+              <a href="#" class="text-blue-600 font-medium">Foydalanish shartlari</a>
+              va
+              <a href="#" class="text-blue-600 font-medium">Maxfiylik siyosati</a>
+              bilan roziligingizni bildirasiz.
+            </p>
+
+            <!-- Submit -->
+            <button mat-flat-button color="primary" type="submit"
+                    class="w-full !h-12 !text-base" [disabled]="isLoading()">
+              @if (isLoading()) {
+                <mat-spinner diameter="20" class="inline-block mr-2"></mat-spinner>
+              }
+              Ro'yxatdan o'tish
+            </button>
+          </form>
+        }
+
+        <!-- Login link -->
+        <div class="text-center text-sm text-gray-500 mt-4">
+          Akkauntingiz bormi?
+          <a routerLink="/" class="text-blue-600 font-semibold ml-1">Kirish</a>
+        </div>
+
       </mat-card-content>
     </mat-card>
 

@@ -12,4 +12,8 @@ export default () => ({
   cors: {
     origin: process.env.CORS_ORIGIN || 'http://localhost:3200',
   },
+  eskiz: {
+    email: process.env.ESKIZ_EMAIL,
+    password: process.env.ESKIZ_PASSWORD,
+  },
 });

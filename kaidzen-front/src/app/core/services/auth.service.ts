@@ -104,4 +104,12 @@ export class AuthService {
     this.cookieService.delete(LocalStorageEnum.RefreshToken, '/');
     this.authStore.clearAuth();
   }
+
+  sendOtp(phone: string) {
+    return this.http.post<{ data: { message: string; code?: string } }>('/sms/send-otp', { phone });
+  }
+
+  verifyOtp(phone: string, code: string) {
+    return this.http.post<{ data: { valid: boolean } }>('/sms/verify-otp', { phone, code });
+  }
 }
