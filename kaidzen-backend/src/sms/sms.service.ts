@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, Logger } from '@nestjs/common';
+import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { PrismaService } from '../prisma/prisma.service';
@@ -120,10 +120,20 @@ export class SmsService {
   }
 
   async sendOtp(phone: string): Promise<{ message: string; code?: string }> {
+    // Telefon raqam tizimda mavjudligini tekshirish
+    const existingUser = await this.prisma.user.findUnique({
+      where: { phone },
+    });
+    if (existingUser) {
+      throw new ConflictException(
+        'Bu telefon raqam allaqachon tizimda ro\'yxatdan o\'tgan. Iltimos, login va parol bilan kiring.',
+      );
+    }
+
     const isProduction = this.configService.get<string>('NODE_ENV') === 'production';
     const code = isProduction
-      ? Math.floor(100000 + Math.random() * 900000).toString()
-      : '123456';
+      ? Math.floor(1000 + Math.random() * 9000).toString()
+      : '1234';
     const cleanPhone = phone.replace(/^\+/, '');
 
     await this.prisma.otp.create({

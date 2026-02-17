@@ -46,7 +46,7 @@ export class RegisterComponent implements OnDestroy {
   // Step 1: Phone + OTP form
   phoneForm: FormGroup = this.fb.group({
     phone: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-    otpCode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
+    otpCode: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern(/^\d{4}$/)]],
   });
 
   // Step 2: Profile details form
@@ -85,9 +85,13 @@ export class RegisterComponent implements OnDestroy {
           this.notify.success('SMS kod yuborildi!');
         }
       },
-      error: () => {
+      error: (err) => {
         this.isLoading.set(false);
-        this.notify.error('SMS yuborishda xatolik!');
+        if (err?.status === 409) {
+          this.notify.error('Bu telefon raqam allaqachon tizimda ro\'yxatdan o\'tgan. Iltimos, login va parol bilan kiring.');
+        } else {
+          this.notify.error('SMS yuborishda xatolik!');
+        }
       },
     });
   }
@@ -146,9 +150,13 @@ export class RegisterComponent implements OnDestroy {
         this.isLoading.set(false);
         this.router.navigate(['/profile']);
       },
-      error: () => {
-        this.notify.error("Ro'yxatdan o'tishda xatolik!");
+      error: (err) => {
         this.isLoading.set(false);
+        if (err?.status === 409) {
+          this.notify.error('Bu telefon raqam allaqachon tizimda ro\'yxatdan o\'tgan!');
+        } else {
+          this.notify.error("Ro'yxatdan o'tishda xatolik!");
+        }
       },
     });
   }
