@@ -161,6 +161,15 @@ export class RegisterComponent implements OnDestroy {
     });
   }
 
+  // --- Back navigation ---
+  goBack() {
+    if (this.currentStep() === 2) {
+      this.currentStep.set(1);
+    } else {
+      this.router.navigate(['/']);
+    }
+  }
+
   // --- Countdown timer ---
   private startCountdown() {
     this.clearCountdown();
