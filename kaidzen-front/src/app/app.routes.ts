@@ -65,6 +65,11 @@ export const routes: Routes = [
         path: 'register',
         loadComponent: () => import('./features/home/pages/auth/register.component').then(m => m.RegisterComponent),
         title: 'Ro\'yxatdan o\'tish - Sarash.uz'
+      },
+      {
+        path: 'forgot-password',
+        loadComponent: () => import('./features/home/pages/auth/forgot-password.component').then(m => m.ForgotPasswordComponent),
+        title: 'Parolni tiklash - Sarash.uz'
       }
     ]
   },

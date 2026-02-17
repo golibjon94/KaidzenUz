@@ -1,5 +1,6 @@
 import { HttpService } from '@nestjs/axios';
-import { ConflictException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { PrismaService } from '../prisma/prisma.service';
@@ -179,5 +180,73 @@ export class SmsService {
     });
 
     return { valid: true };
+  }
+
+  async sendOtpForReset(phone: string): Promise<{ message: string; code?: string }> {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { phone },
+    });
+    if (!existingUser) {
+      throw new NotFoundException(
+        'Bu telefon raqam tizimda topilmadi.',
+      );
+    }
+
+    const isProduction = this.configService.get<string>('NODE_ENV') === 'production';
+    const code = isProduction
+      ? Math.floor(1000 + Math.random() * 9000).toString()
+      : '1234';
+    const cleanPhone = phone.replace(/^\+/, '');
+
+    await this.prisma.otp.create({
+      data: {
+        phone,
+        code,
+        expiresAt: new Date(Date.now() + 5 * 60 * 1000),
+      },
+    });
+
+    if (isProduction) {
+      const message = `Sarash Biznes consulting xizmati. Parolni tiklash kodi: ${code}`;
+      await this.sendSms(cleanPhone, message);
+      return { message: 'OTP sent successfully' };
+    } else {
+      const message = 'Bu Eskiz dan test';
+      await this.sendSms(cleanPhone, message);
+      return { message: 'OTP sent successfully (test mode)', code };
+    }
+  }
+
+  async resetPassword(
+    phone: string,
+    code: string,
+    newPassword: string,
+  ): Promise<{ message: string }> {
+    const otp = await this.prisma.otp.findFirst({
+      where: {
+        phone,
+        code,
+        used: false,
+        expiresAt: { gte: new Date() },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (!otp) {
+      throw new BadRequestException('Kod noto\'g\'ri yoki muddati o\'tgan.');
+    }
+
+    await this.prisma.otp.update({
+      where: { id: otp.id },
+      data: { used: true },
+    });
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await this.prisma.user.update({
+      where: { phone },
+      data: { password: hashedPassword },
+    });
+
+    return { message: 'Parol muvaffaqiyatli yangilandi.' };
   }
 }

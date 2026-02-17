@@ -18,4 +18,16 @@ export class SmsController {
   async verifyOtp(@Body() body: { phone: string; code: string }) {
     return this.smsService.verifyOtp(body.phone, body.code);
   }
+
+  @Public()
+  @Post('send-otp-reset')
+  async sendOtpForReset(@Body() dto: SendOtpDto) {
+    return this.smsService.sendOtpForReset(dto.phone);
+  }
+
+  @Public()
+  @Post('reset-password')
+  async resetPassword(@Body() body: { phone: string; code: string; newPassword: string }) {
+    return this.smsService.resetPassword(body.phone, body.code, body.newPassword);
+  }
 }

@@ -133,6 +133,12 @@ export class HeaderComponent {
     this.router.navigate(['/auth/register']);
   }
 
+  goToForgotPassword() {
+    this.isLoginModalVisible.set(false);
+    this.loginForm.reset();
+    this.router.navigate(['/auth/forgot-password']);
+  }
+
   goToProfile() {
     this.router.navigate(['/profile']);
   }

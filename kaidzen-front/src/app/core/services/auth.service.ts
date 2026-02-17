@@ -112,4 +112,12 @@ export class AuthService {
   verifyOtp(phone: string, code: string) {
     return this.http.post<{ data: { valid: boolean } }>('/sms/verify-otp', { phone, code });
   }
+
+  sendOtpForReset(phone: string) {
+    return this.http.post<{ data: { message: string; code?: string } }>('/sms/send-otp-reset', { phone });
+  }
+
+  resetPassword(phone: string, code: string, newPassword: string) {
+    return this.http.post<{ data: { message: string } }>('/sms/reset-password', { phone, code, newPassword });
+  }
 }
