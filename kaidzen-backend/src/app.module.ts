@@ -42,14 +42,13 @@ import { RolesGuard } from './auth/guards/roles.guard';
     SmsModule,
     PuppeteerModule.forRoot({
       isGlobal: true,
-      executablePath: '/usr/bin/google-chrome',
+      ...(process.platform === 'linux' ? { executablePath: '/usr/bin/google-chrome' } : {}),
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
         '--disable-gpu',
-        '--single-process',
-        '--no-zygote'
+        ...(process.platform === 'linux' ? ['--single-process', '--no-zygote'] : []),
       ],
       headless: true,
     }),
