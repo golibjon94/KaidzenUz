@@ -40,7 +40,19 @@ import { RolesGuard } from './auth/guards/roles.guard';
     DiagnosticsModule,
     SalesNetworksModule,
     SmsModule,
-    PuppeteerModule.forRoot({ isGlobal: true }),
+    PuppeteerModule.forRoot({
+      isGlobal: true,
+      executablePath: '/usr/bin/google-chrome',
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--single-process',
+        '--no-zygote'
+      ],
+      headless: true,
+    }),
   ],
   controllers: [],
   providers: [
