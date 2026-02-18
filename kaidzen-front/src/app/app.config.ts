@@ -1,5 +1,5 @@
 import { ApplicationConfig, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {provideRouter, withHashLocation, withInMemoryScrolling} from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
@@ -19,7 +19,9 @@ registerLocaleData(en);
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
-    provideRouter(routes),
+    provideRouter(routes, withInMemoryScrolling({
+      scrollPositionRestoration: 'enabled',
+    }), withHashLocation()),
     provideClientHydration(withEventReplay()),
     provideHttpClient(
       withInterceptors([
