@@ -1,7 +1,7 @@
 <app-header></app-header>
 
 <!-- Hero Section -->
-<section class="relative bg-linear-to-br from-white via-blue-50/30 to-white pt-20 pb-32 overflow-hidden">
+<section class="relative bg-linear-to-br from-white via-blue-50/30 to-white py-20 overflow-hidden">
   <!-- Animated Background Elements -->
   <div class="absolute inset-0 overflow-hidden pointer-events-none">
     <div class="absolute top-20 left-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
@@ -134,7 +134,7 @@
 </section>
 
 <!-- Services Section -->
-<section id="services" class="bg-linear-to-br from-gray-50 to-white py-24 relative overflow-hidden">
+<section id="services" class="bg-linear-to-br from-gray-50 to-white py-16 relative overflow-hidden">
   <div class="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-blue-500 via-purple-500 to-pink-500"></div>
 
   <div class="max-w-7xl mx-auto px-6">
@@ -157,7 +157,7 @@
 
           <div class="relative z-10">
             <div class="w-16 h-16 bg-linear-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6 transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 shadow-lg group-hover:shadow-blue-500/50">
-              <mat-icon class="!text-3xl text-white">{{ service.icon }}</mat-icon>
+              <mat-icon class="text-3xl! text-white">{{ service.icon }}</mat-icon>
             </div>
 
             <h3 class="text-2xl font-bold mb-4 text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
@@ -180,7 +180,7 @@
 </section>
 
 <!-- Tests Section -->
-<section id="tests" class="py-24 bg-white relative overflow-hidden">
+<section id="tests" class="py-16 bg-white relative overflow-hidden">
   <div class="absolute inset-0 bg-linear-to-br from-blue-50/50 via-transparent to-purple-50/50"></div>
 
   <div class="max-w-7xl mx-auto px-6 relative z-10">
@@ -233,7 +233,7 @@
 </section>
 
 <!-- Blog Section -->
-<section id="blog" class="py-24 bg-linear-to-br from-gray-50 to-white">
+<section id="blog" class="py-16 bg-linear-to-br from-gray-50 to-white">
   <div class="max-w-7xl mx-auto px-6">
     <div class="flex items-center justify-between mb-16">
       <div>
@@ -244,9 +244,9 @@
         <p class="text-gray-600 text-lg">Biznesingiz uchun foydali maslahatlar va yangiliklar.</p>
       </div>
       <a mat-button
-         class="!text-blue-600 !font-semibold !text-lg flex items-center gap-2 hover:gap-3 transition-all duration-300 group"
+         class="text-blue-600! whitespace-nowrap font-semibold! text-lg! flex items-center gap-2 hover:gap-3 transition-all duration-300 group"
          routerLink="/blog">
-        <span>Barchasini ko'rish</span>
+        <span class="whitespace-nowrap">Barchasini ko'rish</span>
         <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
         </svg>
@@ -291,7 +291,7 @@
 </section>
 
 <!-- Cases Section -->
-<section id="cases" class="py-24 bg-white relative overflow-hidden">
+<section id="cases" class="py-16 bg-white relative overflow-hidden">
   <div class="absolute inset-0 bg-linear-to-br from-purple-50/50 via-transparent to-blue-50/50"></div>
 
   <div class="max-w-7xl mx-auto px-6 relative z-10">
@@ -304,9 +304,9 @@
         <p class="text-gray-600 text-lg">Muvaffaqiyatli amalga oshirilgan loyihalarimizdan namunalar.</p>
       </div>
       <a mat-button
-         class="!text-blue-600 !font-semibold !text-lg flex items-center gap-2 hover:gap-3 transition-all duration-300 group"
+         class="text-blue-600! whitespace-nowrap font-semibold! text-lg! flex items-center gap-2 hover:gap-3 transition-all duration-300 group"
          routerLink="/cases">
-        <span>Barchasini ko'rish</span>
+        <span class="whitespace-nowrap">Barchasini ko'rish</span>
         <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
         </svg>
@@ -324,7 +324,7 @@
           <div class="relative z-10">
             <div class="flex items-center gap-4 mb-6">
               <div class="w-14 h-14 bg-linear-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white shadow-lg transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
-                <mat-icon class="!text-2xl">work</mat-icon>
+                <mat-icon class="text-2xl!">work</mat-icon>
               </div>
               <h3 class="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300 flex-1">
                 {{ item.salesNetwork?.name }}
@@ -385,7 +385,7 @@
 </section>
 
 <!-- Stats Section -->
-<section class="py-20 bg-linear-to-br from-blue-600 via-purple-600 to-pink-600 text-white relative overflow-hidden">
+<section class="py-16 bg-linear-to-br from-blue-600 via-purple-600 to-pink-600 text-white relative overflow-hidden">
   <div class="absolute inset-0 bg-black/10"></div>
   <div class="absolute inset-0">
     <div class="absolute top-0 left-1/4 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
